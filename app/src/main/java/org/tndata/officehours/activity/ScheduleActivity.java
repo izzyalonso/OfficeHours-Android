@@ -8,12 +8,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
+import android.view.Menu;
 import android.view.View;
 
+import org.tndata.officehours.databinding.ActivityScheduleBinding;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.R;
 import org.tndata.officehours.adapter.ScheduleAdapter;
-import org.tndata.officehours.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +26,14 @@ import java.util.List;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class MainActivity extends AppCompatActivity{
-    private ActivityMainBinding binding;
+public class ScheduleActivity extends AppCompatActivity{
+    private ActivityScheduleBinding binding;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_schedule);
 
         setSupportActionBar(binding.mainToolbar);
 
@@ -44,6 +45,12 @@ public class MainActivity extends AppCompatActivity{
         binding.mainList.setLayoutManager(new LinearLayoutManager(this));
         binding.mainList.setAdapter(new ScheduleAdapter(this, courses));
         binding.mainList.addItemDecoration(new MockItemDecoration(this, 12));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.schedule, menu);
+        return true;
     }
 
     class MockItemDecoration extends RecyclerView.ItemDecoration{

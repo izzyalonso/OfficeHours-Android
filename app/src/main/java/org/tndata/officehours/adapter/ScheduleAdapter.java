@@ -16,7 +16,7 @@ import java.util.List;
 
 
 /**
- * Adapter used in MainActivity to display the student's schedule
+ * Adapter used in ScheduleActivity to display the student's schedule
  *
  * @author Ismael Alonso
  * @version 1.0.0
