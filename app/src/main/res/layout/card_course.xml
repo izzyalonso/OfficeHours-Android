@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+    <data>
+        <variable
+            name="course"
+            type="org.tndata.officehours.model.Course" />
+    </data>
     <android.support.v7.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card="http://schemas.android.com/apk/res-auto"
@@ -17,19 +22,22 @@
                 android:id="@+id/course_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:text="@{course.getName()}" />
 
             <TextView
                 android:id="@+id/course_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:text="@{course.getTime()}" />
 
             <TextView
                 android:id="@+id/course_instructor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:text="@{course.getInstructor()}" />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

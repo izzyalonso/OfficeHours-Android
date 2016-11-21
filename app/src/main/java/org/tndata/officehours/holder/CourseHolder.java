@@ -1,7 +1,9 @@
 package org.tndata.officehours.holder;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 
+import org.tndata.officehours.model.Course;
 import org.tndata.officehours.databinding.CardCourseBinding;
 
 
@@ -17,7 +19,7 @@ public class CourseHolder extends RecyclerView.ViewHolder{
         this.binding = binding;
     }
 
-    public void setCourse(){
-
+    public void setCourse(@NonNull Course course){
+        binding.setCourse(course);
     }
 }
