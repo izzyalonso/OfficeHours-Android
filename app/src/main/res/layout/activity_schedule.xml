@@ -6,17 +6,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <android.support.v7.widget.Toolbar
-            xmlns:toolbar="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/main_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            toolbar:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        <include
+            layout="@layout/toolbar"
+            android:id="@+id/schedule_toolbar" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/main_list"
+            android:id="@+id/schedule_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />

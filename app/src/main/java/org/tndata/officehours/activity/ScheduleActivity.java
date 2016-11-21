@@ -35,16 +35,16 @@ public class ScheduleActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_schedule);
 
-        setSupportActionBar(binding.mainToolbar);
+        setSupportActionBar(binding.scheduleToolbar.toolbar);
 
         List<Course> courses = new ArrayList<>();
         courses.add(new Course("COMP1900", "MW 11:00-12:25", "Mr. Someone 3rd"));
         courses.add(new Course("COMP2700", "TR 11:00-12:25", "Mr. Someone Jr"));
         courses.add(new Course("COMP4421", "MWF 11:00-12:00", "Mr. Someone Sr"));
 
-        binding.mainList.setLayoutManager(new LinearLayoutManager(this));
-        binding.mainList.setAdapter(new ScheduleAdapter(this, courses));
-        binding.mainList.addItemDecoration(new MockItemDecoration(this, 12));
+        binding.scheduleList.setLayoutManager(new LinearLayoutManager(this));
+        binding.scheduleList.setAdapter(new ScheduleAdapter(this, courses));
+        binding.scheduleList.addItemDecoration(new MockItemDecoration(this, 12));
     }
 
     @Override

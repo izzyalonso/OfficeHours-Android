@@ -5,13 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <android.support.v7.widget.Toolbar
-        xmlns:toolbar="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/main_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        toolbar:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/add_toolbar" />
 
 </LinearLayout>
