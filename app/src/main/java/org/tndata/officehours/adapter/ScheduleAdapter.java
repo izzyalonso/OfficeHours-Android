@@ -48,4 +48,10 @@ public class ScheduleAdapter extends RecyclerView.Adapter<CourseHolder>{
     public void onBindViewHolder(CourseHolder holder, int position){
         holder.setCourse(courses.get(position));
     }
+
+    public void addCourse(@NonNull Course course){
+        courses.add(course);
+        notifyItemChanged(courses.size()-2);
+        notifyItemInserted(courses.size()-1);
+    }
 }

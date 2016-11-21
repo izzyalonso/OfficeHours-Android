@@ -1,6 +1,7 @@
 package org.tndata.officehours.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import org.tndata.officehours.databinding.ActivityScheduleBinding;
@@ -27,7 +29,11 @@ import java.util.List;
  * @version 1.0.0
  */
 public class ScheduleActivity extends AppCompatActivity{
+    private static final int ADD_CODE_RC = 7529;
+
+
     private ActivityScheduleBinding binding;
+    private ScheduleAdapter adapter;
 
 
     @Override
@@ -35,22 +41,45 @@ public class ScheduleActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_schedule);
 
-        setSupportActionBar(binding.mainToolbar);
+        setSupportActionBar(binding.scheduleToolbar.toolbar);
 
         List<Course> courses = new ArrayList<>();
         courses.add(new Course("COMP1900", "MW 11:00-12:25", "Mr. Someone 3rd"));
         courses.add(new Course("COMP2700", "TR 11:00-12:25", "Mr. Someone Jr"));
-        courses.add(new Course("COMP4421", "MWF 11:00-12:00", "Mr. Someone Sr"));
+        courses.add(new Course("COMP4421", "MWF 11:00-12:00", "Dr. Someone Sr"));
 
-        binding.mainList.setLayoutManager(new LinearLayoutManager(this));
-        binding.mainList.setAdapter(new ScheduleAdapter(this, courses));
-        binding.mainList.addItemDecoration(new MockItemDecoration(this, 12));
+        adapter = new ScheduleAdapter(this, courses);
+        binding.scheduleList.setLayoutManager(new LinearLayoutManager(this));
+        binding.scheduleList.setAdapter(adapter);
+        binding.scheduleList.addItemDecoration(new MockItemDecoration(this, 12));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.schedule, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if (item.getItemId() == R.id.schedule_add){
+            startActivityForResult(new Intent(this, AddCodeActivity.class), ADD_CODE_RC);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == ADD_CODE_RC){
+            if (resultCode == RESULT_OK){
+                Course course = data.getParcelableExtra(AddCodeActivity.COURSE_KEY);
+                adapter.addCourse(course);
+            }
+        }
+        else{
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     class MockItemDecoration extends RecyclerView.ItemDecoration{

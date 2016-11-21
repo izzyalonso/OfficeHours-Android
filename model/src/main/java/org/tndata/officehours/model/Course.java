@@ -1,6 +1,9 @@
 package org.tndata.officehours.model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 
@@ -10,7 +13,7 @@ import com.google.gson.annotations.SerializedName;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class Course{
+public class Course implements Parcelable{
     @SerializedName("id")
     private long id;
     @SerializedName("whatever")
@@ -69,5 +72,38 @@ public class Course{
      */
     public String getInstructor(){
         return instructor;
+    }
+
+
+    @Override
+    public int describeContents(){
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags){
+        parcel.writeLong(id);
+        parcel.writeString(name);
+        parcel.writeString(time);
+        parcel.writeString(instructor);
+    }
+
+    public static final Creator<Course> CREATOR = new Creator<Course>(){
+        @Override
+        public Course createFromParcel(Parcel src){
+            return new Course(src);
+        }
+
+        @Override
+        public Course[] newArray(int count){
+            return new Course[count];
+        }
+    };
+
+    private Course(Parcel src){
+        id = src.readLong();
+        name = src.readString();
+        time = src.readString();
+        instructor = src.readString();
     }
 }
