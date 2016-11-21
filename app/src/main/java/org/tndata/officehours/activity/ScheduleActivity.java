@@ -33,6 +33,7 @@ public class ScheduleActivity extends AppCompatActivity{
 
 
     private ActivityScheduleBinding binding;
+    private ScheduleAdapter adapter;
 
 
     @Override
@@ -47,8 +48,9 @@ public class ScheduleActivity extends AppCompatActivity{
         courses.add(new Course("COMP2700", "TR 11:00-12:25", "Mr. Someone Jr"));
         courses.add(new Course("COMP4421", "MWF 11:00-12:00", "Dr. Someone Sr"));
 
+        adapter = new ScheduleAdapter(this, courses);
         binding.scheduleList.setLayoutManager(new LinearLayoutManager(this));
-        binding.scheduleList.setAdapter(new ScheduleAdapter(this, courses));
+        binding.scheduleList.setAdapter(adapter);
         binding.scheduleList.addItemDecoration(new MockItemDecoration(this, 12));
     }
 
@@ -72,7 +74,7 @@ public class ScheduleActivity extends AppCompatActivity{
         if (requestCode == ADD_CODE_RC){
             if (resultCode == RESULT_OK){
                 Course course = data.getParcelableExtra(AddCodeActivity.COURSE_KEY);
-                //TODO
+                adapter.addCourse(course);
             }
         }
         else{
