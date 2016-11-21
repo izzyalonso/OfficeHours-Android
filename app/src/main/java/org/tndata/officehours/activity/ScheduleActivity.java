@@ -1,6 +1,7 @@
 package org.tndata.officehours.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import org.tndata.officehours.databinding.ActivityScheduleBinding;
@@ -51,6 +53,15 @@ public class ScheduleActivity extends AppCompatActivity{
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.schedule, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if (item.getItemId() == R.id.schedule_add){
+            startActivity(new Intent(this, AddCodeActivity.class));
+            return true;
+        }
+        return false;
     }
 
     class MockItemDecoration extends RecyclerView.ItemDecoration{

@@ -19,5 +19,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".activity.AddCodeActivity"
+            android:label="Add Code"
+            android:theme="@style/DialogActivityTheme"
+            android:windowSoftInputMode="stateVisible" />
+
     </application>
 </manifest>
