@@ -8,7 +8,6 @@ buildscript{
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
 
 android{
     compileSdkVersion 25
@@ -21,17 +20,24 @@ android{
         versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes{
         release{
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    dataBinding{
+        enabled true
+    }
 }
 
 dependencies{
     compile project(':model')
     compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.android.support:recyclerview-v7:25.0.1'
+    compile 'com.android.support:cardview-v7:25.0.1'
     compile 'com.google.firebase:firebase-messaging:9.8.0'
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -39,3 +45,5 @@ dependencies{
     })
     testCompile 'junit:junit:4.12'
 }
+
+apply plugin: 'com.google.gms.google-services'

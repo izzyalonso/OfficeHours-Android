@@ -1,4 +1,4 @@
-package org.tndata.model;
+package org.tndata.officehours.model;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest{
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("org.tndata.model.test", appContext.getPackageName());
+        assertEquals("org.tndata.officehours.model.test", appContext.getPackageName());
     }
 }

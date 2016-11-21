@@ -1,4 +1,4 @@
-package org.tndata.model;
+package org.tndata.officehours.model;
 
 import org.junit.Test;
 
