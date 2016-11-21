@@ -1,6 +1,7 @@
 package org.tndata.officehours.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityAddCodeBinding;
+import org.tndata.officehours.model.Course;
 
 
 /**
@@ -21,7 +23,12 @@ import org.tndata.officehours.databinding.ActivityAddCodeBinding;
  * @version 1.0.0
  */
 public class AddCodeActivity extends AppCompatActivity implements TextWatcher{
+    public static final String COURSE_KEY = "org.tndata.officehours.AddCode.Course";
+    private static final int ADD_COURSE_RC = 7742;
+
+
     private ActivityAddCodeBinding binding;
+    private Course course;
 
 
     @Override
@@ -105,7 +112,8 @@ public class AddCodeActivity extends AppCompatActivity implements TextWatcher{
     }
 
     private void onCodeAccepted(){
-        finish();
+        course = new Course("MATH 3450", "TR 3:00-4:25", "Dr. Chili");
+        startActivityForResult(AddCourseActivity.getIntent(this, course), ADD_COURSE_RC);
     }
 
     private void onInvalidCode(){
@@ -123,5 +131,19 @@ public class AddCodeActivity extends AppCompatActivity implements TextWatcher{
         binding.addCode4.setText("");
 
         addListeners();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == ADD_COURSE_RC){
+            if (resultCode == RESULT_OK){
+                Intent intent = new Intent().putExtra(COURSE_KEY, course);
+                setResult(RESULT_OK, intent);
+            }
+            finish();
+        }
+        else{
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

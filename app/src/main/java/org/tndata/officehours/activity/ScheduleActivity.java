@@ -29,6 +29,9 @@ import java.util.List;
  * @version 1.0.0
  */
 public class ScheduleActivity extends AppCompatActivity{
+    private static final int ADD_CODE_RC = 7529;
+
+
     private ActivityScheduleBinding binding;
 
 
@@ -42,7 +45,7 @@ public class ScheduleActivity extends AppCompatActivity{
         List<Course> courses = new ArrayList<>();
         courses.add(new Course("COMP1900", "MW 11:00-12:25", "Mr. Someone 3rd"));
         courses.add(new Course("COMP2700", "TR 11:00-12:25", "Mr. Someone Jr"));
-        courses.add(new Course("COMP4421", "MWF 11:00-12:00", "Mr. Someone Sr"));
+        courses.add(new Course("COMP4421", "MWF 11:00-12:00", "Dr. Someone Sr"));
 
         binding.scheduleList.setLayoutManager(new LinearLayoutManager(this));
         binding.scheduleList.setAdapter(new ScheduleAdapter(this, courses));
@@ -58,10 +61,23 @@ public class ScheduleActivity extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if (item.getItemId() == R.id.schedule_add){
-            startActivity(new Intent(this, AddCodeActivity.class));
+            startActivityForResult(new Intent(this, AddCodeActivity.class), ADD_CODE_RC);
             return true;
         }
         return false;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == ADD_CODE_RC){
+            if (resultCode == RESULT_OK){
+                Course course = data.getParcelableExtra(AddCodeActivity.COURSE_KEY);
+                //TODO
+            }
+        }
+        else{
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     class MockItemDecoration extends RecyclerView.ItemDecoration{

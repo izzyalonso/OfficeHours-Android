@@ -25,5 +25,9 @@
             android:theme="@style/DialogActivityTheme"
             android:windowSoftInputMode="stateVisible" />
 
+        <activity
+            android:name=".activity.AddCourseActivity"
+            android:label="Add to schedule" />
+
     </application>
 </manifest>
