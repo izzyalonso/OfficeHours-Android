@@ -18,6 +18,6 @@ public class CourseHolder extends RecyclerView.ViewHolder{
     }
 
     public void setCourse(){
-        
+
     }
 }
