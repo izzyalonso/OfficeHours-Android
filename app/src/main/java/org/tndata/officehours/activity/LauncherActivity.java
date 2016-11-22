@@ -91,6 +91,8 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
             Log.i(TAG, "Sign in with google successful");
             //TODO check if this account already exists in the backend
             ((OfficeHoursApp)getApplication()).setUser(new User(result.getSignInAccount()));
+            startActivity(new Intent(this, OnBoardingActivity.class));
+            finish();
         }
         else{
             //Why would this happen?

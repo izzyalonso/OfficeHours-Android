@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">OfficeHours</string>
+    <string name="app_name">Office Hours</string>
+
+    <string name="on_boarding_label">Tell us about yourself</string>
+    <string name="on_boarding_type_q">Are you a student or a teacher?</string>
+    <string name="on_boarding_student">Student</string>
+    <string name="on_boarding_teacher">Teacher</string>
+    <string name="on_boarding_first_name">First name</string>
+    <string name="on_boarding_last_name">Last name</string>
+    <string name="on_boarding_email">Email address</string>
+    <string name="on_boarding_phone">Phone number (optional)</string>
+    <string name="on_boarding_finish">Done</string>
+
 </resources>

@@ -21,6 +21,10 @@
         </activity>
 
         <activity
+            android:name=".activity.OnBoardingActivity"
+            android:label="@string/on_boarding_label" />
+
+        <activity
             android:name=".activity.ScheduleActivity"
             android:label="My Schedule" />
 
