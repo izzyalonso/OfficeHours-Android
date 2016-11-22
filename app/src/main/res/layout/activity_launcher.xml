@@ -10,11 +10,12 @@
             android:id="@+id/launcher_gooogle_sign_in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="100dp"
             android:layout_gravity="center_horizontal"
             android:text="Sign in with Google"
             android:textColor="@color/white"
-            android:background="@drawable/btn_google_signin" />
+            android:textAllCaps="false"
+            android:background="@drawable/btn_google_sign_in" />
 
         <Button
             android:id="@+id/launcher_proceed"
