@@ -16,6 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityLauncherBinding;
 import org.tndata.officehours.model.User;
@@ -89,7 +90,7 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
         if (result.isSuccess()){
             Log.i(TAG, "Sign in with google successful");
             //TODO check if this account already exists in the backend
-            User user = new User(result.getSignInAccount());
+            ((OfficeHoursApp)getApplication()).setUser(new User(result.getSignInAccount()));
         }
         else{
             //Why would this happen?
