@@ -97,6 +97,6 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult){
-        //TODO?
+        binding.launcherGooogleSignIn.setEnabled(false);
     }
 }
