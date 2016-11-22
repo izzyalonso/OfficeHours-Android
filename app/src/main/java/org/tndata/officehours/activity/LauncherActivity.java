@@ -87,6 +87,7 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
             Log.d("LauncherFragment", "Sign in success");
             //Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
+            acct.
             //updateUI(true);
         }
         else{
