@@ -29,7 +29,6 @@
                     android:text="@string/on_boarding_type_q" />
 
                 <RadioGroup
-                    android:id="@+id/on_boarding_type_group"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp" >
@@ -38,13 +37,15 @@
                         android:id="@+id/on_boarding_student"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/on_boarding_student" />
+                        android:text="@string/on_boarding_student"
+                        android:onClick="onTypeButtonClick" />
 
                     <RadioButton
                         android:id="@+id/on_boarding_teacher"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/on_boarding_teacher" />
+                        android:text="@string/on_boarding_teacher"
+                        android:onClick="onTypeButtonClick" />
 
                 </RadioGroup>
 
@@ -65,7 +66,8 @@
                     <EditText
                         android:id="@+id/on_boarding_first_name"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapWords" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -77,7 +79,8 @@
                     <EditText
                         android:id="@+id/on_boarding_last_name"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapWords" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -89,7 +92,8 @@
                     <EditText
                         android:id="@+id/on_boarding_email"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -101,20 +105,37 @@
                     <EditText
                         android:id="@+id/on_boarding_phone"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:inputType="phone" />
 
                     <Space
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1" />
 
-                    <Button
-                        android:id="@+id/on_boarding_finish"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:text="@string/on_boarding_finish"/>
+                        android:gravity="end|center_vertical" >
 
+                        <TextView
+                            android:id="@+id/on_boarding_error"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:gravity="end"
+                            android:textColor="@color/error"
+                            android:visibility="gone" />
+
+                        <Button
+                            android:id="@+id/on_boarding_finish"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/on_boarding_finish"/>
+
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

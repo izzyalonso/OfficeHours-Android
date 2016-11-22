@@ -80,6 +80,10 @@ public class User{
         return googleToken;
     }
 
+    public boolean hasDefinedType(){
+        return accountType != null;
+    }
+
     public boolean isStudent(){
         return accountType == AccountType.STUDENT;
     }

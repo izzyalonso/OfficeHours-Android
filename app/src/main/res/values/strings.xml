@@ -11,4 +11,8 @@
     <string name="on_boarding_phone">Phone number (optional)</string>
     <string name="on_boarding_finish">Done</string>
 
+    <string name="on_boarding_error_name">What\'s your name?</string>
+    <string name="on_boarding_error_email">What\'s your email address?</string>
+    <string name="on_boarding_error_email_invalid">Please, introduce a valid email address</string>
+
 </resources>
