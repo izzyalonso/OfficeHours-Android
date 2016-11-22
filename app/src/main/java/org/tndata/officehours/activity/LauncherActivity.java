@@ -8,9 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -18,6 +18,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityLauncherBinding;
+import org.tndata.officehours.model.User;
 
 
 /**
@@ -27,6 +28,8 @@ import org.tndata.officehours.databinding.ActivityLauncherBinding;
  * @version 1.0.0
  */
 public class LauncherActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener{
+    private static final String TAG = "LauncherActivity";
+
     private static final int GOOGLE_SIGN_IN_RC = 5327;
 
 
@@ -84,20 +87,20 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
 
     private void handleGoogleSignInResult(GoogleSignInResult result){
         if (result.isSuccess()){
-            Log.d("LauncherFragment", "Sign in success");
-            //Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-            acct.
-            //updateUI(true);
+            Log.i(TAG, "Sign in with google successful");
+            //TODO check if this account already exists in the backend
+            User user = new User(result.getSignInAccount());
         }
         else{
-            //Signed out, show unauthenticated UI.
-            //updateUI(false);
+            //Why would this happen?
+            Log.e(TAG, "Sign in with Google failed");
+            Toast.makeText(this, "Couldn't sign in", Toast.LENGTH_LONG).show();
         }
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult){
+        Log.e(TAG, "Couldn't connect to GoogleApiClient");
         binding.launcherGooogleSignIn.setEnabled(false);
     }
 }
