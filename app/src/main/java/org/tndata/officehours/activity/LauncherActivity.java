@@ -44,19 +44,32 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_launcher);
 
-        //Set listeners
-        binding.launcherGooogleSignIn.setOnClickListener(this);
-        binding.launcherProceed.setOnClickListener(this);
+        User user = User.readFromPreferences(this);
+        if (user != null){
+            ((OfficeHoursApp)getApplication()).setUser(user);
+            if (user.isOnBoardingComplete()){
+                startActivity(new Intent(this, ScheduleActivity.class));
+            }
+            else{
+                startActivity(new Intent(this, OnBoardingActivity.class));
+            }
+            finish();
+        }
+        else{
+            //Set listeners
+            binding.launcherGooogleSignIn.setOnClickListener(this);
+            binding.launcherProceed.setOnClickListener(this);
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build();
 
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+            googleApiClient = new GoogleApiClient.Builder(this)
+                    .enableAutoManage(this, this)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                    .build();
+        }
     }
 
     @Override
@@ -90,7 +103,9 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
         if (result.isSuccess()){
             Log.i(TAG, "Sign in with google successful");
             //TODO check if this account already exists in the backend
-            ((OfficeHoursApp)getApplication()).setUser(new User(result.getSignInAccount()));
+            User user = new User(result.getSignInAccount());
+            user.writeToPreferences(this);
+            ((OfficeHoursApp)getApplication()).setUser(user);
             startActivity(new Intent(this, OnBoardingActivity.class));
             finish();
         }
