@@ -236,7 +236,7 @@ public class User{
 
         /**
          * Gets an account type for a given descriptor. In order for this method to return an
-         * actual account type the match must be extact.
+         * actual account type the match must be exact.
          *
          * @param descriptor the descriptor to be matched.
          * @return the account type mapped to the provided descriptor or null no mapping was found.
