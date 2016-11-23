@@ -36,11 +36,11 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
         user = ((OfficeHoursApp)getApplication()).getUser();
 
         if (user.isStudent()){
-            binding.onBoardingStudent.setSelected(true);
+            binding.onBoardingStudent.setChecked(true);
             binding.onBoardingInfoContainer.setVisibility(View.VISIBLE);
         }
         else if (user.isTeacher()){
-            binding.onBoardingTeacher.setSelected(true);
+            binding.onBoardingTeacher.setChecked(true);
             binding.onBoardingInfoContainer.setVisibility(View.VISIBLE);
         }
 
@@ -59,11 +59,17 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
 
         switch (view.getId()){
             case R.id.on_boarding_student:
-                user.setAsStudent();
+                if (!user.isStudent()){
+                    user.setAsStudent();
+                    user.writeToPreferences(this);
+                }
                 break;
 
             case R.id.on_boarding_teacher:
-                user.setAsTeacher();
+                if (!user.isTeacher()){
+                    user.setAsTeacher();
+                    user.writeToPreferences(this);
+                }
                 break;
         }
     }
@@ -96,7 +102,11 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
             binding.onBoardingError.setVisibility(View.VISIBLE);
         }
         else{
-            //TODO Save the user
+            user.setName(firstName, lastName);
+            user.setSchoolEmail(email);
+            user.setPhoneNumber(phone);
+            user.onBoardingCompleted();
+            user.writeToPreferences(this);
             startActivity(new Intent(this, ScheduleActivity.class));
             finish();
         }

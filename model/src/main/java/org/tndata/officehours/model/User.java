@@ -139,7 +139,13 @@ public class User{
         editor.putString("user.email", email);
         editor.putString("user.googleToken", googleToken);
 
-        editor.putString("user.accountType", accountType.getDescriptor());
+        //NOTE: account type will be null before going through on boarding
+        if (accountType == null){
+            editor.putString("user.accountType", "");
+        }
+        else{
+            editor.putString("user.accountType", accountType.getDescriptor());
+        }
         editor.putString("user.schoolEmail", schoolEmail);
         editor.putString("user.firstName", firstName);
         editor.putString("user.lastName", lastName);
@@ -166,7 +172,7 @@ public class User{
      * @return the user if one exists or null.
      */
     @Nullable
-    public static User getFromPreferences(@NonNull Context context){
+    public static User readFromPreferences(@NonNull Context context){
         //Open the shared preferences file for the user and check if they exist
         SharedPreferences user = context.getSharedPreferences(PREFERENCE_FILE, Context.MODE_PRIVATE);
         String email = user.getString("user.email", null);
