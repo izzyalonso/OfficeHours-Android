@@ -1,7 +1,13 @@
 package org.tndata.officehours.model;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
 
 /**
  * Model class for a user.
@@ -10,6 +16,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
  * @version 1.0.0
  */
 public class User{
+    private static final String PREFERENCE_FILE = "OfficeHoursUserPreferences";
+
     //Fields retrieved from Google
     private String email;
     private String googleToken;
@@ -117,7 +125,128 @@ public class User{
     }
 
 
-    enum AccountType{
-        STUDENT, TEACHER
+    //START: User persistence in Shared Preferences
+
+    /**
+     * Writes the user to shared preferences. It replaces previously stored data.
+     *
+     * @param context a reference to the context.
+     */
+    public void writeToPreferences(@NonNull Context context){
+        SharedPreferences user = context.getSharedPreferences(PREFERENCE_FILE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = user.edit();
+
+        editor.putString("user.email", email);
+        editor.putString("user.googleToken", googleToken);
+
+        editor.putString("user.accountType", accountType.getDescriptor());
+        editor.putString("user.schoolEmail", schoolEmail);
+        editor.putString("user.firstName", firstName);
+        editor.putString("user.lastName", lastName);
+        editor.putString("user.phoneNumber", phoneNumber);
+        editor.putBoolean("user.isOnBoardingComplete", isOnBoardingComplete);
+
+        editor.putString("user.token", token);
+        editor.apply();
+    }
+
+    /**
+     * Deletes all the information in the preference file.
+     *
+     * @param context a reference to the context.
+     */
+    public static void deleteFromPreferences(@NonNull Context context){
+        context.getSharedPreferences(PREFERENCE_FILE, Context.MODE_PRIVATE).edit().clear().commit();
+    }
+
+    /**
+     * Reads the user stored in Shared Preferences, if any.
+     *
+     * @param context a reference to the context.
+     * @return the user if one exists or null.
+     */
+    @Nullable
+    public static User getFromPreferences(@NonNull Context context){
+        //Open the shared preferences file for the user and check if they exist
+        SharedPreferences user = context.getSharedPreferences(PREFERENCE_FILE, Context.MODE_PRIVATE);
+        String email = user.getString("user.email", null);
+        if (email == null){
+            //If not, return null
+            return null;
+        }
+        return new User(user);
+    }
+
+    /**
+     * Internal constructor. To be used when reading from preferences.
+     *
+     * @param preferences the preference map to read the user from.
+     */
+    private User(SharedPreferences preferences){
+        email = preferences.getString("user.email", "");
+        googleToken = preferences.getString("user.googleToken", "");
+
+        accountType = AccountType.getAccountType(preferences.getString("user.accountType", ""));
+        schoolEmail = preferences.getString("user.schoolEmail", "");
+        firstName = preferences.getString("user.firstName", "");
+        lastName = preferences.getString("user.lastName", "");
+        phoneNumber = preferences.getString("user.phoneNumber", "");
+        isOnBoardingComplete = preferences.getBoolean("user.isOnBoardingComplete", false);
+
+        token = preferences.getString("user.token", "");
+    }
+
+
+    /**
+     * Types of accounts supported by the platform.
+     *
+     * @author Ismael Alonso
+     * @version 1.0.0
+     */
+    private enum AccountType{
+        STUDENT("student"), TEACHER("teacher");
+
+
+        private final String descriptor;
+
+
+        /**
+         * Constructor.
+         *
+         * @param descriptor the account type descriptor.
+         */
+        AccountType(String descriptor){
+            this.descriptor = descriptor;
+        }
+
+        /**
+         * Descriptor getter.
+         *
+         * @return the descriptor
+         */
+        private String getDescriptor(){
+            return descriptor;
+        }
+
+        /**
+         * Gets an account type for a given descriptor. In order for this method to return an
+         * actual account type the match must be extact.
+         *
+         * @param descriptor the descriptor to be matched.
+         * @return the account type mapped to the provided descriptor or null no mapping was found.
+         */
+        @Nullable
+        private static AccountType getAccountType(@Nullable String descriptor){
+            if (descriptor == null){
+                return null;
+            }
+            if (descriptor.equals("student")){
+                return STUDENT;
+            }
+            if (descriptor.equals("teacher")){
+                return TEACHER;
+            }
+            return null;
+        }
     }
 }
