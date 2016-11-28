@@ -20,8 +20,6 @@ public class Course implements Parcelable{
     private String name;
     @SerializedName("whatever")
     private String time;
-    @SerializedName("whatever")
-    private String instructor;
 
 
     /**
@@ -29,13 +27,22 @@ public class Course implements Parcelable{
      *
      * @param name the name of the course.
      * @param time the time of the course.
-     * @param instructor the instructor teaching the course.
      */
-    public Course(String name, String time, String instructor){
-        id = -1;
+    public Course(String name, String time){
+        this(-1, name, time);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param id the id of the course.
+     * @param name the name of the course.
+     * @param time the time of the course.
+     */
+    public Course(long id, String name, String time){
+        this.id = id;
         this.name = name;
         this.time = time;
-        this.instructor = instructor;
     }
 
     /**
@@ -65,15 +72,6 @@ public class Course implements Parcelable{
         return time;
     }
 
-    /**
-     * Instructor getter
-     *
-     * @return the instructor teaching this course.
-     */
-    public String getInstructor(){
-        return instructor;
-    }
-
 
     @Override
     public int describeContents(){
@@ -85,7 +83,6 @@ public class Course implements Parcelable{
         parcel.writeLong(id);
         parcel.writeString(name);
         parcel.writeString(time);
-        parcel.writeString(instructor);
     }
 
     public static final Creator<Course> CREATOR = new Creator<Course>(){
@@ -104,6 +101,5 @@ public class Course implements Parcelable{
         id = src.readLong();
         name = src.readString();
         time = src.readString();
-        instructor = src.readString();
     }
 }
