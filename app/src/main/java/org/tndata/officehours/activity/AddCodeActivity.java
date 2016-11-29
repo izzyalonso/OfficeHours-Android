@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityAddCodeBinding;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.StudentCourse;
 
 
 /**
@@ -112,7 +113,7 @@ public class AddCodeActivity extends AppCompatActivity implements TextWatcher{
     }
 
     private void onCodeAccepted(){
-        course = new Course("MATH 3450", "TR 3:00-4:25", "Dr. Chili");
+        course = new StudentCourse("MATH 3450", "TR 3:00-4:25", "Dr. Chili");
         startActivityForResult(AddCourseActivity.getIntent(this, course), ADD_COURSE_RC);
     }
 

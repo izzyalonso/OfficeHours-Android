@@ -11,12 +11,13 @@ import org.tndata.officehours.model.Course;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.CardCourseBinding;
 import org.tndata.officehours.holder.CourseHolder;
+import org.tndata.officehours.model.StudentCourse;
 
 import java.util.List;
 
 
 /**
- * Adapter used in ScheduleActivity to display the student's schedule
+ * Adapter used in ScheduleActivity to display the student's add
  *
  * @author Ismael Alonso
  * @version 1.0.0

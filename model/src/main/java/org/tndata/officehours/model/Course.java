@@ -13,13 +13,15 @@ import com.google.gson.annotations.SerializedName;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class Course implements Parcelable{
+public abstract class Course implements Parcelable{
     @SerializedName("id")
     private long id;
     @SerializedName("whatever")
     private String name;
     @SerializedName("whatever")
     private String time;
+    @SerializedName("expiration")
+    private String expirationDate;
 
 
     /**
@@ -85,19 +87,7 @@ public class Course implements Parcelable{
         parcel.writeString(time);
     }
 
-    public static final Creator<Course> CREATOR = new Creator<Course>(){
-        @Override
-        public Course createFromParcel(Parcel src){
-            return new Course(src);
-        }
-
-        @Override
-        public Course[] newArray(int count){
-            return new Course[count];
-        }
-    };
-
-    private Course(Parcel src){
+    protected Course(Parcel src){
         id = src.readLong();
         name = src.readString();
         time = src.readString();

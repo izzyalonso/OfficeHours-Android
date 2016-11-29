@@ -46,13 +46,6 @@
                     android:textSize="18sp"
                     android:text="@{course.getTime()}" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textSize="18sp"
-                    android:text="@{course.getInstructor()}" />
-
                 <Button
                     android:id="@+id/add_course_add"
                     android:layout_width="wrap_content"

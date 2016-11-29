@@ -38,5 +38,9 @@
             android:name=".activity.AddCourseActivity"
             android:label="Add to schedule" />
 
+        <activity
+            android:name=".activity.NewCourseActivity"
+            android:label="New Course" />
+
     </application>
 </manifest>

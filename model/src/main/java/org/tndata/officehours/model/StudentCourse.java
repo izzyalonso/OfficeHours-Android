@@ -1,6 +1,8 @@
 package org.tndata.officehours.model;
 
 
+import android.os.Parcel;
+
 /**
  * Model for a course from the student's perspective.
  *
@@ -43,5 +45,28 @@ public class StudentCourse extends Course{
      */
     public String getInstructor(){
         return instructor;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags){
+        super.writeToParcel(parcel, flags);
+        parcel.writeString(instructor);
+    }
+
+    public static final Creator<StudentCourse> CREATOR = new Creator<StudentCourse>(){
+        @Override
+        public StudentCourse createFromParcel(Parcel src){
+            return new StudentCourse(src);
+        }
+
+        @Override
+        public StudentCourse[] newArray(int count){
+            return new StudentCourse[count];
+        }
+    };
+
+    private StudentCourse(Parcel src){
+        super(src);
+        instructor = src.readString();
     }
 }

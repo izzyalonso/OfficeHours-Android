@@ -13,17 +13,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.databinding.ActivityScheduleBinding;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.R;
 import org.tndata.officehours.adapter.ScheduleAdapter;
+import org.tndata.officehours.model.StudentCourse;
+import org.tndata.officehours.util.CustomItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 /**
- * Activity that displays a student's schedule
+ * Activity that displays a student's add
  *
  * @author Ismael Alonso
  * @version 1.0.0
@@ -44,26 +47,31 @@ public class ScheduleActivity extends AppCompatActivity{
         setSupportActionBar(binding.scheduleToolbar.toolbar);
 
         List<Course> courses = new ArrayList<>();
-        courses.add(new Course("COMP1900", "MW 11:00-12:25", "Mr. Someone 3rd"));
-        courses.add(new Course("COMP2700", "TR 11:00-12:25", "Mr. Someone Jr"));
-        courses.add(new Course("COMP4421", "MWF 11:00-12:00", "Dr. Someone Sr"));
+        courses.add(new StudentCourse("COMP1900", "MW 11:00-12:25", "Mr. Someone 3rd"));
+        courses.add(new StudentCourse("COMP2700", "TR 11:00-12:25", "Mr. Someone Jr"));
+        courses.add(new StudentCourse("COMP4421", "MWF 11:00-12:00", "Dr. Someone Sr"));
 
         adapter = new ScheduleAdapter(this, courses);
         binding.scheduleList.setLayoutManager(new LinearLayoutManager(this));
         binding.scheduleList.setAdapter(adapter);
-        binding.scheduleList.addItemDecoration(new MockItemDecoration(this, 12));
+        binding.scheduleList.addItemDecoration(new CustomItemDecoration(this, 12));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.schedule, menu);
+        getMenuInflater().inflate(R.menu.add, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        if (item.getItemId() == R.id.schedule_add){
-            startActivityForResult(new Intent(this, AddCodeActivity.class), ADD_CODE_RC);
+        if (item.getItemId() == R.id.add_add){
+            if (((OfficeHoursApp)getApplication()).getUser().isTeacher()){
+                startActivity(new Intent(this, NewCourseActivity.class));
+            }
+            else{
+                startActivityForResult(new Intent(this, AddCodeActivity.class), ADD_CODE_RC);
+            }
             return true;
         }
         return false;
@@ -73,46 +81,12 @@ public class ScheduleActivity extends AppCompatActivity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if (requestCode == ADD_CODE_RC){
             if (resultCode == RESULT_OK){
-                Course course = data.getParcelableExtra(AddCodeActivity.COURSE_KEY);
+                StudentCourse course = data.getParcelableExtra(AddCodeActivity.COURSE_KEY);
                 adapter.addCourse(course);
             }
         }
         else{
             super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    class MockItemDecoration extends RecyclerView.ItemDecoration{
-        private int mMargin;
-
-
-        /**
-         * Constructor.
-         *
-         * @param context a reference to the context.
-         * @param marginInDp the maximum spacing between items, items, and edges.
-         */
-        public MockItemDecoration(Context context, int marginInDp){
-            mMargin = getPixels(context, marginInDp);
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state){
-            outRect.top = mMargin/2;
-            outRect.left = mMargin;
-            outRect.bottom = mMargin/2;
-            outRect.right = mMargin;
-            if (parent.getChildAdapterPosition(view) == 0){
-                outRect.top = mMargin;
-            }
-            else if (parent.getChildAdapterPosition(view) == parent.getAdapter().getItemCount()-1){
-                outRect.bottom = mMargin;
-            }
-        }
-
-        public int getPixels(Context context, int densityPixels){
-            return (int)Math.ceil(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, densityPixels,
-                    context.getResources().getDisplayMetrics()));
         }
     }
 }
