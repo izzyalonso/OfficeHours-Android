@@ -47,7 +47,13 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view){
         switch (view.getId()){
             case R.id.new_course_time:
-                startActivityForResult(RangeRecurrencePickerActivity.getIntent(this, true), 555);
+                String time = binding.newCourseTime.getText().toString().trim();
+                if (time.isEmpty()){
+                    startActivityForResult(RangeRecurrencePickerActivity.getIntent(this, true), 555);
+                }
+                else{
+                    startActivityForResult(RangeRecurrencePickerActivity.getIntent(this, time, true), 555);
+                }
                 break;
 
             case R.id.new_course_expiration:

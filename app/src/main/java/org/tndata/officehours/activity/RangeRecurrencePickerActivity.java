@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -22,16 +23,28 @@ import java.util.Calendar;
 /**
  * Lets the user choose a time range.
  *
+ * TODO I need a better name for this.
+ *
+ * TODO disable the button if the form ain't complete
+ *
  * @author Ismael Alonso
+ * @version 1.0.0
  */
 public class RangeRecurrencePickerActivity extends AppCompatActivity implements View.OnClickListener{
+    private static final String RECURRENCE_KEY = "org.tndata.officehours.RRP.Recurrence";
     private static final String MC_KEY = "org.tndata.officehours.RRP.MultipleChoice";
 
-    public static final String RESULT_KEY = "org.tndata.officehours.RP.Result";
+    public static final String RESULT_KEY = "org.tndata.officehours.RRP.Result";
 
 
     public static Intent getIntent(@NonNull Context context, boolean multipleChoice){
         return new Intent(context, RangeRecurrencePickerActivity.class)
+                .putExtra(MC_KEY, multipleChoice);
+    }
+
+    public static Intent getIntent(@NonNull Context context, String recurrence, boolean multipleChoice){
+        return new Intent(context, RangeRecurrencePickerActivity.class)
+                .putExtra(RECURRENCE_KEY, recurrence)
                 .putExtra(MC_KEY, multipleChoice);
     }
 
@@ -52,6 +65,11 @@ public class RangeRecurrencePickerActivity extends AppCompatActivity implements 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_range_recurrence_picker);
 
         multipleChoice = getIntent().getBooleanExtra(MC_KEY, false);
+        String recurrence = getIntent().getStringExtra(RECURRENCE_KEY);
+        Log.d("Blah@,", "Recurrence " + recurrence);
+        if (recurrence != null && !recurrence.isEmpty()){
+            setRecurrence(recurrence);
+        }
 
         if (multipleChoice){
             binding.rrpRadio.setVisibility(View.GONE);
@@ -115,6 +133,93 @@ public class RangeRecurrencePickerActivity extends AppCompatActivity implements 
     }
 
     private void done(){
+        setResult(RESULT_OK, new Intent().putExtra(RESULT_KEY, getRecurrence()));
+        finish();
+    }
+
+
+    /*---------------------*
+     * RECURRENCE HANDLERS *
+     *---------------------*/
+
+    /**
+     * Sets a recurrence into the form.
+     *
+     * @param recurrence the recurrence to be parsed and set.
+     */
+    private void setRecurrence(@NonNull String recurrence){
+        //Get the parts of the recurrence
+        String frag[] = recurrence.split(" ");
+        String days = frag[0];
+        String time = frag[1];
+
+        while (!days.isEmpty()){
+            String day = days.substring(0, 1);
+            if (multipleChoice){
+                if (day.equals("M")){
+                    binding.rrpCheckM.setChecked(true);
+                }
+                if (day.equals("T")){
+                    binding.rrpCheckT.setChecked(true);
+                }
+                if (day.equals("W")){
+                    binding.rrpCheckW.setChecked(true);
+                }
+                if (day.equals("R")){
+                    binding.rrpCheckR.setChecked(true);
+                }
+                if (day.equals("F")){
+                    binding.rrpCheckF.setChecked(true);
+                }
+                if (day.equals("S")){
+                    binding.rrpCheckS.setChecked(true);
+                }
+            }
+            else{
+                if (day.equals("M")){
+                    binding.rrpRadioM.setChecked(true);
+                }
+                else if (day.equals("T")){
+                    binding.rrpRadioT.setChecked(true);
+                }
+                else if (day.equals("W")){
+                    binding.rrpRadioW.setChecked(true);
+                }
+                else if (day.equals("R")){
+                    binding.rrpRadioR.setChecked(true);
+                }
+                else if (day.equals("F")){
+                    binding.rrpRadioF.setChecked(true);
+                }
+                else if (day.equals("S")){
+                    binding.rrpRadioS.setChecked(true);
+                }
+            }
+            days = days.substring(1);
+        }
+
+        frag = time.split("-");
+        String from = frag[0];
+        String to = frag[1];
+
+        binding.rrpFrom.setText(from);
+        binding.rrpTo.setText(to);
+
+        frag = from.split(":");
+        fromHour = Integer.valueOf(frag[0]);
+        fromMinute = Integer.valueOf(frag[1]);
+
+        frag = to.split(":");
+        toHour = Integer.valueOf(frag[0]);
+        toMinute = Integer.valueOf(frag[1]);
+    }
+
+    /**
+     * Creates a recurrence string from the data in the form.
+     *
+     * @return the recurrence input by the user.
+     */
+    private String getRecurrence(){
         String result = "";
 
         if (multipleChoice){
@@ -159,9 +264,6 @@ public class RangeRecurrencePickerActivity extends AppCompatActivity implements 
         }
 
         result += " " + binding.rrpFrom.getText().toString().trim();
-        result += "-" + binding.rrpTo.getText().toString().trim();
-
-        setResult(RESULT_OK, new Intent().putExtra(RESULT_KEY, result));
-        finish();
+        return result + "-" + binding.rrpTo.getText().toString().trim();
     }
 }
