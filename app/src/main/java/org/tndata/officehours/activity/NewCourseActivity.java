@@ -1,7 +1,6 @@
 package org.tndata.officehours.activity;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -47,7 +46,7 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view){
         switch (view.getId()){
             case R.id.new_course_time:
-                startActivity(new Intent(this, RangeRecurrencePickerActivity.class));
+                startActivity(RangeRecurrencePickerActivity.getIntent(this, true));
                 break;
 
             case R.id.new_course_expiration:
