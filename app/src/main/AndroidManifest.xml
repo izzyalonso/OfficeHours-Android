@@ -42,5 +42,10 @@
             android:name=".activity.NewCourseActivity"
             android:label="New Course" />
 
+        <activity
+            android:name=".activity.RangeRecurrencePickerActivity"
+            android:label="Range"
+            android:theme="@style/DialogActivityTheme" />
+
     </application>
 </manifest>
