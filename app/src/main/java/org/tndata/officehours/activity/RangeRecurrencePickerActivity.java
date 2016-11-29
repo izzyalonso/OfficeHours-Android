@@ -27,6 +27,8 @@ import java.util.Calendar;
 public class RangeRecurrencePickerActivity extends AppCompatActivity implements View.OnClickListener{
     private static final String MC_KEY = "org.tndata.officehours.RRP.MultipleChoice";
 
+    public static final String RESULT_KEY = "org.tndata.officehours.RP.Result";
+
 
     public static Intent getIntent(@NonNull Context context, boolean multipleChoice){
         return new Intent(context, RangeRecurrencePickerActivity.class)
@@ -60,6 +62,7 @@ public class RangeRecurrencePickerActivity extends AppCompatActivity implements 
 
         binding.rrpFrom.setOnClickListener(this);
         binding.rrpTo.setOnClickListener(this);
+        binding.rrpDone.setOnClickListener(this);
 
         fromHour = -1;
         fromMinute = -1;
@@ -77,6 +80,10 @@ public class RangeRecurrencePickerActivity extends AppCompatActivity implements 
 
             case R.id.rrp_to:
                 selectTime(toHour, toMinute, binding.rrpTo);
+                break;
+
+            case R.id.rrp_done:
+                done();
                 break;
         }
     }
@@ -105,5 +112,56 @@ public class RangeRecurrencePickerActivity extends AppCompatActivity implements 
                 target.setText(hour + ":" + minute);
             }
         }, currentHour, currentMinute, true).show();
+    }
+
+    private void done(){
+        String result = "";
+
+        if (multipleChoice){
+            if (binding.rrpCheckM.isChecked()){
+                result += "M";
+            }
+            if (binding.rrpCheckT.isChecked()){
+                result += "T";
+            }
+            if (binding.rrpCheckW.isChecked()){
+                result += "W";
+            }
+            if (binding.rrpCheckR.isChecked()){
+                result += "R";
+            }
+            if (binding.rrpCheckF.isChecked()){
+                result += "F";
+            }
+            if (binding.rrpCheckS.isChecked()){
+                result += "S";
+            }
+        }
+        else{
+            if (binding.rrpRadioM.isChecked()){
+                result += "M";
+            }
+            else if (binding.rrpRadioT.isChecked()){
+                result += "T";
+            }
+            else if (binding.rrpRadioW.isChecked()){
+                result += "W";
+            }
+            else if (binding.rrpRadioR.isChecked()){
+                result += "R";
+            }
+            else if (binding.rrpRadioF.isChecked()){
+                result += "F";
+            }
+            else if (binding.rrpRadioS.isChecked()){
+                result += "S";
+            }
+        }
+
+        result += " " + binding.rrpFrom.getText().toString().trim();
+        result += "-" + binding.rrpTo.getText().toString().trim();
+
+        setResult(RESULT_OK, new Intent().putExtra(RESULT_KEY, result));
+        finish();
     }
 }
