@@ -10,4 +10,10 @@
         android:titleCondensed="Add"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/add_logout"
+        android:title="Sign out"
+        android:titleCondensed="Sign out"
+        app:showAsAction="never" />
+
 </menu>

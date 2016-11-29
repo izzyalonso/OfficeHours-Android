@@ -1,17 +1,13 @@
 package org.tndata.officehours.activity;
 
-import android.content.Context;
+
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.databinding.ActivityScheduleBinding;
@@ -19,6 +15,7 @@ import org.tndata.officehours.model.Course;
 import org.tndata.officehours.R;
 import org.tndata.officehours.adapter.ScheduleAdapter;
 import org.tndata.officehours.model.StudentCourse;
+import org.tndata.officehours.model.User;
 import org.tndata.officehours.util.CustomItemDecoration;
 
 import java.util.ArrayList;
@@ -73,6 +70,11 @@ public class ScheduleActivity extends AppCompatActivity{
                 startActivityForResult(new Intent(this, AddCodeActivity.class), ADD_CODE_RC);
             }
             return true;
+        }
+        else if (item.getItemId() == R.id.add_logout){
+            User.deleteFromPreferences(this);
+            startActivity(new Intent(this, LauncherActivity.class));
+            finish();
         }
         return false;
     }
