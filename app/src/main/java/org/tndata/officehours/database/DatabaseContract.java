@@ -9,9 +9,9 @@ import android.provider.BaseColumns;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class DatabaseContract{
-    public static abstract class CourseEntry implements BaseColumns{
-        static final String TABLE = "Course";
+class DatabaseContract{
+    static abstract class InstructorCourseEntry implements BaseColumns{
+        static final String TABLE = "InstructorCourse";
 
         static final String ID = _ID;
         static final String CLOUD_ID = "cloud_id";
@@ -20,8 +20,8 @@ public class DatabaseContract{
         static final String CODE = "code";
     }
 
-    public static abstract class ScheduleEntry implements BaseColumns{
-        static final String TABLE = "Schedule";
+    static abstract class StudentCourseEntry implements BaseColumns{
+        static final String TABLE = "StudentCourse";
 
         static final String ID = _ID;
         static final String CLOUD_ID = "cloud_id";

@@ -12,13 +12,13 @@ import android.support.annotation.NonNull;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class DatabaseHelper extends SQLiteOpenHelper{
+class DatabaseHelper extends SQLiteOpenHelper{
     private static final String DATABASE_NAME = "office_hours.db";
 
     //Initial version, TBD
     private static final int V1 = 1;
 
-    //Current version, V3
+    //Current version, V1
     private static final int CURRENT_VERSION = V1;
 
 
@@ -27,13 +27,14 @@ public class DatabaseHelper extends SQLiteOpenHelper{
      *
      * @param context a reference to the context.
      */
-    public DatabaseHelper(@NonNull Context context){
+    DatabaseHelper(@NonNull Context context){
         super(context, DATABASE_NAME, null, CURRENT_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db){
-
+        db.execSQL(InstructorCourseTableHandler.CREATE);
+        db.execSQL(StudentCourseTableHandler.CREATE);
     }
 
     @Override
