@@ -44,7 +44,7 @@
 
         <activity
             android:name=".activity.TimeSlotPickerActivity"
-            android:label="Range"
+            android:label="@string/time_slot_picker_label"
             android:theme="@style/DialogActivityTheme" />
 
     </application>

@@ -184,7 +184,7 @@ public class TimeSlotPickerActivity
                     toHour = hour;
                     toMinute = minute;
                 }
-                target.setText(hour + ":" + minute);
+                target.setText(hour + ":" + (minute < 10 ? "0" + minute : minute));
                 checkFromState();
             }
         }, currentHour, currentMinute, true).show();
@@ -302,6 +302,8 @@ public class TimeSlotPickerActivity
         frag = to.split(":");
         toHour = Integer.valueOf(frag[0]);
         toMinute = Integer.valueOf(frag[1]);
+
+        checkFromState();
     }
 
     /**

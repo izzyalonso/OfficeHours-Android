@@ -16,6 +16,7 @@
     <string name="on_boarding_error_email_invalid">Please, introduce a valid email address</string>
 
     <!-- TimeSlotPickerActivity -->
+    <string name="time_slot_picker_label">Pick a time</string>
     <string name="time_slot_picker_monday">M</string>
     <string name="time_slot_picker_tuesday">T</string>
     <string name="time_slot_picker_wednesday">W</string>
