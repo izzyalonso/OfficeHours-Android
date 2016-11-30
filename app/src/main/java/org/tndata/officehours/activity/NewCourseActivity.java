@@ -49,10 +49,10 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
             case R.id.new_course_time:
                 String time = binding.newCourseTime.getText().toString().trim();
                 if (time.isEmpty()){
-                    startActivityForResult(RangeRecurrencePickerActivity.getIntent(this, true), 555);
+                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, true), 555);
                 }
                 else{
-                    startActivityForResult(RangeRecurrencePickerActivity.getIntent(this, time, true), 555);
+                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, time, true), 555);
                 }
                 break;
 
@@ -65,7 +65,7 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if (requestCode == 555 && resultCode == RESULT_OK){
-            binding.newCourseTime.setText(data.getStringExtra(RangeRecurrencePickerActivity.RESULT_KEY));
+            binding.newCourseTime.setText(data.getStringExtra(TimeSlotPickerActivity.RESULT_KEY));
         }
     }
 

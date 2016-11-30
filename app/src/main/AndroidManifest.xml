@@ -43,7 +43,7 @@
             android:label="New Course" />
 
         <activity
-            android:name=".activity.RangeRecurrencePickerActivity"
+            android:name=".activity.TimeSlotPickerActivity"
             android:label="Range"
             android:theme="@style/DialogActivityTheme" />
 
