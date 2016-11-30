@@ -8,6 +8,9 @@ import android.support.annotation.Nullable;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -27,9 +30,9 @@ public class User{
     //Fields set during on boarding, some of these are pre-populated with Google's
     private AccountType accountType;
     private List<String> officeHours;
-    private String schoolEmail;
     private String firstName;
     private String lastName;
+    private String schoolEmail;
     private String phoneNumber;
     private boolean isOnBoardingComplete;
 
@@ -62,13 +65,17 @@ public class User{
         accountType = AccountType.TEACHER;
     }
 
-    public void setSchoolEmail(String schoolEmail){
-        this.schoolEmail = schoolEmail;
+    public void setOfficeHours(List<String> officeHours){
+        this.officeHours = officeHours;
     }
 
     public void setName(String firstName, String lastName){
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public void setSchoolEmail(String schoolEmail){
+        this.schoolEmail = schoolEmail;
     }
 
     public void setPhoneNumber(String phoneNumber){
@@ -103,8 +110,8 @@ public class User{
         return accountType == AccountType.TEACHER;
     }
 
-    public String getSchoolEmail(){
-        return schoolEmail;
+    public List<String> getOfficeHours(){
+        return officeHours;
     }
 
     public String getFirstName(){
@@ -113,6 +120,10 @@ public class User{
 
     public String getLastName(){
         return lastName;
+    }
+
+    public String getSchoolEmail(){
+        return schoolEmail;
     }
 
     public String getPhoneNumber(){
@@ -148,10 +159,18 @@ public class User{
         }
         else{
             editor.putString("user.accountType", accountType.getDescriptor());
+            if (accountType == AccountType.TEACHER){
+                String officeHoursCsv = ""
+                for (String officeHour:officeHours){
+                    officeHoursCsv += officeHour + ",";
+                }
+                officeHoursCsv = officeHoursCsv.substring(0, officeHoursCsv.length()-2);
+                editor.putString("user.officeHours", officeHoursCsv);
+            }
         }
-        editor.putString("user.schoolEmail", schoolEmail);
         editor.putString("user.firstName", firstName);
         editor.putString("user.lastName", lastName);
+        editor.putString("user.schoolEmail", schoolEmail);
         editor.putString("user.phoneNumber", phoneNumber);
         editor.putBoolean("user.isOnBoardingComplete", isOnBoardingComplete);
 
@@ -196,9 +215,13 @@ public class User{
         googleToken = preferences.getString("user.googleToken", "");
 
         accountType = AccountType.getAccountType(preferences.getString("user.accountType", ""));
-        schoolEmail = preferences.getString("user.schoolEmail", "");
+        if (accountType == AccountType.TEACHER){
+            String officeHoursCsv = preferences.getString("user.officeHours", "");
+            officeHours = new ArrayList<>(Arrays.asList(officeHoursCsv.split(",")));
+        }
         firstName = preferences.getString("user.firstName", "");
         lastName = preferences.getString("user.lastName", "");
+        schoolEmail = preferences.getString("user.schoolEmail", "");
         phoneNumber = preferences.getString("user.phoneNumber", "");
         isOnBoardingComplete = preferences.getBoolean("user.isOnBoardingComplete", false);
 
