@@ -160,7 +160,7 @@ public class User{
         else{
             editor.putString("user.accountType", accountType.getDescriptor());
             if (accountType == AccountType.TEACHER){
-                String officeHoursCsv = ""
+                String officeHoursCsv = "";
                 for (String officeHour:officeHours){
                     officeHoursCsv += officeHour + ",";
                 }

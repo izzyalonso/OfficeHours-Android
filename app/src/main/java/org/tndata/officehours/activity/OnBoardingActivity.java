@@ -155,6 +155,7 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
             binding.onBoardingError.setVisibility(View.VISIBLE);
         }
         else{
+            user.setOfficeHours(officeHours);
             user.setName(firstName, lastName);
             user.setSchoolEmail(email);
             user.setPhoneNumber(phone);
