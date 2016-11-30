@@ -7,11 +7,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.Button;
 
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityOnBoardingBinding;
 import org.tndata.officehours.model.User;
+
+import java.util.ArrayList;
 
 
 /**
@@ -21,9 +24,13 @@ import org.tndata.officehours.model.User;
  * @version 1.0.0
  */
 public class OnBoardingActivity extends AppCompatActivity implements View.OnClickListener{
+    private static final int TIME_SLOT_PICKER_RC = 2753;
+
+
     private ActivityOnBoardingBinding binding;
 
     private User user;
+    private ArrayList<String> officeHours;
 
 
     @Override
@@ -34,6 +41,7 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
         setSupportActionBar(binding.onBoardingToolbar.toolbar);
 
         user = ((OfficeHoursApp)getApplication()).getUser();
+        officeHours = new ArrayList<>();
 
         if (user.isStudent()){
             binding.onBoardingStudent.setChecked(true);
@@ -48,6 +56,7 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
         binding.onBoardingLastName.setText(user.getLastName());
         binding.onBoardingEmail.setText(user.getEmail());
 
+        binding.onBoardingOfficeHoursAdd.setOnClickListener(this);
         binding.onBoardingFinish.setOnClickListener(this);
     }
 
@@ -72,17 +81,43 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void displayForm(boolean includeTeacherFields){
-        binding.onBoardingFirstNameLayout.setVisibility(View.VISIBLE);
-        binding.onBoardingLastNameLayout.setVisibility(View.VISIBLE);
-        binding.onBoardingEmailLayout.setVisibility(View.VISIBLE);
-        binding.onBoardingPhoneLayout.setVisibility(View.VISIBLE);
+        if (includeTeacherFields){
+            binding.onBoardingOfficeHoursSection.setVisibility(View.VISIBLE);
+        }
+        else{
+            binding.onBoardingOfficeHoursSection.setVisibility(View.GONE);
+        }
+        binding.onBoardingPersonalInfoSection.setVisibility(View.VISIBLE);
         binding.onBoardingButtonContainer.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onClick(View view){
-        if (view.getId() == R.id.on_boarding_finish){
+        if (view.getId() == R.id.on_boarding_office_hours_add){
+            startActivityForResult(TimeSlotPickerActivity.getIntent(this, false), TIME_SLOT_PICKER_RC);
+        }
+        else if (view.getId() == R.id.on_boarding_finish){
             finishOnBoarding();
+        }
+        else{
+            int index = binding.onBoardingOfficeHours.indexOfChild(view);
+            binding.onBoardingOfficeHours.removeViewAt(index);
+            officeHours.remove(index);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == TIME_SLOT_PICKER_RC && resultCode == RESULT_OK){
+            String slot = data.getStringExtra(TimeSlotPickerActivity.RESULT_KEY);
+            Button button = new Button(this);
+            button.setText(slot);
+            button.setOnClickListener(this);
+            binding.onBoardingOfficeHours.addView(button);
+            officeHours.add(slot);
+        }
+        else{
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 

@@ -3,6 +3,9 @@
 
     <string name="on_boarding_label">Tell us about yourself</string>
     <string name="on_boarding_type_q">Are you a student or a teacher?</string>
+    <string name="on_boarding_office_hours_q">What are your office hours?</string>
+    <string name="on_boarding_office_hours_add">Add hours</string>
+    <string name="on_boarding_personal_info_q">Personal information</string>
     <string name="on_boarding_student">Student</string>
     <string name="on_boarding_teacher">Teacher</string>
     <string name="on_boarding_first_name">First name</string>

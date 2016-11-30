@@ -22,11 +22,15 @@ import java.util.Calendar;
  * @version 1.0.0
  */
 public class NewCourseActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener{
+    private static final int TIME_SLOT_PICKER_RC = 6286;
+
+
     private ActivityNewCourseBinding binding;
 
     private int expirationYear;
     private int expirationMonth;
     private int expirationDay;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
@@ -49,10 +53,10 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
             case R.id.new_course_time:
                 String time = binding.newCourseTime.getText().toString().trim();
                 if (time.isEmpty()){
-                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, true), 555);
+                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, true), TIME_SLOT_PICKER_RC);
                 }
                 else{
-                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, time, true), 555);
+                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, time, true), TIME_SLOT_PICKER_RC);
                 }
                 break;
 
@@ -64,7 +68,7 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if (requestCode == 555 && resultCode == RESULT_OK){
+        if (requestCode == TIME_SLOT_PICKER_RC && resultCode == RESULT_OK){
             binding.newCourseTime.setText(data.getStringExtra(TimeSlotPickerActivity.RESULT_KEY));
         }
     }

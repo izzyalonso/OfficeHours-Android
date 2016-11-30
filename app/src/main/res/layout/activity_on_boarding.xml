@@ -4,7 +4,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="true" >
 
         <include
             layout="@layout/toolbar"
@@ -20,7 +21,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp" >
+                android:padding="16dp" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -49,69 +50,110 @@
 
                 </RadioGroup>
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/on_boarding_first_name_layout"
+                <LinearLayout
+                    android:id="@+id/on_boarding_office_hours_section"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:visibility="gone" >
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/on_boarding_first_name"
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textCapWords"
-                        android:hint="@string/on_boarding_first_name"/>
+                        android:textSize="18sp"
+                        android:text="@string/on_boarding_office_hours_q" />
 
-                </android.support.design.widget.TextInputLayout>
+                    <com.google.android.flexbox.FlexboxLayout
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:flexbox="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/on_boarding_office_hours"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        flexbox:flexWrap="wrap" />
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/on_boarding_last_name_layout"
+                    <Button
+                        android:id="@+id/on_boarding_office_hours_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_gravity="end"
+                        android:text="@string/on_boarding_office_hours_add"
+                        style="@style/FlatButton" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/on_boarding_personal_info_section"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:visibility="gone" >
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/on_boarding_last_name"
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textCapWords"
-                        android:hint="@string/on_boarding_last_name"/>
+                        android:textSize="18sp"
+                        android:text="@string/on_boarding_personal_info_q" />
 
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/on_boarding_email_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:visibility="gone" >
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/on_boarding_email"
+                    <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textCapWords"
-                        android:hint="@string/on_boarding_email" />
+                        android:layout_marginTop="8dp" >
 
-                </android.support.design.widget.TextInputLayout>
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/on_boarding_first_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapWords"
+                            android:hint="@string/on_boarding_first_name"/>
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/on_boarding_phone_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:visibility="gone" >
+                    </android.support.design.widget.TextInputLayout>
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/on_boarding_phone"
+                    <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textCapWords"
-                        android:hint="@string/on_boarding_phone"/>
+                        android:layout_marginTop="8dp" >
 
-                </android.support.design.widget.TextInputLayout>
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/on_boarding_last_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapWords"
+                            android:hint="@string/on_boarding_last_name"/>
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" >
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/on_boarding_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapWords"
+                            android:hint="@string/on_boarding_email" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" >
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/on_boarding_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapWords"
+                            android:hint="@string/on_boarding_phone"/>
+
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
 
                 <Space
                     android:layout_width="match_parent"
@@ -123,6 +165,7 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:gravity="end|center_vertical"
                     android:visibility="gone" >
 
