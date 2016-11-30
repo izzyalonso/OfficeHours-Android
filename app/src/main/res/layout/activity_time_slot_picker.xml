@@ -100,7 +100,7 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:textSize="16sp"
-                    android:text="M" />
+                    android:text="@string/time_slot_picker_monday" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -108,7 +108,7 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:textSize="16sp"
-                    android:text="T" />
+                    android:text="@string/time_slot_picker_tuesday" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -116,7 +116,7 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:textSize="16sp"
-                    android:text="W" />
+                    android:text="@string/time_slot_picker_wednesday" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -124,7 +124,7 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:textSize="16sp"
-                    android:text="R" />
+                    android:text="@string/time_slot_picker_thursday" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -132,7 +132,7 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:textSize="16sp"
-                    android:text="F" />
+                    android:text="@string/time_slot_picker_friday" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -140,7 +140,7 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:textSize="16sp"
-                    android:text="S" />
+                    android:text="@string/time_slot_picker_saturday" />
 
             </LinearLayout>
         </LinearLayout>
@@ -160,13 +160,13 @@
                 android:gravity="center_horizontal"
                 android:focusable="false"
                 android:longClickable="false"
-                android:hint="from" />
+                android:hint="@string/time_slot_picker_from" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:text="-" />
+                android:text="@string/time_slot_picker_dash" />
 
             <EditText
                 android:id="@+id/tsp_to"
@@ -176,7 +176,7 @@
                 android:gravity="center_horizontal"
                 android:focusable="false"
                 android:longClickable="false"
-                android:hint="to"/>
+                android:hint="@string/time_slot_picker_to"/>
 
         </LinearLayout>
 
@@ -187,7 +187,7 @@
             android:layout_marginTop="8dp"
             android:layout_gravity="end"
             android:enabled="false"
-            android:text="Done"
+            android:text="@string/time_slot_picker_done"
             style="@style/FlatButton" />
 
     </LinearLayout>

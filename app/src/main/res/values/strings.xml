@@ -15,4 +15,16 @@
     <string name="on_boarding_error_email">What\'s your email address?</string>
     <string name="on_boarding_error_email_invalid">Please, introduce a valid email address</string>
 
+    <!-- TimeSlotPickerActivity -->
+    <string name="time_slot_picker_monday">M</string>
+    <string name="time_slot_picker_tuesday">T</string>
+    <string name="time_slot_picker_wednesday">W</string>
+    <string name="time_slot_picker_thursday">R</string>
+    <string name="time_slot_picker_friday">F</string>
+    <string name="time_slot_picker_saturday">S</string>
+    <string name="time_slot_picker_from">from</string>
+    <string name="time_slot_picker_dash">-</string>
+    <string name="time_slot_picker_to">to</string>
+    <string name="time_slot_picker_done">done</string>
+
 </resources>
