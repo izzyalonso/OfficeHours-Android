@@ -37,11 +37,11 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
 
         if (user.isStudent()){
             binding.onBoardingStudent.setChecked(true);
-            binding.onBoardingInfoContainer.setVisibility(View.VISIBLE);
+            displayForm(false);
         }
         else if (user.isTeacher()){
             binding.onBoardingTeacher.setChecked(true);
-            binding.onBoardingInfoContainer.setVisibility(View.VISIBLE);
+            displayForm(true);
         }
 
         binding.onBoardingFirstName.setText(user.getFirstName());
@@ -52,16 +52,12 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void onTypeButtonClick(View view){
-        //If the user has not selected a type yet, show more options
-        if (!user.hasDefinedType()){
-            binding.onBoardingInfoContainer.setVisibility(View.VISIBLE);
-        }
-
         switch (view.getId()){
             case R.id.on_boarding_student:
                 if (!user.isStudent()){
                     user.setAsStudent();
                     user.writeToPreferences(this);
+                    displayForm(false);
                 }
                 break;
 
@@ -69,9 +65,18 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
                 if (!user.isTeacher()){
                     user.setAsTeacher();
                     user.writeToPreferences(this);
+                    displayForm(true);
                 }
                 break;
         }
+    }
+
+    private void displayForm(boolean includeTeacherFields){
+        binding.onBoardingFirstNameLayout.setVisibility(View.VISIBLE);
+        binding.onBoardingLastNameLayout.setVisibility(View.VISIBLE);
+        binding.onBoardingEmailLayout.setVisibility(View.VISIBLE);
+        binding.onBoardingPhoneLayout.setVisibility(View.VISIBLE);
+        binding.onBoardingButtonContainer.setVisibility(View.VISIBLE);
     }
 
     @Override
