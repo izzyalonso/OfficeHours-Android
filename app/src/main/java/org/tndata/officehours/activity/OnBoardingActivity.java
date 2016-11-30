@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class OnBoardingActivity extends AppCompatActivity implements View.OnClickListener{
+public class OnBoardingActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener{
     private static final int TIME_SLOT_PICKER_RC = 2753;
 
 
@@ -57,6 +58,7 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
         binding.onBoardingEmail.setText(user.getEmail());
 
         binding.onBoardingOfficeHoursAdd.setOnClickListener(this);
+        binding.onBoardingSchoolEmailDisable.setOnCheckedChangeListener(this);
         binding.onBoardingFinish.setOnClickListener(this);
     }
 
@@ -121,10 +123,21 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean checked){
+        if (checked){
+            binding.onBoardingSchoolEmail.setText(user.getEmail());
+        }
+        else{
+            binding.onBoardingSchoolEmail.setText("");
+        }
+        binding.onBoardingSchoolEmail.setEnabled(!checked);
+    }
+
     private void finishOnBoarding(){
         String firstName = binding.onBoardingFirstName.getText().toString().trim();
         String lastName = binding.onBoardingLastName.getText().toString().trim();
-        String email = binding.onBoardingEmail.getText().toString().trim();
+        String email = binding.onBoardingSchoolEmail.getText().toString().trim();
         String phone = binding.onBoardingPhone.getText().toString().trim();
 
         binding.onBoardingError.setVisibility(View.GONE);

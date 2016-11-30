@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+import java.util.List;
+
 
 /**
  * Model class for a user.
@@ -24,6 +26,7 @@ public class User{
 
     //Fields set during on boarding, some of these are pre-populated with Google's
     private AccountType accountType;
+    private List<String> officeHours;
     private String schoolEmail;
     private String firstName;
     private String lastName;

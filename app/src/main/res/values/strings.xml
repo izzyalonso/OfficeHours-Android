@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Office Hours</string>
 
+    <!-- OnBoardingActivity -->
     <string name="on_boarding_label">Tell us about yourself</string>
     <string name="on_boarding_type_q">Are you a student or a teacher?</string>
     <string name="on_boarding_office_hours_q">What are your office hours?</string>
@@ -10,7 +11,9 @@
     <string name="on_boarding_teacher">Teacher</string>
     <string name="on_boarding_first_name">First name</string>
     <string name="on_boarding_last_name">Last name</string>
-    <string name="on_boarding_email">Email address</string>
+    <string name="on_boarding_email">E-mail address</string>
+    <string name="on_boarding_school_email">School e-mail address</string>
+    <string name="on_boarding_school_email_disable">I prefer to use my regular email address</string>
     <string name="on_boarding_phone">Phone number (optional)</string>
     <string name="on_boarding_finish">Done</string>
 
