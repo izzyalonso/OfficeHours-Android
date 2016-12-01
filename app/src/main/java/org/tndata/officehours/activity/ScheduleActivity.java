@@ -14,7 +14,6 @@ import org.tndata.officehours.databinding.ActivityScheduleBinding;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.R;
 import org.tndata.officehours.adapter.ScheduleAdapter;
-import org.tndata.officehours.model.StudentCourse;
 import org.tndata.officehours.model.User;
 import org.tndata.officehours.util.CustomItemDecoration;
 
@@ -44,9 +43,9 @@ public class ScheduleActivity extends AppCompatActivity{
         setSupportActionBar(binding.scheduleToolbar.toolbar);
 
         List<Course> courses = new ArrayList<>();
-        courses.add(new StudentCourse("COMP1900", "MW 11:00-12:25", "Mr. Someone 3rd"));
-        courses.add(new StudentCourse("COMP2700", "TR 11:00-12:25", "Mr. Someone Jr"));
-        courses.add(new StudentCourse("COMP4421", "MWF 11:00-12:00", "Dr. Someone Sr"));
+        courses.add(new Course("COMP1900", "MW 11:00-12:25"));//, "Mr. Someone 3rd"));
+        courses.add(new Course("COMP2700", "TR 11:00-12:25"));//, "Mr. Someone Jr"));
+        courses.add(new Course("COMP4421", "MWF 11:00-12:00"));//, "Dr. Someone Sr"));
 
         adapter = new ScheduleAdapter(this, courses);
         binding.scheduleList.setLayoutManager(new LinearLayoutManager(this));
@@ -83,7 +82,7 @@ public class ScheduleActivity extends AppCompatActivity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if (requestCode == ADD_CODE_RC){
             if (resultCode == RESULT_OK){
-                StudentCourse course = data.getParcelableExtra(AddCodeActivity.COURSE_KEY);
+                Course course = data.getParcelableExtra(AddCodeActivity.COURSE_KEY);
                 adapter.addCourse(course);
             }
         }

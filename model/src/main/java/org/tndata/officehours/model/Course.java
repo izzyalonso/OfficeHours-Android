@@ -13,7 +13,7 @@ import com.google.gson.annotations.SerializedName;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public abstract class Course implements Parcelable{
+public class Course implements Parcelable{
     @SerializedName("id")
     private long id;
     @SerializedName("whatever")
@@ -22,6 +22,9 @@ public abstract class Course implements Parcelable{
     private String time;
     @SerializedName("expiration")
     private String expirationDate;
+
+    private String code;
+    private String instructor;
 
 
     /**
@@ -74,6 +77,29 @@ public abstract class Course implements Parcelable{
         return time;
     }
 
+    /**
+     * Expiration date getter.
+     *
+     * @return the expiration date.
+     */
+    public String getExpirationDate(){
+        return expirationDate;
+    }
+
+    /**
+     * Code getter.
+     *
+     * @return the course access code.
+     */
+    public String getCode(){
+        return code;
+    }
+
+    public String getInstructor(){
+        //TODO
+        return "";
+    }
+
 
     @Override
     public int describeContents(){
@@ -85,11 +111,27 @@ public abstract class Course implements Parcelable{
         parcel.writeLong(id);
         parcel.writeString(name);
         parcel.writeString(time);
+        parcel.writeString(expirationDate);
+        parcel.writeString(code);
     }
+
+    public static final Creator<Course> CREATOR = new Creator<Course>(){
+        @Override
+        public Course createFromParcel(Parcel src){
+            return new Course(src);
+        }
+
+        @Override
+        public Course[] newArray(int count){
+            return new Course[count];
+        }
+    };
 
     protected Course(Parcel src){
         id = src.readLong();
         name = src.readString();
         time = src.readString();
+        expirationDate = src.readString();
+        code = src.readString();
     }
 }

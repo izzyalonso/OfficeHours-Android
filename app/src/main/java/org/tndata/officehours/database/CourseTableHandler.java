@@ -7,46 +7,52 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.support.annotation.NonNull;
 
-import org.tndata.officehours.database.DatabaseContract.InstructorCourseEntry;
-import org.tndata.officehours.model.InstructorCourse;
+import org.tndata.officehours.database.DatabaseContract.CourseEntry;
+import org.tndata.officehours.model.Course;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 /**
- * Table handler for instructor courses.
+ * Table handler for courses.
  *
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class InstructorCourseTableHandler extends TableHandler{
+public class CourseTableHandler extends TableHandler{
 
     /*---------*
      * QUERIES *
      *---------*/
 
-    static final String CREATE = "CREATE TABLE " + InstructorCourseEntry.TABLE + " ("
-            + InstructorCourseEntry.ID + " INTEGER PRIMARY KEY, "
-            + InstructorCourseEntry.CLOUD_ID + " INTEGER, "
-            + InstructorCourseEntry.NAME + " TEXT, "
-            + InstructorCourseEntry.TIME + " TEXT, "
-            + InstructorCourseEntry.CODE + " TEXT)";
+    static final String CREATE = "CREATE TABLE " + CourseEntry.TABLE + " ("
+            + CourseEntry.ID + " INTEGER PRIMARY KEY, "
+            + CourseEntry.CLOUD_ID + " INTEGER, "
+            + CourseEntry.NAME + " TEXT, "
+            + CourseEntry.TIME + " TEXT, "
+            + CourseEntry.EXPIRATION_DATE + " TEXT, "
+            + CourseEntry.CODE + " TEXT, "
+            + CourseEntry.INSTRUCTOR + " TEXT)";
 
-    private static final String INSERT = "INSERT INTO " + InstructorCourseEntry.TABLE + " ("
-            + InstructorCourseEntry.CLOUD_ID + ", "
-            + InstructorCourseEntry.NAME + ", "
-            + InstructorCourseEntry.TIME + ", "
-            + InstructorCourseEntry.CODE + ") "
-            + "VALUES (?, ?, ?, ?)";
+    private static final String INSERT = "INSERT INTO " + CourseEntry.TABLE + " ("
+            + CourseEntry.CLOUD_ID + ", "
+            + CourseEntry.NAME + ", "
+            + CourseEntry.TIME + ", "
+            + CourseEntry.EXPIRATION_DATE + ", "
+            + CourseEntry.CODE + ", "
+            + CourseEntry.INSTRUCTOR + ") "
+            + "VALUES (?, ?, ?, ?, ?, ?)";
 
-    private static final String UPDATE = "UPDATE " + InstructorCourseEntry.TABLE + " SET "
-            + InstructorCourseEntry.NAME + "=?, "
-            + InstructorCourseEntry.TIME + "=?, "
-            + InstructorCourseEntry.CODE + "=? "
-            + "WHERE " + InstructorCourseEntry.CLOUD_ID + "=?";
+    private static final String UPDATE = "UPDATE " + CourseEntry.TABLE + " SET "
+            + CourseEntry.NAME + "=?, "
+            + CourseEntry.TIME + "=?, "
+            + CourseEntry.EXPIRATION_DATE + "=?, "
+            + CourseEntry.CODE + "=?, "
+            + CourseEntry.INSTRUCTOR + "=? "
+            + "WHERE " + CourseEntry.CLOUD_ID + "=?";
 
-    private static final String SELECT = "SELECT * FROM " + InstructorCourseEntry.TABLE;
+    private static final String SELECT = "SELECT * FROM " + CourseEntry.TABLE;
 
 
     /**
@@ -54,7 +60,7 @@ public class InstructorCourseTableHandler extends TableHandler{
      *
      * @param context a reference to the context.
      */
-    public InstructorCourseTableHandler(@NonNull Context context){
+    public CourseTableHandler(@NonNull Context context){
         init(context);
     }
 
@@ -64,11 +70,11 @@ public class InstructorCourseTableHandler extends TableHandler{
      *---------*/
 
     /**
-     * Saves an InstructorCourse to the database.
+     * Saves a Course to the database.
      *
      * @param course the course to be saved.
      */
-    public void saveCourse(@NonNull InstructorCourse course){
+    public void saveCourse(@NonNull Course course){
         //Open a connection to the database
         SQLiteDatabase db = getDatabase();
 
@@ -77,7 +83,9 @@ public class InstructorCourseTableHandler extends TableHandler{
         stmt.bindLong(1, course.getId());
         stmt.bindString(2, course.getName());
         stmt.bindString(3, course.getTime());
-        stmt.bindString(4, course.getCode());
+        stmt.bindString(4, course.getExpirationDate());
+        stmt.bindString(5, course.getCode());
+        stmt.bindString(6, course.getInstructor());
 
         //Execute the query
         stmt.executeInsert();
@@ -91,13 +99,13 @@ public class InstructorCourseTableHandler extends TableHandler{
      *
      * @param courses the list of courses to be saved.
      */
-    public void saveCourses(@NonNull List<InstructorCourse> courses){
+    public void saveCourses(@NonNull List<Course> courses){
         //Retrieve a database, begin the transaction, and compile the query
         SQLiteDatabase db = getDatabase();
         db.beginTransaction();
         SQLiteStatement stmt = db.compileStatement(INSERT);
 
-        for (InstructorCourse course:courses){
+        for (Course course:courses){
             //Previous bindings (if any) are emptied
             stmt.clearBindings();
 
@@ -105,7 +113,9 @@ public class InstructorCourseTableHandler extends TableHandler{
             stmt.bindLong(1, course.getId());
             stmt.bindString(2, course.getName());
             stmt.bindString(3, course.getTime());
-            stmt.bindString(4, course.getCode());
+            stmt.bindString(4, course.getExpirationDate());
+            stmt.bindString(5, course.getCode());
+            stmt.bindString(6, course.getInstructor());
 
             //Execution
             stmt.executeInsert();
@@ -124,7 +134,7 @@ public class InstructorCourseTableHandler extends TableHandler{
      *
      * @param course the course to be updated.
      */
-    public void updateCourse(@NonNull InstructorCourse course){
+    public void updateCourse(@NonNull Course course){
         //Open a connection to the database
         SQLiteDatabase db = getDatabase();
 
@@ -132,8 +142,10 @@ public class InstructorCourseTableHandler extends TableHandler{
         SQLiteStatement stmt = db.compileStatement(UPDATE);
         stmt.bindString(1, course.getName());
         stmt.bindString(2, course.getTime());
-        stmt.bindString(3, course.getCode());
-        stmt.bindLong(4, course.getId());
+        stmt.bindString(3, course.getExpirationDate());
+        stmt.bindString(4, course.getCode());
+        stmt.bindString(5, course.getInstructor());
+        stmt.bindLong(6, course.getId());
 
         //Execute the query
         stmt.execute();
@@ -147,23 +159,22 @@ public class InstructorCourseTableHandler extends TableHandler{
      *
      * @return the list of courses currently stored in the database.
      */
-    public ArrayList<InstructorCourse> getCourses(){
+    public ArrayList<Course> getCourses(){
         //Open a readable database and execute the query
         SQLiteDatabase db = getDatabase();
         Cursor cursor = db.rawQuery(SELECT, null);
 
-        ArrayList<InstructorCourse> courses = new ArrayList<>();
+        ArrayList<Course> courses = new ArrayList<>();
 
         //If there are rows in the cursor returned by the query
         if (cursor.moveToFirst()){
             //For each item
             do{
                 //Create the Instructor course and add it to the list
-                courses.add(new InstructorCourse(
-                        getInt(cursor, InstructorCourseEntry.CLOUD_ID),
-                        getString(cursor, InstructorCourseEntry.NAME),
-                        getString(cursor, InstructorCourseEntry.TIME),
-                        getString(cursor, InstructorCourseEntry.CODE)
+                courses.add(new Course(
+                        getInt(cursor, CourseEntry.CLOUD_ID),
+                        getString(cursor, CourseEntry.NAME),
+                        getString(cursor, CourseEntry.TIME)
                 ));
             }
             //Move on until the cursor is empty

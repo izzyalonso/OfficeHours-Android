@@ -11,7 +11,6 @@ import org.tndata.officehours.model.Course;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.CardCourseBinding;
 import org.tndata.officehours.holder.CourseHolder;
-import org.tndata.officehours.model.StudentCourse;
 
 import java.util.List;
 
