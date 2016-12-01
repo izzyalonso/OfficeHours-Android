@@ -49,9 +49,9 @@ public class User{
         email = account.getEmail();
         googleToken = account.getIdToken();
         accountType = null; //Unknown yet
-        schoolEmail = email;
         firstName = account.getGivenName();
         lastName = account.getFamilyName();
+        schoolEmail = email;
         phoneNumber = "";
         isOnBoardingComplete = false;
         token = null;
@@ -159,12 +159,14 @@ public class User{
         }
         else{
             editor.putString("user.accountType", accountType.getDescriptor());
-            if (accountType == AccountType.TEACHER){
+            if (accountType == AccountType.TEACHER && officeHours != null){
                 String officeHoursCsv = "";
                 for (String officeHour:officeHours){
                     officeHoursCsv += officeHour + ",";
                 }
-                officeHoursCsv = officeHoursCsv.substring(0, officeHoursCsv.length()-2);
+                if (!officeHoursCsv.isEmpty()){
+                    officeHoursCsv = officeHoursCsv.substring(0, officeHoursCsv.length() - 2);
+                }
                 editor.putString("user.officeHours", officeHoursCsv);
             }
         }
@@ -217,7 +219,9 @@ public class User{
         accountType = AccountType.getAccountType(preferences.getString("user.accountType", ""));
         if (accountType == AccountType.TEACHER){
             String officeHoursCsv = preferences.getString("user.officeHours", "");
-            officeHours = new ArrayList<>(Arrays.asList(officeHoursCsv.split(",")));
+            if (!officeHoursCsv.isEmpty()){
+                officeHours = new ArrayList<>(Arrays.asList(officeHoursCsv.split(",")));
+            }
         }
         firstName = preferences.getString("user.firstName", "");
         lastName = preferences.getString("user.lastName", "");
