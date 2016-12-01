@@ -48,7 +48,7 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
         if (user != null){
             ((OfficeHoursApp)getApplication()).setUser(user);
             if (user.isOnBoardingComplete()){
-                startActivity(new Intent(this, ScheduleActivity.class));
+                loadData();
             }
             else{
                 startActivity(new Intent(this, OnBoardingActivity.class));
@@ -102,7 +102,7 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
     private void handleGoogleSignInResult(GoogleSignInResult result){
         if (result.isSuccess()){
             Log.i(TAG, "Sign in with google successful");
-            //TODO check if this account already exists in the backend
+            //TODO check if this account already exists in the backend, if so, load it
             User user = new User(result.getSignInAccount());
             user.writeToPreferences(this);
             ((OfficeHoursApp)getApplication()).setUser(user);
@@ -120,5 +120,10 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult){
         Log.e(TAG, "Couldn't connect to GoogleApiClient");
         binding.launcherGooogleSignIn.setEnabled(false);
+    }
+
+    private void loadData(){
+        //TODO Load from DB
+        startActivity(new Intent(this, ScheduleActivity.class));
     }
 }

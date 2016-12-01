@@ -15,7 +15,7 @@ import org.tndata.officehours.model.Course;
 
 
 /**
- * Lets the user decide whether this is the course they want to add to their schedule.
+ * Lets the user decide whether this is the course they want to add to their add.
  *
  * @author Ismael Alonso
  * @version 1.0.0

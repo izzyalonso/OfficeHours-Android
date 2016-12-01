@@ -2,7 +2,10 @@ package org.tndata.officehours;
 
 import android.app.Application;
 
+import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.User;
+
+import java.util.List;
 
 
 /**
@@ -13,6 +16,7 @@ import org.tndata.officehours.model.User;
  */
 public class OfficeHoursApp extends Application{
     private User user;
+    private List<Course> courses;
 
 
     public void setUser(User user){
@@ -21,5 +25,17 @@ public class OfficeHoursApp extends Application{
 
     public User getUser(){
         return user;
+    }
+
+    public void setCourses(List<Course> courses){
+        this.courses = courses;
+    }
+
+    public void addCourse(Course course){
+        courses.add(course);
+    }
+
+    public List<Course> getCourses(){
+        return courses;
     }
 }

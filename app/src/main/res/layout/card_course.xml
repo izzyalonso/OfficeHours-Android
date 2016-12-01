@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
-                android:text="@{course.getName()}" />
+                android:text="@{course.getDisplayName()}" />
 
             <TextView
                 android:id="@+id/course_time"
@@ -31,13 +31,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:text="@{course.getTime()}" />
-
-            <TextView
-                android:id="@+id/course_instructor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="@{course.getInstructor()}" />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

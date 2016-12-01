@@ -112,7 +112,7 @@ public class AddCodeActivity extends AppCompatActivity implements TextWatcher{
     }
 
     private void onCodeAccepted(){
-        course = new Course("MATH 3450", "TR 3:00-4:25", "Dr. Chili");
+        course = new Course("MATH 3450", "Some math class", "TR 3:00-4:25", "");
         startActivityForResult(AddCourseActivity.getIntent(this, course), ADD_COURSE_RC);
     }
 

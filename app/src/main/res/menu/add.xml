@@ -4,10 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/schedule_add"
+        android:id="@+id/add_add"
         android:icon="@drawable/ic_add_white_24dp"
         android:title="Add a course"
         android:titleCondensed="Add"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/add_logout"
+        android:title="Sign out"
+        android:titleCondensed="Sign out"
+        app:showAsAction="never" />
 
 </menu>
