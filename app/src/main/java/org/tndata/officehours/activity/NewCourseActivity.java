@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -66,7 +67,13 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
                 break;
 
             case R.id.new_course_done:
-
+                if (areFieldsSet()){
+                    binding.newCourseError.setVisibility(View.GONE);
+                    saveCourse();
+                }
+                else{
+                    binding.newCourseError.setVisibility(View.VISIBLE);
+                }
                 break;
         }
     }
@@ -95,5 +102,49 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
 
         String expiration = (expirationMonth+1) + "/" + expirationDay + "/" + expirationYear;
         binding.newCourseExpiration.setText(expiration);
+    }
+
+    private boolean areFieldsSet(){
+        if (binding.newCourseCode.getText().toString().trim().isEmpty()){
+            binding.newCourseError.setText(R.string.new_course_error_code);
+            return false;
+        }
+        else if (binding.newCourseName.getText().toString().trim().isEmpty()){
+            binding.newCourseError.setText(R.string.new_course_error_name);
+            return false;
+        }
+        else if (binding.newCourseTime.getText().toString().trim().isEmpty()){
+            binding.newCourseError.setText(R.string.new_course_error_meeting_time);
+            return false;
+        }
+        else if (binding.newCourseExpiration.getText().toString().trim().isEmpty()){
+            binding.newCourseError.setText(R.string.new_course_error_expiration_date);
+            return false;
+        }
+        return true;
+    }
+
+    private void saveCourse(){
+        setFormState(true);
+        new Handler().postDelayed(new Runnable(){
+            @Override
+            public void run(){
+                setFormState(false);
+            }
+        }, 2500);
+    }
+
+    private void setFormState(boolean loading){
+        binding.newCourseCode.setEnabled(!loading);
+        binding.newCourseName.setEnabled(!loading);
+        binding.newCourseTime.setEnabled(!loading);
+        binding.newCourseExpiration.setEnabled(!loading);
+        if (loading){
+            binding.newCourseProgress.setVisibility(View.VISIBLE);
+        }
+        else{
+            binding.newCourseProgress.setVisibility(View.GONE);
+        }
+        binding.newCourseDone.setEnabled(!loading);
     }
 }

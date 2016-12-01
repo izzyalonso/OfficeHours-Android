@@ -81,6 +81,15 @@ public class Course implements Parcelable{
     }
 
     /**
+     * Display name getter. Formatted <code>: <name>
+     *
+     * @return the display name of the course
+     */
+    public String getDisplayName(){
+        return code + ": " + name;
+    }
+
+    /**
      * Time getter.
      *
      * @return the time of the course.

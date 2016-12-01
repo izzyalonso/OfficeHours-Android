@@ -40,7 +40,7 @@
 
         <activity
             android:name=".activity.NewCourseActivity"
-            android:label="New Course" />
+            android:label="@string/new_course_label" />
 
         <activity
             android:name=".activity.TimeSlotPickerActivity"
