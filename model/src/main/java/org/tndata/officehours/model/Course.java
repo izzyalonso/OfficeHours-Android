@@ -16,6 +16,8 @@ import com.google.gson.annotations.SerializedName;
 public class Course implements Parcelable{
     @SerializedName("id")
     private long id;
+    @SerializedName("code")
+    private String code;
     @SerializedName("whatever")
     private String name;
     @SerializedName("whatever")
@@ -23,7 +25,7 @@ public class Course implements Parcelable{
     @SerializedName("expiration")
     private String expirationDate;
 
-    private String code;
+    private String accessCode;
     private String instructor;
 
 
@@ -33,8 +35,8 @@ public class Course implements Parcelable{
      * @param name the name of the course.
      * @param time the time of the course.
      */
-    public Course(String name, String time){
-        this(-1, name, time);
+    public Course(String code, String name, String time){
+        this(-1, code, name, time);
     }
 
     /**
@@ -44,8 +46,9 @@ public class Course implements Parcelable{
      * @param name the name of the course.
      * @param time the time of the course.
      */
-    public Course(long id, String name, String time){
+    public Course(long id, String code, String name, String time){
         this.id = id;
+        this.code = code;
         this.name = name;
         this.time = time;
     }
@@ -57,6 +60,15 @@ public class Course implements Parcelable{
      */
     public long getId(){
         return id;
+    }
+
+    /**
+     * Code getter.
+     *
+     * @return the course code.
+     */
+    public String getCode(){
+        return code;
     }
 
     /**
@@ -87,12 +99,12 @@ public class Course implements Parcelable{
     }
 
     /**
-     * Code getter.
+     * Access code getter.
      *
      * @return the course access code.
      */
-    public String getCode(){
-        return code;
+    public String getAccessCode(){
+        return accessCode;
     }
 
     public String getInstructor(){
@@ -112,7 +124,7 @@ public class Course implements Parcelable{
         parcel.writeString(name);
         parcel.writeString(time);
         parcel.writeString(expirationDate);
-        parcel.writeString(code);
+        parcel.writeString(accessCode);
     }
 
     public static final Creator<Course> CREATOR = new Creator<Course>(){
@@ -132,6 +144,6 @@ public class Course implements Parcelable{
         name = src.readString();
         time = src.readString();
         expirationDate = src.readString();
-        code = src.readString();
+        accessCode = src.readString();
     }
 }

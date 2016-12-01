@@ -15,10 +15,11 @@ class DatabaseContract{
 
         static final String ID = _ID;
         static final String CLOUD_ID = "cloud_id";
+        static final String CODE = "code";
         static final String NAME = "name";
         static final String TIME = "time";
         static final String EXPIRATION_DATE = "expiration_date";
-        static final String CODE = "code";
+        static final String ACCESS_CODE = "access_code";
         static final String INSTRUCTOR = "instructor";
     }
 }

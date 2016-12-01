@@ -41,6 +41,7 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
 
         binding.newCourseTime.setOnClickListener(this);
         binding.newCourseExpiration.setOnClickListener(this);
+        binding.newCourseDone.setOnClickListener(this);
 
         expirationYear = -1;
         expirationMonth = -1;
@@ -62,6 +63,10 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
 
             case R.id.new_course_expiration:
                 pickExpiration();
+                break;
+
+            case R.id.new_course_done:
+
                 break;
         }
     }
