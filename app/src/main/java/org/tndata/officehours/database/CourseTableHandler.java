@@ -181,7 +181,8 @@ public class CourseTableHandler extends TableHandler{
                         getInt(cursor, CourseEntry.CLOUD_ID),
                         getString(cursor, CourseEntry.CODE),
                         getString(cursor, CourseEntry.NAME),
-                        getString(cursor, CourseEntry.TIME)
+                        getString(cursor, CourseEntry.TIME),
+                        getString(cursor, CourseEntry.EXPIRATION_DATE)
                 ));
             }
             //Move on until the cursor is empty

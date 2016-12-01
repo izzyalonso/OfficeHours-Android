@@ -29,6 +29,7 @@ import java.util.List;
  */
 public class ScheduleActivity extends AppCompatActivity{
     private static final int ADD_CODE_RC = 7529;
+    private static final int NEW_COURSE_RC = 6392;
 
 
     private ActivityScheduleBinding binding;
@@ -43,9 +44,9 @@ public class ScheduleActivity extends AppCompatActivity{
         setSupportActionBar(binding.scheduleToolbar.toolbar);
 
         List<Course> courses = new ArrayList<>();
-        courses.add(new Course("COMP1900", "Intro to cs", "MW 11:00-12:25"));//, "Mr. Someone 3rd"));
-        courses.add(new Course("COMP2700", "Discrete math",  "TR 11:00-12:25"));//, "Mr. Someone Jr"));
-        courses.add(new Course("COMP4421", "Some higher level course", "MWF 11:00-12:00"));//, "Dr. Someone Sr"));
+        courses.add(new Course("COMP1900", "Intro to cs", "MW 11:00-12:25", ""));//, "Mr. Someone 3rd"));
+        courses.add(new Course("COMP2700", "Discrete math",  "TR 11:00-12:25", ""));//, "Mr. Someone Jr"));
+        courses.add(new Course("COMP4421", "Some higher level course", "MWF 11:00-12:00", ""));//, "Dr. Someone Sr"));
 
         adapter = new ScheduleAdapter(this, courses);
         binding.scheduleList.setLayoutManager(new LinearLayoutManager(this));
@@ -63,7 +64,7 @@ public class ScheduleActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item){
         if (item.getItemId() == R.id.add_add){
             if (((OfficeHoursApp)getApplication()).getUser().isTeacher()){
-                startActivity(new Intent(this, NewCourseActivity.class));
+                startActivityForResult(new Intent(this, NewCourseActivity.class), NEW_COURSE_RC);
             }
             else{
                 startActivityForResult(new Intent(this, AddCodeActivity.class), ADD_CODE_RC);
@@ -85,6 +86,10 @@ public class ScheduleActivity extends AppCompatActivity{
                 Course course = data.getParcelableExtra(AddCodeActivity.COURSE_KEY);
                 adapter.addCourse(course);
             }
+        }
+        else if (requestCode == NEW_COURSE_RC){
+            Course course = data.getParcelableExtra(NewCourseActivity.RESULT_KEY);
+            adapter.addCourse(course);
         }
         else{
             super.onActivityResult(requestCode, resultCode, data);

@@ -35,8 +35,8 @@ public class Course implements Parcelable{
      * @param name the name of the course.
      * @param time the time of the course.
      */
-    public Course(String code, String name, String time){
-        this(-1, code, name, time);
+    public Course(String code, String name, String time, String expirationDate){
+        this(-1, code, name, time, expirationDate);
     }
 
     /**
@@ -46,11 +46,12 @@ public class Course implements Parcelable{
      * @param name the name of the course.
      * @param time the time of the course.
      */
-    public Course(long id, String code, String name, String time){
+    public Course(long id, String code, String name, String time, String expirationDate){
         this.id = id;
         this.code = code;
         this.name = name;
         this.time = time;
+        this.expirationDate = expirationDate;
     }
 
     /**
@@ -130,6 +131,7 @@ public class Course implements Parcelable{
     @Override
     public void writeToParcel(Parcel parcel, int flags){
         parcel.writeLong(id);
+        parcel.writeString(code);
         parcel.writeString(name);
         parcel.writeString(time);
         parcel.writeString(expirationDate);
@@ -150,6 +152,7 @@ public class Course implements Parcelable{
 
     protected Course(Parcel src){
         id = src.readLong();
+        code = src.readString();
         name = src.readString();
         time = src.readString();
         expirationDate = src.readString();

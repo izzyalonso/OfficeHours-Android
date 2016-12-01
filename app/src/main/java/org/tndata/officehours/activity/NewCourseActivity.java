@@ -12,6 +12,7 @@ import android.widget.DatePicker;
 
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityNewCourseBinding;
+import org.tndata.officehours.model.Course;
 
 import java.util.Calendar;
 
@@ -24,6 +25,8 @@ import java.util.Calendar;
  */
 public class NewCourseActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener{
     private static final int TIME_SLOT_PICKER_RC = 6286;
+
+    public static final String RESULT_KEY = "org.tndata.officehours.NewCourse.Course";
 
 
     private ActivityNewCourseBinding binding;
@@ -129,7 +132,14 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run(){
-                setFormState(false);
+                Course course = new Course(
+                        binding.newCourseCode.getText().toString().trim(),
+                        binding.newCourseName.getText().toString().trim(),
+                        binding.newCourseTime.getText().toString().trim(),
+                        binding.newCourseExpiration.getText().toString().trim()
+                );
+                setResult(RESULT_OK, new Intent().putExtra(RESULT_KEY, course));
+                finish();
             }
         }, 2500);
     }
