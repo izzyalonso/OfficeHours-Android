@@ -47,4 +47,20 @@
     <string name="time_slot_picker_to">to</string>
     <string name="time_slot_picker_done">done</string>
 
+    <!-- AddCourseActivity -->
+    <string name="add_course_label">Add to my schedule</string>
+    <string name="add_course_verify">Please, verify this is your course</string>
+    <string name="add_course_course">Course</string>
+    <string name="add_course_meeting_time">Meeting time</string>
+    <string name="add_course_last_meeting">Last meeting date</string>
+    <string name="add_course_instructor">Instructor</string>
+    <string name="add_course_add">Add</string>
+
+    <!-- CourseActivity -->
+    <string name="course_info_header">Course information</string>
+    <string name="course_meeting_time">Meeting time</string>
+    <string name="course_last_meeting">Last meeting date</string>
+    <string name="course_instructor">Instructor</string>
+    <string name="course_access_code">Access code</string>
+
 </resources>

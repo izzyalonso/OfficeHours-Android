@@ -108,11 +108,11 @@ public class AddCodeActivity extends AppCompatActivity implements TextWatcher{
                     onInvalidCode();
                 }
             }
-        }, 5000);
+        }, 2000);
     }
 
     private void onCodeAccepted(){
-        course = new Course("MATH 3450", "Some math class", "TR 3:00-4:25", "");
+        course = new Course("MATH 3450", "Some math class", "TR 3:00-4:25", "12/25/2016", "Mr. Algaebra");
         startActivityForResult(AddCourseActivity.getIntent(this, course), ADD_COURSE_RC);
     }
 

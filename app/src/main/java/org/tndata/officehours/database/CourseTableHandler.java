@@ -31,28 +31,28 @@ public class CourseTableHandler extends TableHandler{
             + CourseEntry.CLOUD_ID + " INTEGER, "
             + CourseEntry.CODE + " TEXT, "
             + CourseEntry.NAME + " TEXT, "
-            + CourseEntry.TIME + " TEXT, "
+            + CourseEntry.MEETING_TIME + " TEXT, "
             + CourseEntry.EXPIRATION_DATE + " TEXT, "
             + CourseEntry.ACCESS_CODE + " TEXT, "
-            + CourseEntry.INSTRUCTOR + " TEXT)";
+            + CourseEntry.INSTRUCTOR_NAME + " TEXT)";
 
     private static final String INSERT = "INSERT INTO " + CourseEntry.TABLE + " ("
             + CourseEntry.CLOUD_ID + ", "
             + CourseEntry.CODE + ", "
             + CourseEntry.NAME + ", "
-            + CourseEntry.TIME + ", "
+            + CourseEntry.MEETING_TIME + ", "
             + CourseEntry.EXPIRATION_DATE + ", "
             + CourseEntry.ACCESS_CODE + ", "
-            + CourseEntry.INSTRUCTOR + ") "
+            + CourseEntry.INSTRUCTOR_NAME + ") "
             + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     private static final String UPDATE = "UPDATE " + CourseEntry.TABLE + " SET "
             + CourseEntry.CODE + "=?, "
             + CourseEntry.NAME + "=?, "
-            + CourseEntry.TIME + "=?, "
+            + CourseEntry.MEETING_TIME + "=?, "
             + CourseEntry.EXPIRATION_DATE + "=?, "
             + CourseEntry.ACCESS_CODE + "=?, "
-            + CourseEntry.INSTRUCTOR + "=? "
+            + CourseEntry.INSTRUCTOR_NAME + "=? "
             + "WHERE " + CourseEntry.CLOUD_ID + "=?";
 
     private static final String SELECT = "SELECT * FROM " + CourseEntry.TABLE;
@@ -86,10 +86,10 @@ public class CourseTableHandler extends TableHandler{
         stmt.bindLong(1, course.getId());
         stmt.bindString(2, course.getCode());
         stmt.bindString(3, course.getName());
-        stmt.bindString(4, course.getTime());
+        stmt.bindString(4, course.getMeetingTime());
         stmt.bindString(5, course.getExpirationDate());
         stmt.bindString(6, course.getAccessCode());
-        stmt.bindString(7, course.getInstructor());
+        stmt.bindString(7, course.getInstructorName());
 
         //Execute the query
         stmt.executeInsert();
@@ -117,10 +117,10 @@ public class CourseTableHandler extends TableHandler{
             stmt.bindLong(1, course.getId());
             stmt.bindString(2, course.getCode());
             stmt.bindString(3, course.getName());
-            stmt.bindString(4, course.getTime());
+            stmt.bindString(4, course.getMeetingTime());
             stmt.bindString(5, course.getExpirationDate());
             stmt.bindString(6, course.getAccessCode());
-            stmt.bindString(7, course.getInstructor());
+            stmt.bindString(7, course.getInstructorName());
 
             //Execution
             stmt.executeInsert();
@@ -147,10 +147,10 @@ public class CourseTableHandler extends TableHandler{
         SQLiteStatement stmt = db.compileStatement(UPDATE);
         stmt.bindString(1, course.getCode());
         stmt.bindString(2, course.getName());
-        stmt.bindString(3, course.getTime());
+        stmt.bindString(3, course.getMeetingTime());
         stmt.bindString(4, course.getExpirationDate());
         stmt.bindString(5, course.getAccessCode());
-        stmt.bindString(6, course.getInstructor());
+        stmt.bindString(6, course.getInstructorName());
         stmt.bindLong(7, course.getId());
 
         //Execute the query
@@ -181,8 +181,10 @@ public class CourseTableHandler extends TableHandler{
                         getInt(cursor, CourseEntry.CLOUD_ID),
                         getString(cursor, CourseEntry.CODE),
                         getString(cursor, CourseEntry.NAME),
-                        getString(cursor, CourseEntry.TIME),
-                        getString(cursor, CourseEntry.EXPIRATION_DATE)
+                        getString(cursor, CourseEntry.MEETING_TIME),
+                        getString(cursor, CourseEntry.EXPIRATION_DATE),
+                        getString(cursor, CourseEntry.ACCESS_CODE),
+                        getString(cursor, CourseEntry.INSTRUCTOR_NAME)
                 ));
             }
             //Move on until the cursor is empty

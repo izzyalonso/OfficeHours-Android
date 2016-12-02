@@ -187,7 +187,7 @@ public class TimeSlotPickerActivity
                 target.setText(hour + ":" + (minute < 10 ? "0" + minute : minute));
                 checkFromState();
             }
-        }, currentHour, currentMinute, true).show();
+        }, currentHour, currentMinute, false).show();
     }
 
     /**

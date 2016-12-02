@@ -15,7 +15,7 @@ import org.tndata.officehours.model.Course;
 
 
 /**
- * Lets the user decide whether this is the course they want to add to their add.
+ * Lets the user decide whether this is the course they want to add to their schedule.
  *
  * @author Ismael Alonso
  * @version 1.0.0
@@ -29,12 +29,10 @@ public class AddCourseActivity extends AppCompatActivity implements View.OnClick
     }
 
 
-    private ActivityAddCourseBinding binding;
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        ActivityAddCourseBinding binding;
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_course);
 
         setSupportActionBar(binding.addCourseToolbar.toolbar);

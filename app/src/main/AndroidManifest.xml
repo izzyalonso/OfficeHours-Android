@@ -36,7 +36,7 @@
 
         <activity
             android:name=".activity.AddCourseActivity"
-            android:label="Add to schedule" />
+            android:label="@string/add_course_label" />
 
         <activity
             android:name=".activity.NewCourseActivity"
@@ -46,6 +46,8 @@
             android:name=".activity.TimeSlotPickerActivity"
             android:label="@string/time_slot_picker_label"
             android:theme="@style/DialogActivityTheme" />
+
+        <activity android:name=".activity.CourseActivity" />
 
     </application>
 </manifest>

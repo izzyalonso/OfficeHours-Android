@@ -17,14 +17,6 @@
             android:textAllCaps="false"
             android:background="@drawable/btn_google_sign_in" />
 
-        <Button
-            android:id="@+id/launcher_proceed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_gravity="center_horizontal"
-            android:text="schedule" />
-
         <ProgressBar
             android:layout_width="35dp"
             android:layout_height="35dp"
