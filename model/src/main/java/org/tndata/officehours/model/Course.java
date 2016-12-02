@@ -21,22 +21,22 @@ public class Course implements Parcelable{
     @SerializedName("whatever")
     private String name;
     @SerializedName("whatever")
-    private String time;
+    private String meetingTime;
     @SerializedName("expiration")
     private String expirationDate;
 
     private String accessCode;
-    private String instructor;
+    private String instructorName;
 
 
     /**
      * Constructor.
      *
      * @param name the name of the course.
-     * @param time the time of the course.
+     * @param meetingTime the meetingTime of the course.
      */
-    public Course(String code, String name, String time, String expirationDate){
-        this(-1, code, name, time, expirationDate);
+    public Course(String code, String name, String meetingTime, String expirationDate){
+        this(-1, code, name, meetingTime, expirationDate);
     }
 
     /**
@@ -44,13 +44,13 @@ public class Course implements Parcelable{
      *
      * @param id the id of the course.
      * @param name the name of the course.
-     * @param time the time of the course.
+     * @param meetingTime the meetingTime of the course.
      */
-    public Course(long id, String code, String name, String time, String expirationDate){
+    public Course(long id, String code, String name, String meetingTime, String expirationDate){
         this.id = id;
         this.code = code;
         this.name = name;
-        this.time = time;
+        this.meetingTime = meetingTime;
         this.expirationDate = expirationDate;
     }
 
@@ -91,12 +91,12 @@ public class Course implements Parcelable{
     }
 
     /**
-     * Time getter.
+     * Meeting time getter.
      *
-     * @return the time of the course.
+     * @return the meeting time of the course.
      */
-    public String getTime(){
-        return time;
+    public String getMeetingTime(){
+        return meetingTime;
     }
 
     /**
@@ -117,7 +117,7 @@ public class Course implements Parcelable{
         return accessCode;
     }
 
-    public String getInstructor(){
+    public String getInstructorName(){
         //TODO
         return "";
     }
@@ -133,7 +133,7 @@ public class Course implements Parcelable{
         parcel.writeLong(id);
         parcel.writeString(code);
         parcel.writeString(name);
-        parcel.writeString(time);
+        parcel.writeString(meetingTime);
         parcel.writeString(expirationDate);
         parcel.writeString(accessCode);
     }
@@ -154,7 +154,7 @@ public class Course implements Parcelable{
         id = src.readLong();
         code = src.readString();
         name = src.readString();
-        time = src.readString();
+        meetingTime = src.readString();
         expirationDate = src.readString();
         accessCode = src.readString();
     }

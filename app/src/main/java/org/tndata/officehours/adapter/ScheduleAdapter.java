@@ -21,13 +21,27 @@ import java.util.List;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class ScheduleAdapter extends RecyclerView.Adapter<CourseHolder>{
+public class ScheduleAdapter
+        extends RecyclerView.Adapter<CourseHolder>
+        implements CourseHolder.Listener{
+
     private Context context;
+    private Listener listener;
     private List<Course> courses;
 
 
-    public ScheduleAdapter(@NonNull Context context, @NonNull List<Course> courses){
+    /**
+     * Constructor.
+     *
+     * @param context a reference to the context.
+     * @param listener the listener object.
+     * @param courses the list of courses to be initially displayed.
+     */
+    public ScheduleAdapter(
+            @NonNull Context context, @NonNull Listener listener, @NonNull List<Course> courses
+    ){
         this.context = context;
+        this.listener = listener;
         this.courses = courses;
     }
 
@@ -41,7 +55,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<CourseHolder>{
         LayoutInflater inflater = LayoutInflater.from(context);
         CardCourseBinding binding;
         binding = DataBindingUtil.inflate(inflater, R.layout.card_course, parent, false);
-        return new CourseHolder(binding);
+        return new CourseHolder(binding, this);
     }
 
     @Override
@@ -53,5 +67,26 @@ public class ScheduleAdapter extends RecyclerView.Adapter<CourseHolder>{
         courses.add(course);
         notifyItemChanged(courses.size()-2);
         notifyItemInserted(courses.size()-1);
+    }
+
+    @Override
+    public void onItemTapped(int position){
+        listener.onCourseSelected(courses.get(position));
+    }
+
+
+    /**
+     * Listener interface for the schedule adapter.
+     *
+     * @author Ismael Alonso
+     * @version 1.0.0
+     */
+    public interface Listener{
+        /**
+         * Called when a course is tapped.
+         *
+         * @param course the tapped course.
+         */
+        void onCourseSelected(@NonNull Course course);
     }
 }

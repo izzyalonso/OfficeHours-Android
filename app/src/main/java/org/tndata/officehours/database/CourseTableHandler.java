@@ -86,10 +86,10 @@ public class CourseTableHandler extends TableHandler{
         stmt.bindLong(1, course.getId());
         stmt.bindString(2, course.getCode());
         stmt.bindString(3, course.getName());
-        stmt.bindString(4, course.getTime());
+        stmt.bindString(4, course.getMeetingTime());
         stmt.bindString(5, course.getExpirationDate());
         stmt.bindString(6, course.getAccessCode());
-        stmt.bindString(7, course.getInstructor());
+        stmt.bindString(7, course.getInstructorName());
 
         //Execute the query
         stmt.executeInsert();
@@ -117,10 +117,10 @@ public class CourseTableHandler extends TableHandler{
             stmt.bindLong(1, course.getId());
             stmt.bindString(2, course.getCode());
             stmt.bindString(3, course.getName());
-            stmt.bindString(4, course.getTime());
+            stmt.bindString(4, course.getMeetingTime());
             stmt.bindString(5, course.getExpirationDate());
             stmt.bindString(6, course.getAccessCode());
-            stmt.bindString(7, course.getInstructor());
+            stmt.bindString(7, course.getInstructorName());
 
             //Execution
             stmt.executeInsert();
@@ -147,10 +147,10 @@ public class CourseTableHandler extends TableHandler{
         SQLiteStatement stmt = db.compileStatement(UPDATE);
         stmt.bindString(1, course.getCode());
         stmt.bindString(2, course.getName());
-        stmt.bindString(3, course.getTime());
+        stmt.bindString(3, course.getMeetingTime());
         stmt.bindString(4, course.getExpirationDate());
         stmt.bindString(5, course.getAccessCode());
-        stmt.bindString(6, course.getInstructor());
+        stmt.bindString(6, course.getInstructorName());
         stmt.bindLong(7, course.getId());
 
         //Execute the query
