@@ -30,7 +30,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
-                    android:text="Course information" />
+                    android:text="@string/course_info_header" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                     android:layout_marginTop="8dp"
                     android:textColor="@color/accent"
                     android:textSize="14sp"
-                    android:text="Meeting time" />
+                    android:text="@string/course_meeting_time" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -53,7 +53,7 @@
                     android:layout_marginTop="8dp"
                     android:textColor="@color/accent"
                     android:textSize="14sp"
-                    android:text="Last course meeting" />
+                    android:text="@string/course_last_meeting" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -68,7 +68,7 @@
                     android:layout_marginTop="8dp"
                     android:textColor="@color/accent"
                     android:textSize="14sp"
-                    android:text="Instructor" />
+                    android:text="@string/course_instructor" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -84,7 +84,7 @@
                     android:layout_marginTop="8dp"
                     android:textColor="@color/accent"
                     android:textSize="14sp"
-                    android:text="Access code" />
+                    android:text="@string/course_access_code" />
 
                 <TextView
                     android:id="@+id/course_access_code"

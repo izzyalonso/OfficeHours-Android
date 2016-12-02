@@ -47,4 +47,11 @@
     <string name="time_slot_picker_to">to</string>
     <string name="time_slot_picker_done">done</string>
 
+    <!-- CourseActivity -->
+    <string name="course_info_header">Course information</string>
+    <string name="course_meeting_time">Meeting time</string>
+    <string name="course_last_meeting">Last meeting date</string>
+    <string name="course_instructor">Instructor</string>
+    <string name="course_access_code">Access code</string>
+
 </resources>
