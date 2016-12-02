@@ -10,9 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.DatePicker;
 
+import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityNewCourseBinding;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.User;
 
 import java.util.Calendar;
 
@@ -132,11 +134,13 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run(){
+                User user = ((OfficeHoursApp)getApplication()).getUser();
                 Course course = new Course(
                         binding.newCourseCode.getText().toString().trim(),
                         binding.newCourseName.getText().toString().trim(),
                         binding.newCourseTime.getText().toString().trim(),
-                        binding.newCourseExpiration.getText().toString().trim()
+                        binding.newCourseExpiration.getText().toString().trim(),
+                        ((OfficeHoursApp)getApplication()).getUser().getName()
                 );
                 setResult(RESULT_OK, new Intent().putExtra(RESULT_KEY, course));
                 finish();

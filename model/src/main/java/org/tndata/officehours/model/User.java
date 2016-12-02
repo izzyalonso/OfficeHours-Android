@@ -121,6 +121,10 @@ public class User{
         return lastName;
     }
 
+    public String getName(){
+        return firstName + " " + lastName;
+    }
+
     public String getSchoolEmail(){
         return schoolEmail;
     }
