@@ -89,8 +89,10 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
             }
         }
         else if (requestCode == NEW_COURSE_RC){
-            Course course = data.getParcelableExtra(NewCourseActivity.RESULT_KEY);
-            adapter.addCourse(course);
+            if (resultCode == RESULT_OK){
+                Course course = data.getParcelableExtra(NewCourseActivity.RESULT_KEY);
+                adapter.addCourse(course);
+            }
         }
         else{
             super.onActivityResult(requestCode, resultCode, data);

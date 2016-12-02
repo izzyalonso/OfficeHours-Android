@@ -26,16 +26,16 @@
     <string name="new_course_header">Enter the relevant course information</string>
     <string name="new_course_code_hint">Code (ie. ENGL 1010)</string>
     <string name="new_course_name_hint">Name (ie. English Composition)</string>
-    <string name="new_course_meeting_time_hint">Meeting meetingTime</string>
+    <string name="new_course_meeting_time_hint">Meeting time</string>
     <string name="new_course_expiration_date_hint">Expiration date</string>
     <string name="new_course_error_code">Introduce a code</string>
     <string name="new_course_error_name">Introduce a name</string>
-    <string name="new_course_error_meeting_time">Introduce a meeting meetingTime</string>
+    <string name="new_course_error_meeting_time">Introduce a meeting time</string>
     <string name="new_course_error_expiration_date">Introduce an expiration date</string>
     <string name="new_course_create">Create</string>
 
     <!-- TimeSlotPickerActivity -->
-    <string name="time_slot_picker_label">Pick a meetingTime</string>
+    <string name="time_slot_picker_label">Pick a time</string>
     <string name="time_slot_picker_monday">M</string>
     <string name="time_slot_picker_tuesday">T</string>
     <string name="time_slot_picker_wednesday">W</string>
