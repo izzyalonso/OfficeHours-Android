@@ -108,7 +108,7 @@ public class AddCodeActivity extends AppCompatActivity implements TextWatcher{
                     onInvalidCode();
                 }
             }
-        }, 5000);
+        }, 2000);
     }
 
     private void onCodeAccepted(){
