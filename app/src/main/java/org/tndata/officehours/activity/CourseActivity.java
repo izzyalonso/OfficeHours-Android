@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
+import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityCourseBinding;
 import org.tndata.officehours.model.Course;
@@ -39,13 +41,14 @@ public class CourseActivity extends AppCompatActivity{
         binding = DataBindingUtil.setContentView(this, R.layout.activity_course);
 
         course = getIntent().getParcelableExtra(COURSE_KEY);
+        binding.setCourse(course);
 
         binding.courseToolbar.toolbar.setTitle(course.getDisplayName());
         setSupportActionBar(binding.courseToolbar.toolbar);
 
-        binding.courseMeetingTime.setText("Course meets " + course.getMeetingTime());
-        binding.courseExpirationDate.setText("Course finishes " + course.getExpirationDate());
-        binding.courseInstructorName.setText("Course taught by " + course.getInstructorName());
-        binding.courseAccessCode.setText("Access code: " + course.getAccessCode());
+        if (((OfficeHoursApp)getApplication()).getUser().isStudent()){
+            binding.courseAccessCodeHint.setVisibility(View.GONE);
+            binding.courseAccessCode.setVisibility(View.GONE);
+        }
     }
 }

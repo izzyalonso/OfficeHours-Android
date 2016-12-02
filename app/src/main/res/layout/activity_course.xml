@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+    <data>
+        <variable
+            name="course"
+            type="org.tndata.officehours.model.Course" />
+    </data>
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
@@ -22,40 +27,92 @@
                 android:padding="16dp" >
 
                 <TextView
-                    android:id="@+id/course_meeting_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp" />
+                    android:textSize="20sp"
+                    android:text="Course information" />
 
                 <TextView
-                    android:id="@+id/course_expiration_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp" />
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/accent"
+                    android:textSize="14sp"
+                    android:text="Meeting time" />
 
                 <TextView
-                    android:id="@+id/course_instructor_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp" />
+                    android:layout_marginTop="2dp"
+                    android:textSize="18sp"
+                    android:text="@{course.getMeetingTime()}" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/accent"
+                    android:textSize="14sp"
+                    android:text="Last course meeting" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textSize="18sp"
+                    android:text="@{course.getExpirationDate()}" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/accent"
+                    android:textSize="14sp"
+                    android:text="Instructor" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textSize="18sp"
+                    android:text="@{course.getInstructorName()}" />
+
+                <TextView
+                    android:id="@+id/course_access_code_hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/accent"
+                    android:textSize="14sp"
+                    android:text="Access code" />
 
                 <TextView
                     android:id="@+id/course_access_code"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp" />
+                    android:layout_marginTop="2dp"
+                    android:textSize="18sp"
+                    android:text="1234" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/divider" />
 
                 <TextView
                     android:id="@+id/course_people"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:textSize="18sp"
-                    android:text="Click here to see the people in this course" />
+                    android:text="People in this course" />
 
                 <TextView
                     android:id="@+id/course_chat_room"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:textSize="18sp"
                     android:text="Chat room of sorts?" />
 
