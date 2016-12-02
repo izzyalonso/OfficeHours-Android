@@ -18,7 +18,12 @@ import android.widget.TimePicker;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityTimeSlotPickerBinding;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -37,8 +42,14 @@ public class TimeSlotPickerActivity
     //Keys and such
     private static final String SLOT_KEY = "org.tndata.officehours.TSP.Slot";
     private static final String MC_KEY = "org.tndata.officehours.TSP.MultiChoice";
+    private static final String IS_24_HOUR_FORMAT_KEY = "org.tndata.officehours.TSP.24HourFormat";
 
     public static final String RESULT_KEY = "org.tndata.officehours.TSP.Result";
+
+
+    private static final DateFormat parser = new SimpleDateFormat("H:mm", Locale.getDefault());
+    private static final DateFormat formatter12 = new SimpleDateFormat("K:mm a", Locale.getDefault());
+    private static final DateFormat formatter24 = new SimpleDateFormat("H:mm", Locale.getDefault());
 
 
     /**
@@ -48,9 +59,10 @@ public class TimeSlotPickerActivity
      * @param multiChoice true if multiple day choice is allowed, false otherwise.
      * @return the intent to launch the activity.
      */
-    public static Intent getIntent(@NonNull Context context, boolean multiChoice){
+    public static Intent getIntent(@NonNull Context context, boolean multiChoice, boolean is24HourFormat){
         return new Intent(context, TimeSlotPickerActivity.class)
-                .putExtra(MC_KEY, multiChoice);
+                .putExtra(MC_KEY, multiChoice)
+                .putExtra(IS_24_HOUR_FORMAT_KEY, is24HourFormat);
     }
 
     /**
@@ -61,20 +73,24 @@ public class TimeSlotPickerActivity
      * @param multiChoice rue if multiple day choice is allowed, false otherwise.
      * @return the intent to launch the activity.
      */
-    public static Intent getIntent(@NonNull Context context, @NonNull String slot, boolean multiChoice){
+    public static Intent getIntent(@NonNull Context context, @NonNull String slot,
+                                   boolean multiChoice, boolean is24HourFormat){
+
         return new Intent(context, TimeSlotPickerActivity.class)
                 .putExtra(SLOT_KEY, slot)
-                .putExtra(MC_KEY, multiChoice);
+                .putExtra(MC_KEY, multiChoice)
+                .putExtra(IS_24_HOUR_FORMAT_KEY, is24HourFormat);
     }
 
 
     private ActivityTimeSlotPickerBinding binding;
     private boolean multiChoice;
+    private boolean is24HourFormat;
 
     private boolean radioSelected;
     private int selectedCheckboxes;
-    private int fromHour, fromMinute;
-    private int toHour, toMinute;
+
+    private Date from, to;
 
 
     @Override
@@ -84,6 +100,7 @@ public class TimeSlotPickerActivity
 
         //Display the correct day picker
         multiChoice = getIntent().getBooleanExtra(MC_KEY, false);
+        is24HourFormat = getIntent().getBooleanExtra(IS_24_HOUR_FORMAT_KEY, false);
         if (multiChoice){
             binding.tspRadio.setVisibility(View.GONE);
         }
@@ -94,10 +111,6 @@ public class TimeSlotPickerActivity
         //Set initial state
         radioSelected = false;
         selectedCheckboxes = 0;
-        fromHour = -1;
-        fromMinute = -1;
-        toHour = -1;
-        toMinute = -1;
         
         //Set the listeners
         binding.tspRadio.setOnCheckedChangeListener(this);
@@ -115,6 +128,10 @@ public class TimeSlotPickerActivity
         String slot = getIntent().getStringExtra(SLOT_KEY);
         if (slot != null && !slot.isEmpty()){
             setSlot(slot);
+        }
+        else{
+            from = null;
+            to = null;
         }
     }
 
@@ -142,11 +159,11 @@ public class TimeSlotPickerActivity
     public void onClick(View view){
         switch (view.getId()){
             case R.id.tsp_from:
-                selectTime(fromHour, fromMinute, binding.tspFrom);
+                selectTime(from, binding.tspFrom);
                 break;
 
             case R.id.tsp_to:
-                selectTime(toHour, toMinute, binding.tspTo);
+                selectTime(to, binding.tspTo);
                 break;
 
             case R.id.tsp_done:
@@ -158,36 +175,35 @@ public class TimeSlotPickerActivity
     /**
      * Fires a time picker dialog to select a time and sets the result to the selected section.
      * 
-     * @param currentHour the hour currently picked in the selected section or -1 if none
-     * @param currentMinute the minute currently picked in the selected section or -1 if none
+     * @param selectedTime the current choice in the selected section.
      * @param target the section to which the result should be written.
      */
-    private void selectTime(int currentHour, int currentMinute, final EditText target){
-        //Set defaults if necessary
-        Calendar calendar = Calendar.getInstance();
-        if (currentHour == -1){
-            currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+    private void selectTime(@Nullable Date selectedTime, final EditText target){
+        //Extract hour and minute
+        Calendar time = Calendar.getInstance();
+        if (selectedTime != null){
+            time.setTime(selectedTime);
         }
-        if (currentMinute == -1){
-            currentMinute = calendar.get(Calendar.MINUTE);
-        }
+        int currentHour = time.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = time.get(Calendar.MINUTE);
 
         //Fire the dialog
         new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener(){
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute){
+                Calendar time = Calendar.getInstance();
+                time.set(Calendar.HOUR_OF_DAY, hour);
+                time.set(Calendar.MINUTE, minute);
                 if (target == binding.tspFrom){
-                    fromHour = hour;
-                    fromMinute = minute;
+                    from = time.getTime();
                 }
                 else if (target == binding.tspTo){
-                    toHour = hour;
-                    toMinute = minute;
+                    to = time.getTime();
                 }
-                target.setText(hour + ":" + (minute < 10 ? "0" + minute : minute));
+                target.setText(getSelectedFormatter().format(time.getTime()));
                 checkFromState();
             }
-        }, currentHour, currentMinute, false).show();
+        }, currentHour, currentMinute, is24HourFormat).show();
     }
 
     /**
@@ -195,7 +211,7 @@ public class TimeSlotPickerActivity
      */
     private void checkFromState(){
         if (radioSelected || selectedCheckboxes != 0){
-            if (fromMinute != -1 && toHour != -1){
+            if (from != null && to != null){
                 binding.tspDone.setEnabled(true);
             }
             else{
@@ -213,6 +229,10 @@ public class TimeSlotPickerActivity
     private void done(){
         setResult(RESULT_OK, new Intent().putExtra(RESULT_KEY, getSlot()));
         finish();
+    }
+
+    private DateFormat getSelectedFormatter(){
+        return is24HourFormat ? formatter24 : formatter12;
     }
 
 
@@ -289,19 +309,17 @@ public class TimeSlotPickerActivity
         }
 
         frag = time.split("-");
-        String from = frag[0];
-        String to = frag[1];
+        try{
+            from = parser.parse(frag[0]);
+            to = parser.parse(frag[1]);
+        }
+        catch (ParseException px){
+            px.printStackTrace();
+        }
 
-        binding.tspFrom.setText(from);
-        binding.tspTo.setText(to);
-
-        frag = from.split(":");
-        fromHour = Integer.valueOf(frag[0]);
-        fromMinute = Integer.valueOf(frag[1]);
-
-        frag = to.split(":");
-        toHour = Integer.valueOf(frag[0]);
-        toMinute = Integer.valueOf(frag[1]);
+        DateFormat formatter = getSelectedFormatter();
+        binding.tspFrom.setText(formatter.format(from));
+        binding.tspTo.setText(formatter.format(to));
 
         checkFromState();
     }
@@ -355,7 +373,82 @@ public class TimeSlotPickerActivity
             }
         }
 
-        result += " " + binding.tspFrom.getText().toString().trim();
-        return result + "-" + binding.tspTo.getText().toString().trim();
+        result += " " + formatter24.format(from);
+        return result + "-" + formatter24.format(to);
+    }
+
+    public static String get12HourFormattedString(@NonNull String src, boolean expandWeekDays){
+        String result = "";
+
+        //Split times the days and times sections
+        String frags[] = src.split(" ");
+        String days = frags[0];
+        String times = frags[1];
+
+        //Format the week days
+        if (!expandWeekDays){
+            result = days;
+        }
+        else{
+            while (!days.isEmpty()){
+                if (!result.isEmpty()){
+                    if (!result.contains(" ") && days.length() == 1){
+                        result += " and ";
+                    }
+                    else{
+                        result += ", ";
+                        if (days.length() == 1){
+                            result += "and ";
+                        }
+                    }
+                }
+
+                String day = days.substring(0, 1);
+                switch (day){
+                    case "M":
+                        result += "Monday";
+                        break;
+
+                    case "T":
+                        result += "Tuesday";
+                        break;
+
+                    case "W":
+                        result += "Wednesday";
+                        break;
+
+                    case "R":
+                        result += "Thursday";
+                        break;
+
+                    case "F":
+                        result += "Friday";
+                        break;
+
+                    case "S":
+                        result += "Saturday";
+                        break;
+
+                }
+            }
+        }
+        result += " ";
+
+        DateFormat parser = new SimpleDateFormat("H:mm", Locale.getDefault());
+        DateFormat formatter = new SimpleDateFormat("K:mm a", Locale.getDefault());
+
+        //Split from and to
+        frags = times.split("-");
+        //Add the formatted dates
+        try{
+            result += formatter.format(parser.parse(frags[0]));
+            result += "-";
+            result += formatter.format(parser.parse(frags[1]));
+        }
+        catch (ParseException px){
+            px.printStackTrace();
+        }
+
+        return result;
     }
 }

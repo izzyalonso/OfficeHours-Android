@@ -14,7 +14,6 @@ import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityNewCourseBinding;
 import org.tndata.officehours.model.Course;
-import org.tndata.officehours.model.User;
 
 import java.util.Calendar;
 
@@ -60,10 +59,10 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
             case R.id.new_course_time:
                 String time = binding.newCourseTime.getText().toString().trim();
                 if (time.isEmpty()){
-                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, true), TIME_SLOT_PICKER_RC);
+                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, true, false), TIME_SLOT_PICKER_RC);
                 }
                 else{
-                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, time, true), TIME_SLOT_PICKER_RC);
+                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, time, true, false), TIME_SLOT_PICKER_RC);
                 }
                 break;
 
