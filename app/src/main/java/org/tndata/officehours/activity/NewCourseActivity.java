@@ -14,7 +14,6 @@ import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityNewCourseBinding;
 import org.tndata.officehours.model.Course;
-import org.tndata.officehours.model.User;
 
 import java.util.Calendar;
 
@@ -33,6 +32,7 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
 
     private ActivityNewCourseBinding binding;
 
+    private String selectedTimeSlot;
     private int expirationYear;
     private int expirationMonth;
     private int expirationDay;
@@ -49,6 +49,7 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
         binding.newCourseExpiration.setOnClickListener(this);
         binding.newCourseDone.setOnClickListener(this);
 
+        selectedTimeSlot = "";
         expirationYear = -1;
         expirationMonth = -1;
         expirationDay = -1;
@@ -58,12 +59,11 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view){
         switch (view.getId()){
             case R.id.new_course_time:
-                String time = binding.newCourseTime.getText().toString().trim();
-                if (time.isEmpty()){
-                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, true), TIME_SLOT_PICKER_RC);
+                if (selectedTimeSlot.isEmpty()){
+                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, true, false), TIME_SLOT_PICKER_RC);
                 }
                 else{
-                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, time, true), TIME_SLOT_PICKER_RC);
+                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, selectedTimeSlot, true, false), TIME_SLOT_PICKER_RC);
                 }
                 break;
 
@@ -86,7 +86,9 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if (requestCode == TIME_SLOT_PICKER_RC && resultCode == RESULT_OK){
-            binding.newCourseTime.setText(data.getStringExtra(TimeSlotPickerActivity.RESULT_KEY));
+            selectedTimeSlot = data.getStringExtra(TimeSlotPickerActivity.RESULT_KEY);
+            String display = TimeSlotPickerActivity.get12HourFormattedString(selectedTimeSlot, false);
+            binding.newCourseTime.setText(display);
         }
     }
 
@@ -118,7 +120,7 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
             binding.newCourseError.setText(R.string.new_course_error_name);
             return false;
         }
-        else if (binding.newCourseTime.getText().toString().trim().isEmpty()){
+        else if (selectedTimeSlot.isEmpty()){
             binding.newCourseError.setText(R.string.new_course_error_meeting_time);
             return false;
         }
@@ -137,7 +139,7 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
                 Course course = new Course(
                         binding.newCourseCode.getText().toString().trim(),
                         binding.newCourseName.getText().toString().trim(),
-                        binding.newCourseTime.getText().toString().trim(),
+                        selectedTimeSlot,
                         binding.newCourseExpiration.getText().toString().trim(),
                         ((OfficeHoursApp)getApplication()).getUser().getName()
                 );

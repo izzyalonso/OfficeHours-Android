@@ -96,7 +96,7 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View view){
         if (view.getId() == R.id.on_boarding_office_hours_add){
-            startActivityForResult(TimeSlotPickerActivity.getIntent(this, false), TIME_SLOT_PICKER_RC);
+            startActivityForResult(TimeSlotPickerActivity.getIntent(this, false, false), TIME_SLOT_PICKER_RC);
         }
         else if (view.getId() == R.id.on_boarding_finish){
             finishOnBoarding();
@@ -112,8 +112,9 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if (requestCode == TIME_SLOT_PICKER_RC && resultCode == RESULT_OK){
             String slot = data.getStringExtra(TimeSlotPickerActivity.RESULT_KEY);
+            String display = TimeSlotPickerActivity.get12HourFormattedString(slot, true);
             Button button = new Button(this);
-            button.setText(slot);
+            button.setText(display);
             button.setOnClickListener(this);
             binding.onBoardingOfficeHours.addView(button);
             officeHours.add(slot);
