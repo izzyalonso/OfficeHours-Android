@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.View;
 
 import org.tndata.officehours.OfficeHoursApp;
@@ -50,5 +51,14 @@ public class CourseActivity extends AppCompatActivity{
             binding.courseAccessCodeHint.setVisibility(View.GONE);
             binding.courseAccessCode.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        if (((OfficeHoursApp)getApplication()).getUser().isTeacher()){
+            getMenuInflater().inflate(R.menu.edit, menu);
+            return true;
+        }
+        return false;
     }
 }
