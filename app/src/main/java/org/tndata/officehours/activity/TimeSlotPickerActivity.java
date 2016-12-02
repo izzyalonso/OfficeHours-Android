@@ -27,7 +27,11 @@ import java.util.Locale;
 
 
 /**
- * Lets the user choose a time range.
+ * Lets the user choose a time range. Takes and delivers time ranges in the following format:
+ *
+ * M{0,1}T{0,1}W{0,1}R{0,1}F{0,1}S{0,1} [1-2]{0,1}[0-9]:[1-6]{0,1}[0-9]\-[1-2]{0,1}[0-9]:[1-6]{0,1}[0-9]
+ *
+ * Example: MW 13:00-14:15
  *
  * @author Ismael Alonso
  * @version 1.0.0
@@ -98,9 +102,11 @@ public class TimeSlotPickerActivity
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_time_slot_picker);
 
-        //Display the correct day picker
+        //Grab the setting flags
         multiChoice = getIntent().getBooleanExtra(MC_KEY, false);
         is24HourFormat = getIntent().getBooleanExtra(IS_24_HOUR_FORMAT_KEY, false);
+
+        //Display the selected day picker
         if (multiChoice){
             binding.tspRadio.setVisibility(View.GONE);
         }
@@ -231,6 +237,11 @@ public class TimeSlotPickerActivity
         finish();
     }
 
+    /**
+     * Gets the correct formatter.
+     *
+     * @return either the 24 or the 12 hour time formatter.
+     */
     private DateFormat getSelectedFormatter(){
         return is24HourFormat ? formatter24 : formatter12;
     }
