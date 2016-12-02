@@ -404,6 +404,7 @@ public class TimeSlotPickerActivity
                 }
 
                 String day = days.substring(0, 1);
+                days = days.substring(1);
                 switch (day){
                     case "M":
                         result += "Monday";
@@ -442,7 +443,7 @@ public class TimeSlotPickerActivity
         //Add the formatted dates
         try{
             result += formatter.format(parser.parse(frags[0]));
-            result += "-";
+            result += " - ";
             result += formatter.format(parser.parse(frags[1]));
         }
         catch (ParseException px){

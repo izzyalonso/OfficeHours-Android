@@ -112,8 +112,9 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if (requestCode == TIME_SLOT_PICKER_RC && resultCode == RESULT_OK){
             String slot = data.getStringExtra(TimeSlotPickerActivity.RESULT_KEY);
+            String display = TimeSlotPickerActivity.get12HourFormattedString(slot, true);
             Button button = new Button(this);
-            button.setText(slot);
+            button.setText(display);
             button.setOnClickListener(this);
             binding.onBoardingOfficeHours.addView(button);
             officeHours.add(slot);
