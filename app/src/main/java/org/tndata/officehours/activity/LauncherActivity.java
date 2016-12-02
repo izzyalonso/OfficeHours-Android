@@ -58,7 +58,6 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
         else{
             //Set listeners
             binding.launcherGooogleSignIn.setOnClickListener(this);
-            binding.launcherProceed.setOnClickListener(this);
 
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(getString(R.string.default_web_client_id))
@@ -76,10 +75,6 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view){
         if (view.getId() == R.id.launcher_gooogle_sign_in){
             signInWithGoogle();
-        }
-        else if (view.getId() == R.id.launcher_proceed){
-            startActivity(new Intent(this, ScheduleActivity.class));
-            finish();
         }
     }
 

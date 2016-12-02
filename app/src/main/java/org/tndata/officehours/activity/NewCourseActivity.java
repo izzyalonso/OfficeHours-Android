@@ -134,7 +134,6 @@ public class NewCourseActivity extends AppCompatActivity implements View.OnClick
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run(){
-                User user = ((OfficeHoursApp)getApplication()).getUser();
                 Course course = new Course(
                         binding.newCourseCode.getText().toString().trim(),
                         binding.newCourseName.getText().toString().trim(),
