@@ -19,7 +19,7 @@ import java.util.Calendar;
 
 
 /**
- * Activity used to create a course.
+ * Activity used to create or edit a course.
  *
  * @author Ismael Alonso
  * @version 1.0.0
@@ -34,10 +34,8 @@ public class CourseEditorActivity extends AppCompatActivity implements View.OnCl
 
     private Course course;
 
-    private String selectedTimeSlot;
-    private int expirationYear;
-    private int expirationMonth;
-    private int expirationDay;
+    private String meetingTime;
+    private String lastMeetingDate;
 
 
     @Override
@@ -53,26 +51,24 @@ public class CourseEditorActivity extends AppCompatActivity implements View.OnCl
 
         course = getIntent().getParcelableExtra(COURSE_KEY);
         if (course == null){
-            selectedTimeSlot = "";
-            expirationYear = -1;
-            expirationMonth = -1;
-            expirationDay = -1;
+            //If no course was delivered, initialize everything to zero
+            meetingTime = "";
+            lastMeetingDate = "";
 
             binding.courseEditorToolbar.toolbar.setTitle(R.string.course_editor_label_new);
         }
         else{
-            selectedTimeSlot = course.getMeetingTime();
-            String date[] = course.getExpirationDate().split("/");
-            expirationYear = Integer.valueOf(date[2]);
-            expirationMonth = Integer.valueOf(date[0])-1;
-            expirationDay = Integer.valueOf(date[1]);
+            //If a course was delivered, populate all fields
+            meetingTime = course.getMeetingTime();
+            lastMeetingDate = course.getLastMeetingDate();
 
             binding.courseEditorCode.setText(course.getCode());
             binding.courseEditorName.setText(course.getName());
-            binding.courseEditorTime.setText(selectedTimeSlot);
-            binding.courseEditorExpiration.setText(course.getExpirationDate());
+            binding.courseEditorTime.setText(meetingTime);
+            binding.courseEditorExpiration.setText(lastMeetingDate);
 
             binding.courseEditorToolbar.toolbar.setTitle(R.string.course_editor_label_edit);
+            binding.courseEditorDone.setText(R.string.course_editor_save);
         }
     }
 
@@ -80,16 +76,16 @@ public class CourseEditorActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view){
         switch (view.getId()){
             case R.id.course_editor_time:
-                if (selectedTimeSlot.isEmpty()){
+                if (meetingTime.isEmpty()){
                     startActivityForResult(TimeSlotPickerActivity.getIntent(this, true, false), TIME_SLOT_PICKER_RC);
                 }
                 else{
-                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, selectedTimeSlot, true, false), TIME_SLOT_PICKER_RC);
+                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, meetingTime, true, false), TIME_SLOT_PICKER_RC);
                 }
                 break;
 
             case R.id.course_editor_expiration:
-                pickExpiration();
+                pickLastMeetingDate();
                 break;
 
             case R.id.course_editor_done:
@@ -107,29 +103,34 @@ public class CourseEditorActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if (requestCode == TIME_SLOT_PICKER_RC && resultCode == RESULT_OK){
-            selectedTimeSlot = data.getStringExtra(TimeSlotPickerActivity.RESULT_KEY);
-            String display = TimeSlotPickerActivity.get12HourFormattedString(selectedTimeSlot, false);
+            meetingTime = data.getStringExtra(TimeSlotPickerActivity.RESULT_KEY);
+            String display = TimeSlotPickerActivity.get12HourFormattedString(meetingTime, false);
             binding.courseEditorTime.setText(display);
         }
     }
 
-    private void pickExpiration(){
-        Calendar calendar = Calendar.getInstance();
-        int year = expirationYear != -1 ? expirationYear : calendar.get(Calendar.YEAR);
-        int month = expirationMonth != -1 ? expirationMonth : calendar.get(Calendar.MONTH);
-        int day = expirationDay != -1 ? expirationDay : calendar.get(Calendar.DAY_OF_MONTH);
+    private void pickLastMeetingDate(){
+        int year, month, day;
+        if (lastMeetingDate.isEmpty()){
+            Calendar calendar = Calendar.getInstance();
+            year = calendar.get(Calendar.YEAR);
+            month = calendar.get(Calendar.MONTH);
+            day = calendar.get(Calendar.DAY_OF_MONTH);
+        }
+        else{
+            String date[] = lastMeetingDate.split("/");
+            year = Integer.valueOf(date[2]);
+            month = Integer.valueOf(date[0])-1; //Months start at 0
+            day = Integer.valueOf(date[1]);
+        }
 
         new DatePickerDialog(this, this, year, month, day).show();
     }
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth){
-        expirationYear = year;
-        expirationMonth = monthOfYear;
-        expirationDay = dayOfMonth;
-
-        String expiration = (expirationMonth+1) + "/" + expirationDay + "/" + expirationYear;
-        binding.courseEditorExpiration.setText(expiration);
+        lastMeetingDate = (monthOfYear+1) + "/" + dayOfMonth + "/" + year;
+        binding.courseEditorExpiration.setText(lastMeetingDate);
     }
 
     private boolean areFieldsSet(){
@@ -141,7 +142,7 @@ public class CourseEditorActivity extends AppCompatActivity implements View.OnCl
             binding.courseEditorError.setText(R.string.course_editor_error_name);
             return false;
         }
-        else if (selectedTimeSlot.isEmpty()){
+        else if (meetingTime.isEmpty()){
             binding.courseEditorError.setText(R.string.course_editor_error_meeting_time);
             return false;
         }
@@ -161,7 +162,7 @@ public class CourseEditorActivity extends AppCompatActivity implements View.OnCl
                     Course course = new Course(
                             binding.courseEditorCode.getText().toString().trim(),
                             binding.courseEditorName.getText().toString().trim(),
-                            selectedTimeSlot,
+                            meetingTime,
                             binding.courseEditorExpiration.getText().toString().trim(),
                             ((OfficeHoursApp)getApplication()).getUser().getName()
                     );
@@ -170,8 +171,8 @@ public class CourseEditorActivity extends AppCompatActivity implements View.OnCl
                 else{
                     course.setCode(binding.courseEditorCode.getText().toString().trim());
                     course.setName(binding.courseEditorName.getText().toString().trim());
-                    course.setMeetingTime(selectedTimeSlot);
-                    course.setExpirationDate(binding.courseEditorExpiration.getText().toString().trim());
+                    course.setMeetingTime(meetingTime);
+                    course.setLastMeetingDate(binding.courseEditorExpiration.getText().toString().trim());
                     setResult(RESULT_OK, new Intent().putExtra(COURSE_KEY, course));
                 }
                 finish();

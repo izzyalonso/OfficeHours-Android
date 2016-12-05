@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:textSize="18sp"
-                    android:text="@{course.getExpirationDate()}" />
+                    android:text="@{course.getLastMeetingDate()}" />
 
                 <TextView
                     android:layout_width="match_parent"
