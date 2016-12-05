@@ -143,6 +143,22 @@ public class Course implements Parcelable{
         return instructorName;
     }
 
+    public void setCode(String code){
+        this.code = code;
+    }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public void setMeetingTime(String meetingTime){
+        this.meetingTime = meetingTime;
+    }
+
+    public void setExpirationDate(String expirationDate){
+        this.expirationDate = expirationDate;
+    }
+
 
     /*------------------*
      * PARCELABLE STUFF *

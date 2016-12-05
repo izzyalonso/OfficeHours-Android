@@ -65,7 +65,7 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
     public boolean onOptionsItemSelected(MenuItem item){
         if (item.getItemId() == R.id.add_add){
             if (((OfficeHoursApp)getApplication()).getUser().isTeacher()){
-                startActivityForResult(new Intent(this, NewCourseActivity.class), NEW_COURSE_RC);
+                startActivityForResult(new Intent(this, CourseEditorActivity.class), NEW_COURSE_RC);
             }
             else{
                 startActivityForResult(new Intent(this, AddCodeActivity.class), ADD_CODE_RC);
@@ -90,7 +90,7 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
         }
         else if (requestCode == NEW_COURSE_RC){
             if (resultCode == RESULT_OK){
-                Course course = data.getParcelableExtra(NewCourseActivity.RESULT_KEY);
+                Course course = data.getParcelableExtra(CourseEditorActivity.COURSE_KEY);
                 adapter.addCourse(course);
             }
         }
