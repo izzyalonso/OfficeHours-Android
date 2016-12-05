@@ -24,7 +24,12 @@ import java.util.Calendar;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class CourseEditorActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener{
+public class CourseEditorActivity
+        extends AppCompatActivity
+        implements
+                View.OnClickListener,
+                DatePickerDialog.OnDateSetListener{
+    
     private static final int TIME_SLOT_PICKER_RC = 6286;
 
     public static final String COURSE_KEY = "org.tndata.officehours.CourseEditor.Course";
@@ -76,12 +81,14 @@ public class CourseEditorActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view){
         switch (view.getId()){
             case R.id.course_editor_time:
+                Intent slotPicker;
                 if (meetingTime.isEmpty()){
-                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, true, false), TIME_SLOT_PICKER_RC);
+                    slotPicker = TimeSlotPickerActivity.getIntent(this, true, false);
                 }
                 else{
-                    startActivityForResult(TimeSlotPickerActivity.getIntent(this, meetingTime, true, false), TIME_SLOT_PICKER_RC);
+                    slotPicker = TimeSlotPickerActivity.getIntent(this, meetingTime, true, false);
                 }
+                startActivityForResult(slotPicker, TIME_SLOT_PICKER_RC);
                 break;
 
             case R.id.course_editor_expiration:
