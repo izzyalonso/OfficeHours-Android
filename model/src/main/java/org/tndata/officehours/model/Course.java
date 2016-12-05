@@ -23,8 +23,8 @@ public class Course implements Parcelable{
     private String name;
     @SerializedName("meeting_time")
     private String meetingTime;
-    @SerializedName("expiration_date")
-    private String expirationDate;
+    @SerializedName("last_meeting_date")
+    private String lastMeetingDate;
     @SerializedName("access_code")
     private String accessCode;
     @SerializedName("instructor_name")
@@ -38,13 +38,13 @@ public class Course implements Parcelable{
      * @param code the code of the course.
      * @param name the name of the course.
      * @param meetingTime a representation of the days and times the course meets.
-     * @param expirationDate the day the course expires.
+     * @param lastMeetingTime the last day the class meets.
      * @param instructorName the name of the instructor who teaches the course.
      */
     public Course(@NonNull String code, @NonNull String name, @NonNull String meetingTime,
-                  @NonNull String expirationDate, @NonNull String instructorName){
+                  @NonNull String lastMeetingTime, @NonNull String instructorName){
 
-        this(-1, code, name, meetingTime, expirationDate, "", instructorName);
+        this(-1, code, name, meetingTime, lastMeetingTime, "", instructorName);
     }
 
     /**
@@ -54,19 +54,19 @@ public class Course implements Parcelable{
      * @param code the code of the course.
      * @param name the name of the course.
      * @param meetingTime a representation of the days and times the course meets.
-     * @param expirationDate the day the course expires.
+     * @param lastMeetingDate the last day the class meets.
      * @param accessCode the code that grants access to the course.
      * @param instructorName the name of the instructor who teaches the course.
      */
     public Course(long id, @NonNull String code, @NonNull String name, @NonNull String meetingTime,
-                  @NonNull String expirationDate, @NonNull String accessCode,
+                  @NonNull String lastMeetingDate, @NonNull String accessCode,
                   @NonNull String instructorName){
 
         this.id = id;
         this.code = code;
         this.name = name;
         this.meetingTime = meetingTime;
-        this.expirationDate = expirationDate;
+        this.lastMeetingDate = lastMeetingDate;
         this.accessCode = accessCode;
         this.instructorName = instructorName;
     }
@@ -117,12 +117,12 @@ public class Course implements Parcelable{
     }
 
     /**
-     * Expiration date getter.
+     * Last meeting date getter.
      *
      * @return the expiration date.
      */
-    public String getExpirationDate(){
-        return expirationDate;
+    public String getLastMeetingDate(){
+        return lastMeetingDate;
     }
 
     /**
@@ -143,6 +143,42 @@ public class Course implements Parcelable{
         return instructorName;
     }
 
+    /**
+     * Code setter.
+     *
+     * @param code the course code.
+     */
+    public void setCode(String code){
+        this.code = code;
+    }
+
+    /**
+     * Name setter.
+     *
+     * @param name the name of the course.
+     */
+    public void setName(String name){
+        this.name = name;
+    }
+
+    /**
+     * Meeting time setter.
+     *
+     * @param meetingTime the meeting time of the course.
+     */
+    public void setMeetingTime(String meetingTime){
+        this.meetingTime = meetingTime;
+    }
+
+    /**
+     * Last meeting date setter.
+     *
+     * @param lastMeetingDate the last meeting date of the course.
+     */
+    public void setLastMeetingDate(String lastMeetingDate){
+        this.lastMeetingDate = lastMeetingDate;
+    }
+
 
     /*------------------*
      * PARCELABLE STUFF *
@@ -159,7 +195,7 @@ public class Course implements Parcelable{
         parcel.writeString(code);
         parcel.writeString(name);
         parcel.writeString(meetingTime);
-        parcel.writeString(expirationDate);
+        parcel.writeString(lastMeetingDate);
         parcel.writeString(accessCode);
         parcel.writeString(instructorName);
     }
@@ -186,7 +222,7 @@ public class Course implements Parcelable{
         code = src.readString();
         name = src.readString();
         meetingTime = src.readString();
-        expirationDate = src.readString();
+        lastMeetingDate = src.readString();
         accessCode = src.readString();
         instructorName = src.readString();
     }

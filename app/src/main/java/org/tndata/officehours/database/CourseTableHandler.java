@@ -87,7 +87,7 @@ public class CourseTableHandler extends TableHandler{
         stmt.bindString(2, course.getCode());
         stmt.bindString(3, course.getName());
         stmt.bindString(4, course.getMeetingTime());
-        stmt.bindString(5, course.getExpirationDate());
+        stmt.bindString(5, course.getLastMeetingDate());
         stmt.bindString(6, course.getAccessCode());
         stmt.bindString(7, course.getInstructorName());
 
@@ -118,7 +118,7 @@ public class CourseTableHandler extends TableHandler{
             stmt.bindString(2, course.getCode());
             stmt.bindString(3, course.getName());
             stmt.bindString(4, course.getMeetingTime());
-            stmt.bindString(5, course.getExpirationDate());
+            stmt.bindString(5, course.getLastMeetingDate());
             stmt.bindString(6, course.getAccessCode());
             stmt.bindString(7, course.getInstructorName());
 
@@ -148,7 +148,7 @@ public class CourseTableHandler extends TableHandler{
         stmt.bindString(1, course.getCode());
         stmt.bindString(2, course.getName());
         stmt.bindString(3, course.getMeetingTime());
-        stmt.bindString(4, course.getExpirationDate());
+        stmt.bindString(4, course.getLastMeetingDate());
         stmt.bindString(5, course.getAccessCode());
         stmt.bindString(6, course.getInstructorName());
         stmt.bindLong(7, course.getId());

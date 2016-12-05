@@ -8,7 +8,7 @@
         android:focusableInTouchMode="true" >
 
         <include
-            android:id="@+id/new_course_toolbar"
+            android:id="@+id/course_editor_toolbar"
             layout="@layout/toolbar" />
 
         <ScrollView
@@ -29,7 +29,7 @@
                     android:layout_marginLeft="2dp"
                     android:layout_marginStart="2dp"
                     android:textSize="18sp"
-                    android:text="@string/new_course_header" />
+                    android:text="@string/course_editor_header" />
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -37,10 +37,10 @@
                     android:layout_marginTop="8dp" >
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/new_course_code"
+                        android:id="@+id/course_editor_code"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/new_course_code_hint" >
+                        android:hint="@string/course_editor_code_hint" >
 
                     </android.support.design.widget.TextInputEditText>
                 </android.support.design.widget.TextInputLayout>
@@ -51,40 +51,38 @@
                     android:layout_marginTop="8dp" >
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/new_course_name"
+                        android:id="@+id/course_editor_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/new_course_name_hint" />
+                        android:hint="@string/course_editor_name_hint" />
 
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/new_course_time_hint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp" >
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/new_course_time"
+                        android:id="@+id/course_editor_meeting_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:focusable="false"
-                        android:hint="@string/new_course_meeting_time_hint" />
+                        android:hint="@string/course_editor_meeting_time_hint" />
 
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/new_course_expiration_hint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp" >
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/new_course_expiration"
+                        android:id="@+id/course_editor_last_meeting_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:focusable="false"
-                        android:hint="@string/new_course_expiration_date_hint" />
+                        android:hint="@string/course_editor_last_meeting_date_hint" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -101,7 +99,7 @@
                     android:gravity="end|center_vertical" >
 
                     <TextView
-                        android:id="@+id/new_course_error"
+                        android:id="@+id/course_editor_error"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="end"
@@ -109,18 +107,18 @@
                         android:visibility="gone" />
 
                     <ProgressBar
-                        android:id="@+id/new_course_progress"
+                        android:id="@+id/course_editor_progress"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:visibility="gone" />
 
                     <Button
-                        android:id="@+id/new_course_done"
+                        android:id="@+id/course_editor_done"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:layout_marginStart="8dp"
-                        android:text="@string/new_course_create" />
+                        android:text="@string/course_editor_create" />
 
                 </LinearLayout>
             </LinearLayout>
