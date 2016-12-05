@@ -143,18 +143,38 @@ public class Course implements Parcelable{
         return instructorName;
     }
 
+    /**
+     * Code setter.
+     *
+     * @param code the course code.
+     */
     public void setCode(String code){
         this.code = code;
     }
 
+    /**
+     * Name setter.
+     *
+     * @param name the name of the course.
+     */
     public void setName(String name){
         this.name = name;
     }
 
+    /**
+     * Meeting time setter.
+     *
+     * @param meetingTime the meeting time of the course.
+     */
     public void setMeetingTime(String meetingTime){
         this.meetingTime = meetingTime;
     }
 
+    /**
+     * Last meeting date setter.
+     *
+     * @param lastMeetingDate the last meeting date of the course.
+     */
     public void setLastMeetingDate(String lastMeetingDate){
         this.lastMeetingDate = lastMeetingDate;
     }

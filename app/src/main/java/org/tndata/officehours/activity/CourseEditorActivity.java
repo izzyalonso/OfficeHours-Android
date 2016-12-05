@@ -45,8 +45,8 @@ public class CourseEditorActivity extends AppCompatActivity implements View.OnCl
 
         setSupportActionBar(binding.courseEditorToolbar.toolbar);
 
-        binding.courseEditorTime.setOnClickListener(this);
-        binding.courseEditorExpiration.setOnClickListener(this);
+        binding.courseEditorMeetingTime.setOnClickListener(this);
+        binding.courseEditorLastMeetingDate.setOnClickListener(this);
         binding.courseEditorDone.setOnClickListener(this);
 
         course = getIntent().getParcelableExtra(COURSE_KEY);
@@ -64,8 +64,8 @@ public class CourseEditorActivity extends AppCompatActivity implements View.OnCl
 
             binding.courseEditorCode.setText(course.getCode());
             binding.courseEditorName.setText(course.getName());
-            binding.courseEditorTime.setText(meetingTime);
-            binding.courseEditorExpiration.setText(lastMeetingDate);
+            binding.courseEditorMeetingTime.setText(meetingTime);
+            binding.courseEditorLastMeetingDate.setText(lastMeetingDate);
 
             binding.courseEditorToolbar.toolbar.setTitle(R.string.course_editor_label_edit);
             binding.courseEditorDone.setText(R.string.course_editor_save);
@@ -105,10 +105,13 @@ public class CourseEditorActivity extends AppCompatActivity implements View.OnCl
         if (requestCode == TIME_SLOT_PICKER_RC && resultCode == RESULT_OK){
             meetingTime = data.getStringExtra(TimeSlotPickerActivity.RESULT_KEY);
             String display = TimeSlotPickerActivity.get12HourFormattedString(meetingTime, false);
-            binding.courseEditorTime.setText(display);
+            binding.courseEditorMeetingTime.setText(display);
         }
     }
 
+    /**
+     * Fires the last meeting date picker.
+     */
     private void pickLastMeetingDate(){
         int year, month, day;
         if (lastMeetingDate.isEmpty()){
@@ -130,9 +133,15 @@ public class CourseEditorActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth){
         lastMeetingDate = (monthOfYear+1) + "/" + dayOfMonth + "/" + year;
-        binding.courseEditorExpiration.setText(lastMeetingDate);
+        binding.courseEditorLastMeetingDate.setText(lastMeetingDate);
     }
 
+    /**
+     * Checks for forms correctness. If it finds empty fields it will set the relevant error
+     * string in the error feedback TextView and return false.
+     *
+     * @return true if the form is filled properly, false otherwise.
+     */
     private boolean areFieldsSet(){
         if (binding.courseEditorCode.getText().toString().trim().isEmpty()){
             binding.courseEditorError.setText(R.string.course_editor_error_code);
@@ -146,13 +155,16 @@ public class CourseEditorActivity extends AppCompatActivity implements View.OnCl
             binding.courseEditorError.setText(R.string.course_editor_error_meeting_time);
             return false;
         }
-        else if (binding.courseEditorExpiration.getText().toString().trim().isEmpty()){
-            binding.courseEditorError.setText(R.string.course_editor_error_expiration_date);
+        else if (lastMeetingDate.isEmpty()){
+            binding.courseEditorError.setText(R.string.course_editor_error_last_meeting_date);
             return false;
         }
         return true;
     }
 
+    /**
+     * Triggers the process that saves a course, new or edited.
+     */
     private void saveCourse(){
         setFormState(true);
         new Handler().postDelayed(new Runnable(){
@@ -163,7 +175,7 @@ public class CourseEditorActivity extends AppCompatActivity implements View.OnCl
                             binding.courseEditorCode.getText().toString().trim(),
                             binding.courseEditorName.getText().toString().trim(),
                             meetingTime,
-                            binding.courseEditorExpiration.getText().toString().trim(),
+                            lastMeetingDate,
                             ((OfficeHoursApp)getApplication()).getUser().getName()
                     );
                     setResult(RESULT_OK, new Intent().putExtra(COURSE_KEY, course));
@@ -172,7 +184,7 @@ public class CourseEditorActivity extends AppCompatActivity implements View.OnCl
                     course.setCode(binding.courseEditorCode.getText().toString().trim());
                     course.setName(binding.courseEditorName.getText().toString().trim());
                     course.setMeetingTime(meetingTime);
-                    course.setLastMeetingDate(binding.courseEditorExpiration.getText().toString().trim());
+                    course.setLastMeetingDate(lastMeetingDate);
                     setResult(RESULT_OK, new Intent().putExtra(COURSE_KEY, course));
                 }
                 finish();
@@ -180,11 +192,16 @@ public class CourseEditorActivity extends AppCompatActivity implements View.OnCl
         }, 2500);
     }
 
+    /**
+     * Changes the state of the form, enabling, disabling, hiding, or showing relevant fields.
+     *
+     * @param loading true if the activity is in load state, false otherwise.
+     */
     private void setFormState(boolean loading){
         binding.courseEditorCode.setEnabled(!loading);
         binding.courseEditorName.setEnabled(!loading);
-        binding.courseEditorTime.setEnabled(!loading);
-        binding.courseEditorExpiration.setEnabled(!loading);
+        binding.courseEditorMeetingTime.setEnabled(!loading);
+        binding.courseEditorLastMeetingDate.setEnabled(!loading);
         if (loading){
             binding.courseEditorProgress.setVisibility(View.VISIBLE);
         }
