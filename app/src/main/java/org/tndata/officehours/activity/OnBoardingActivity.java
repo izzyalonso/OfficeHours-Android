@@ -14,6 +14,7 @@ import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityOnBoardingBinding;
 import org.tndata.officehours.model.User;
+import org.tndata.officehours.util.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -53,6 +54,11 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
             displayForm(true);
         }
 
+        if (!user.getPhotoUrl().isEmpty()){
+            ImageLoader.Options options = new ImageLoader.Options().setCropToCircle(true);
+            ImageLoader.loadBitmap(binding.onBoardingAvatar, user.getPhotoUrl(), options);
+            binding.onBoardingAvatar.setVisibility(View.VISIBLE);
+        }
         binding.onBoardingFirstName.setText(user.getFirstName());
         binding.onBoardingLastName.setText(user.getLastName());
         binding.onBoardingEmail.setText(user.getEmail());

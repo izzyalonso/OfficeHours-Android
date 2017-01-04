@@ -3,6 +3,7 @@ package org.tndata.officehours.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -31,6 +32,7 @@ public class User{
     private List<String> officeHours;
     private String firstName;
     private String lastName;
+    private String photoUrl;
     private String schoolEmail;
     private String phoneNumber;
     private boolean isOnBoardingComplete;
@@ -46,10 +48,13 @@ public class User{
      */
     public User(GoogleSignInAccount account){
         email = account.getEmail();
+        //googleToken = account.getServerAuthCode();
         googleToken = account.getIdToken();
         accountType = null; //Unknown yet
         firstName = account.getGivenName();
         lastName = account.getFamilyName();
+        Uri url = account.getPhotoUrl();
+        photoUrl = url == null ? "" : account.getPhotoUrl().toString();
         schoolEmail = email;
         phoneNumber = "";
         isOnBoardingComplete = false;
@@ -121,6 +126,10 @@ public class User{
         return lastName;
     }
 
+    public String getPhotoUrl(){
+        return photoUrl;
+    }
+
     public String getName(){
         return firstName + " " + lastName;
     }
@@ -175,6 +184,7 @@ public class User{
         }
         editor.putString("user.firstName", firstName);
         editor.putString("user.lastName", lastName);
+        editor.putString("user.photoUrl", photoUrl);
         editor.putString("user.schoolEmail", schoolEmail);
         editor.putString("user.phoneNumber", phoneNumber);
         editor.putBoolean("user.isOnBoardingComplete", isOnBoardingComplete);
@@ -228,6 +238,7 @@ public class User{
         }
         firstName = preferences.getString("user.firstName", "");
         lastName = preferences.getString("user.lastName", "");
+        photoUrl = preferences.getString("user.photoUrl", "");
         schoolEmail = preferences.getString("user.schoolEmail", "");
         phoneNumber = preferences.getString("user.phoneNumber", "");
         isOnBoardingComplete = preferences.getBoolean("user.isOnBoardingComplete", false);

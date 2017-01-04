@@ -2,6 +2,7 @@
     <string name="app_name">Office Hours</string>
 
     <!-- OnBoardingActivity -->
+    <string name="on_boarding_avatar_cd">The user\'s profile image</string>
     <string name="on_boarding_label">Tell us about yourself</string>
     <string name="on_boarding_type_q">Are you a student or a teacher?</string>
     <string name="on_boarding_office_hours_q">What are your office hours?</string>
@@ -64,5 +65,7 @@
     <string name="course_last_meeting">Last meeting date</string>
     <string name="course_instructor">Instructor</string>
     <string name="course_access_code">Access code</string>
+    
+    <string name="server_client_id">123754374341-8ug3otempcpmoi7rmaa6dkd362vor46l.apps.googleusercontent.com</string>
 
 </resources>

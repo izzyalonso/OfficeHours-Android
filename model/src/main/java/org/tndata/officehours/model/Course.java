@@ -38,13 +38,13 @@ public class Course implements Parcelable{
      * @param code the code of the course.
      * @param name the name of the course.
      * @param meetingTime a representation of the days and times the course meets.
-     * @param lastMeetingTime the last day the class meets.
+     * @param lastMeetingDate the last day the class meets.
      * @param instructorName the name of the instructor who teaches the course.
      */
     public Course(@NonNull String code, @NonNull String name, @NonNull String meetingTime,
-                  @NonNull String lastMeetingTime, @NonNull String instructorName){
+                  @NonNull String lastMeetingDate, @NonNull String instructorName){
 
-        this(-1, code, name, meetingTime, lastMeetingTime, "", instructorName);
+        this(-1, code, name, meetingTime, lastMeetingDate, "", instructorName);
     }
 
     /**

@@ -7,6 +7,8 @@ import org.tndata.officehours.model.User;
 
 import java.util.List;
 
+import es.sandwatch.httprequests.HttpRequest;
+
 
 /**
  * Application specific class.
@@ -37,5 +39,12 @@ public class OfficeHoursApp extends Application{
 
     public List<Course> getCourses(){
         return courses;
+    }
+
+
+    @Override
+    public void onCreate(){
+        super.onCreate();
+        HttpRequest.init(this);
     }
 }

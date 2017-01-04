@@ -80,7 +80,7 @@ public class CourseEditorActivity
     @Override
     public void onClick(View view){
         switch (view.getId()){
-            case R.id.course_editor_time:
+            case R.id.course_editor_meeting_time:
                 Intent slotPicker;
                 if (meetingTime.isEmpty()){
                     slotPicker = TimeSlotPickerActivity.getIntent(this, true, false);
@@ -91,7 +91,7 @@ public class CourseEditorActivity
                 startActivityForResult(slotPicker, TIME_SLOT_PICKER_RC);
                 break;
 
-            case R.id.course_editor_expiration:
+            case R.id.course_editor_last_meeting_date:
                 pickLastMeetingDate();
                 break;
 

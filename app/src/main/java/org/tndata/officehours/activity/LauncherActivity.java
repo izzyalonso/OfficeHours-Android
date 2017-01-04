@@ -20,6 +20,10 @@ import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityLauncherBinding;
 import org.tndata.officehours.model.User;
+import org.tndata.officehours.util.API;
+
+import es.sandwatch.httprequests.HttpRequest;
+import es.sandwatch.httprequests.HttpRequestError;
 
 
 /**
@@ -28,7 +32,13 @@ import org.tndata.officehours.model.User;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class LauncherActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener{
+public class LauncherActivity
+        extends AppCompatActivity
+        implements
+                View.OnClickListener,
+                GoogleApiClient.OnConnectionFailedListener,
+                HttpRequest.RequestCallback{
+
     private static final String TAG = "LauncherActivity";
 
     private static final int GOOGLE_SIGN_IN_RC = 5327;
@@ -37,6 +47,8 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
     private ActivityLauncherBinding binding;
 
     private GoogleApiClient googleApiClient;
+
+    private User user;
 
 
     @Override
@@ -60,7 +72,8 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
             binding.launcherGooogleSignIn.setOnClickListener(this);
 
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken(getString(R.string.default_web_client_id))
+                    //.requestServerAuthCode(getString(R.string.server_client_id))
+                    .requestIdToken(getString(R.string.server_client_id))
                     .requestEmail()
                     .build();
 
@@ -97,12 +110,9 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
     private void handleGoogleSignInResult(GoogleSignInResult result){
         if (result.isSuccess()){
             Log.i(TAG, "Sign in with google successful");
-            //TODO check if this account already exists in the backend, if so, load it
-            User user = new User(result.getSignInAccount());
-            user.writeToPreferences(this);
-            ((OfficeHoursApp)getApplication()).setUser(user);
-            startActivity(new Intent(this, OnBoardingActivity.class));
-            finish();
+            user = new User(result.getSignInAccount());
+            //HttpRequest.post(this, API.URL.signIn(), API.BODY.signIn(user));
+            onRequestComplete(0, null);
         }
         else{
             //Why would this happen?
@@ -120,5 +130,18 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
     private void loadData(){
         //TODO Load from DB
         startActivity(new Intent(this, ScheduleActivity.class));
+    }
+
+    @Override
+    public void onRequestComplete(int requestCode, String result){
+        user.writeToPreferences(this);
+        ((OfficeHoursApp)getApplication()).setUser(user);
+        startActivity(new Intent(this, OnBoardingActivity.class));
+        finish();
+    }
+
+    @Override
+    public void onRequestFailed(int requestCode, HttpRequestError error){
+        Log.d(TAG, error.toString());
     }
 }

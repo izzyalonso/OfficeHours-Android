@@ -24,7 +24,7 @@ import org.tndata.officehours.model.Course;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class CourseActivity extends AppCompatActivity{
+public class CourseActivity extends AppCompatActivity implements View.OnClickListener{
     private static final String COURSE_KEY = "org.tndata.officehours.Course.Course";
 
     private static final int EDIT_RC = 6293;
@@ -54,6 +54,8 @@ public class CourseActivity extends AppCompatActivity{
             binding.courseAccessCodeHint.setVisibility(View.GONE);
             binding.courseAccessCode.setVisibility(View.GONE);
         }
+
+        binding.courseChatRoom.setOnClickListener(this);
     }
 
     @Override
@@ -88,5 +90,10 @@ public class CourseActivity extends AppCompatActivity{
         else{
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void onClick(View view){
+        startActivity(new Intent(this, ChatActivity.class));
     }
 }
