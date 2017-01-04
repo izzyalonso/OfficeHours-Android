@@ -111,8 +111,8 @@ public class LauncherActivity
         if (result.isSuccess()){
             Log.i(TAG, "Sign in with google successful");
             user = new User(result.getSignInAccount());
-            //HttpRequest.post(this, API.URL.signIn(), API.BODY.signIn(user));
-            onRequestComplete(0, null);
+            HttpRequest.post(this, API.URL.signIn(), API.BODY.signIn(user));
+            //onRequestComplete(0, null);
         }
         else{
             //Why would this happen?
