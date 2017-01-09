@@ -46,5 +46,10 @@ public class OfficeHoursApp extends Application{
     public void onCreate(){
         super.onCreate();
         HttpRequest.init(this);
+
+        User user = User.readFromPreferences(this);
+        if (user != null){
+            HttpRequest.addHeader("Authorization", "Token " + user.getToken());
+        }
     }
 }

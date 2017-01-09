@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 
@@ -14,8 +15,12 @@ import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityCourseEditorBinding;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.util.API;
 
 import java.util.Calendar;
+
+import es.sandwatch.httprequests.HttpRequest;
+import es.sandwatch.httprequests.HttpRequestError;
 
 
 /**
@@ -28,7 +33,10 @@ public class CourseEditorActivity
         extends AppCompatActivity
         implements
                 View.OnClickListener,
-                DatePickerDialog.OnDateSetListener{
+                DatePickerDialog.OnDateSetListener,
+                HttpRequest.RequestCallback{
+
+    private static final String TAG = "CourseEditorActivity";
     
     private static final int TIME_SLOT_PICKER_RC = 6286;
 
@@ -158,6 +166,10 @@ public class CourseEditorActivity
             binding.courseEditorError.setText(R.string.course_editor_error_name);
             return false;
         }
+        else if (binding.courseEditorLocation.getText().toString().trim().isEmpty()){
+            binding.courseEditorError.setText(R.string.course_editor_error_location);
+            return false;
+        }
         else if (meetingTime.isEmpty()){
             binding.courseEditorError.setText(R.string.course_editor_error_meeting_time);
             return false;
@@ -174,7 +186,22 @@ public class CourseEditorActivity
      */
     private void saveCourse(){
         setFormState(true);
-        new Handler().postDelayed(new Runnable(){
+        if (course == null){
+            //New
+            course = new Course(
+                    binding.courseEditorCode.getText().toString().trim(),
+                    binding.courseEditorName.getText().toString().trim(),
+                    binding.courseEditorLocation.getText().toString().trim(),
+                    meetingTime,
+                    lastMeetingDate,
+                    ((OfficeHoursApp)getApplication()).getUser().getName()
+            );
+            HttpRequest.post(this, API.URL.courses(), API.BODY.postPutCourse(course));
+        }
+        else{
+            //Editing
+        }
+        /*new Handler().postDelayed(new Runnable(){
             @Override
             public void run(){
                 if (course == null){
@@ -196,7 +223,7 @@ public class CourseEditorActivity
                 }
                 finish();
             }
-        }, 2500);
+        }, 2500);*/
     }
 
     /**
@@ -207,6 +234,7 @@ public class CourseEditorActivity
     private void setFormState(boolean loading){
         binding.courseEditorCode.setEnabled(!loading);
         binding.courseEditorName.setEnabled(!loading);
+        binding.courseEditorLocation.setEnabled(!loading);
         binding.courseEditorMeetingTime.setEnabled(!loading);
         binding.courseEditorLastMeetingDate.setEnabled(!loading);
         if (loading){
@@ -216,5 +244,15 @@ public class CourseEditorActivity
             binding.courseEditorProgress.setVisibility(View.GONE);
         }
         binding.courseEditorDone.setEnabled(!loading);
+    }
+
+    @Override
+    public void onRequestComplete(int requestCode, String result){
+        Log.d(TAG, result);
+    }
+
+    @Override
+    public void onRequestFailed(int requestCode, HttpRequestError error){
+        Log.d(TAG, error.toString());
     }
 }

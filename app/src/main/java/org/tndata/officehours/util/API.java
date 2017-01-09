@@ -1,13 +1,19 @@
 package org.tndata.officehours.util;
 
+import android.support.annotation.NonNull;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.tndata.officehours.BuildConfig;
+import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.User;
 
 
 /**
- * Created by ialonso on 1/4/17.
+ * Class containing generators for endpoint URLs and request bodies.
+ *
+ * @author Ismael Alonso
+ * @version 1.0.0
  */
 public class API{
     //Api urls and app configuration
@@ -31,6 +37,8 @@ public class API{
     private API(){
 
     }
+
+
     public static class URL{
         public static String signIn(){
             return BASE_URL + "users/oauth/";
@@ -50,6 +58,22 @@ public class API{
                 body.put("last_name", user.getLastName());
                 body.put("image_url", "");
                 body.put("oauth_token", user.getGoogleToken());
+            }
+            catch (JSONException jx){
+                jx.printStackTrace();
+            }
+            return body;
+        }
+
+        public static JSONObject postPutCourse(@NonNull Course course){
+            JSONObject body = new JSONObject();
+            try{
+                body.put("_code", course.getCode());
+                body.put("name", course.getName());
+                body.put("location", course.getLocation());
+                body.put("start_time", "");
+                body.put("meeting_time", course.getMeetingTime());
+                body.put("last_meeting_date", course.getLastMeetingDate());
             }
             catch (JSONException jx){
                 jx.printStackTrace();

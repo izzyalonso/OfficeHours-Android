@@ -61,6 +61,21 @@ public class User{
         token = null;
     }
 
+    //Temp
+    public User(){
+        email = "";
+        //googleToken = account.getServerAuthCode();
+        //googleToken = account.getIdToken();
+        accountType = null; //Unknown yet
+        firstName = "";
+        lastName = "";
+        photoUrl = "";
+        schoolEmail = email;
+        phoneNumber = "";
+        isOnBoardingComplete = false;
+        token = "";
+    }
+
     public void setAsStudent(){
         accountType = AccountType.STUDENT;
     }

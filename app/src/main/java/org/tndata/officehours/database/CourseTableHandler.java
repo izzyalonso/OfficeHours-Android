@@ -31,6 +31,7 @@ public class CourseTableHandler extends TableHandler{
             + CourseEntry.CLOUD_ID + " INTEGER, "
             + CourseEntry.CODE + " TEXT, "
             + CourseEntry.NAME + " TEXT, "
+            + CourseEntry.LOCATION + " TEXT, "
             + CourseEntry.MEETING_TIME + " TEXT, "
             + CourseEntry.EXPIRATION_DATE + " TEXT, "
             + CourseEntry.ACCESS_CODE + " TEXT, "
@@ -40,15 +41,17 @@ public class CourseTableHandler extends TableHandler{
             + CourseEntry.CLOUD_ID + ", "
             + CourseEntry.CODE + ", "
             + CourseEntry.NAME + ", "
+            + CourseEntry.LOCATION + ", "
             + CourseEntry.MEETING_TIME + ", "
             + CourseEntry.EXPIRATION_DATE + ", "
             + CourseEntry.ACCESS_CODE + ", "
             + CourseEntry.INSTRUCTOR_NAME + ") "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String UPDATE = "UPDATE " + CourseEntry.TABLE + " SET "
             + CourseEntry.CODE + "=?, "
             + CourseEntry.NAME + "=?, "
+            + CourseEntry.LOCATION + "=?, "
             + CourseEntry.MEETING_TIME + "=?, "
             + CourseEntry.EXPIRATION_DATE + "=?, "
             + CourseEntry.ACCESS_CODE + "=?, "
@@ -86,10 +89,11 @@ public class CourseTableHandler extends TableHandler{
         stmt.bindLong(1, course.getId());
         stmt.bindString(2, course.getCode());
         stmt.bindString(3, course.getName());
-        stmt.bindString(4, course.getMeetingTime());
-        stmt.bindString(5, course.getLastMeetingDate());
-        stmt.bindString(6, course.getAccessCode());
-        stmt.bindString(7, course.getInstructorName());
+        stmt.bindString(4, course.getLocation());
+        stmt.bindString(5, course.getMeetingTime());
+        stmt.bindString(6, course.getLastMeetingDate());
+        stmt.bindString(7, course.getAccessCode());
+        stmt.bindString(8, course.getInstructorName());
 
         //Execute the query
         stmt.executeInsert();
@@ -117,10 +121,11 @@ public class CourseTableHandler extends TableHandler{
             stmt.bindLong(1, course.getId());
             stmt.bindString(2, course.getCode());
             stmt.bindString(3, course.getName());
-            stmt.bindString(4, course.getMeetingTime());
-            stmt.bindString(5, course.getLastMeetingDate());
-            stmt.bindString(6, course.getAccessCode());
-            stmt.bindString(7, course.getInstructorName());
+            stmt.bindString(4, course.getLocation());
+            stmt.bindString(5, course.getMeetingTime());
+            stmt.bindString(6, course.getLastMeetingDate());
+            stmt.bindString(7, course.getAccessCode());
+            stmt.bindString(8, course.getInstructorName());
 
             //Execution
             stmt.executeInsert();
@@ -147,11 +152,12 @@ public class CourseTableHandler extends TableHandler{
         SQLiteStatement stmt = db.compileStatement(UPDATE);
         stmt.bindString(1, course.getCode());
         stmt.bindString(2, course.getName());
-        stmt.bindString(3, course.getMeetingTime());
-        stmt.bindString(4, course.getLastMeetingDate());
-        stmt.bindString(5, course.getAccessCode());
-        stmt.bindString(6, course.getInstructorName());
-        stmt.bindLong(7, course.getId());
+        stmt.bindString(3, course.getLocation());
+        stmt.bindString(4, course.getMeetingTime());
+        stmt.bindString(5, course.getLastMeetingDate());
+        stmt.bindString(6, course.getAccessCode());
+        stmt.bindString(7, course.getInstructorName());
+        stmt.bindLong(8, course.getId());
 
         //Execute the query
         stmt.execute();
@@ -181,6 +187,7 @@ public class CourseTableHandler extends TableHandler{
                         getInt(cursor, CourseEntry.CLOUD_ID),
                         getString(cursor, CourseEntry.CODE),
                         getString(cursor, CourseEntry.NAME),
+                        getString(cursor, CourseEntry.LOCATION),
                         getString(cursor, CourseEntry.MEETING_TIME),
                         getString(cursor, CourseEntry.EXPIRATION_DATE),
                         getString(cursor, CourseEntry.ACCESS_CODE),

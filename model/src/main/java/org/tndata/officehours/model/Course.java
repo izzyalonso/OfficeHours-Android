@@ -21,6 +21,8 @@ public class Course implements Parcelable{
     private String code;
     @SerializedName("name")
     private String name;
+    @SerializedName("location")
+    private String location;
     @SerializedName("meeting_time")
     private String meetingTime;
     @SerializedName("last_meeting_date")
@@ -37,14 +39,16 @@ public class Course implements Parcelable{
      *
      * @param code the code of the course.
      * @param name the name of the course.
+     * @param location the location of the course.
      * @param meetingTime a representation of the days and times the course meets.
      * @param lastMeetingDate the last day the class meets.
      * @param instructorName the name of the instructor who teaches the course.
      */
-    public Course(@NonNull String code, @NonNull String name, @NonNull String meetingTime,
-                  @NonNull String lastMeetingDate, @NonNull String instructorName){
+    public Course(@NonNull String code, @NonNull String name, @NonNull String location,
+                  @NonNull String meetingTime, @NonNull String lastMeetingDate,
+                  @NonNull String instructorName){
 
-        this(-1, code, name, meetingTime, lastMeetingDate, "", instructorName);
+        this(-1, code, name, location, meetingTime, lastMeetingDate, "", instructorName);
     }
 
     /**
@@ -53,18 +57,20 @@ public class Course implements Parcelable{
      * @param id the id of the course.
      * @param code the code of the course.
      * @param name the name of the course.
+     * @param location the location of the course.
      * @param meetingTime a representation of the days and times the course meets.
      * @param lastMeetingDate the last day the class meets.
      * @param accessCode the code that grants access to the course.
      * @param instructorName the name of the instructor who teaches the course.
      */
-    public Course(long id, @NonNull String code, @NonNull String name, @NonNull String meetingTime,
-                  @NonNull String lastMeetingDate, @NonNull String accessCode,
-                  @NonNull String instructorName){
+    public Course(long id, @NonNull String code, @NonNull String name, @NonNull String location,
+                  @NonNull String meetingTime, @NonNull String lastMeetingDate,
+                  @NonNull String accessCode, @NonNull String instructorName){
 
         this.id = id;
         this.code = code;
         this.name = name;
+        this.location = location;
         this.meetingTime = meetingTime;
         this.lastMeetingDate = lastMeetingDate;
         this.accessCode = accessCode;
@@ -105,6 +111,15 @@ public class Course implements Parcelable{
      */
     public String getDisplayName(){
         return code + ": " + name;
+    }
+
+    /**
+     * Location getter.
+     *
+     * @return the location of the course.
+     */
+    public String getLocation(){
+        return location;
     }
 
     /**
@@ -194,6 +209,7 @@ public class Course implements Parcelable{
         parcel.writeLong(id);
         parcel.writeString(code);
         parcel.writeString(name);
+        parcel.writeString(location);
         parcel.writeString(meetingTime);
         parcel.writeString(lastMeetingDate);
         parcel.writeString(accessCode);
@@ -221,6 +237,7 @@ public class Course implements Parcelable{
         id = src.readLong();
         code = src.readString();
         name = src.readString();
+        location = src.readString();
         meetingTime = src.readString();
         lastMeetingDate = src.readString();
         accessCode = src.readString();

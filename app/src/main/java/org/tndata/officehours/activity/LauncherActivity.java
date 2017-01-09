@@ -69,7 +69,17 @@ public class LauncherActivity
         }
         else{
             //Set listeners
-            binding.launcherGooogleSignIn.setOnClickListener(this);
+            user = new User();
+            user.writeToPreferences(this);
+            ((OfficeHoursApp)getApplication()).setUser(user);
+            if (user.isOnBoardingComplete()){
+                loadData();
+            }
+            else{
+                startActivity(new Intent(this, OnBoardingActivity.class));
+            }
+            finish();
+            /*binding.launcherGooogleSignIn.setOnClickListener(this);
 
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     //.requestServerAuthCode(getString(R.string.server_client_id))
@@ -80,7 +90,7 @@ public class LauncherActivity
             googleApiClient = new GoogleApiClient.Builder(this)
                     .enableAutoManage(this, this)
                     .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                    .build();
+                    .build();*/
         }
     }
 
@@ -111,8 +121,8 @@ public class LauncherActivity
         if (result.isSuccess()){
             Log.i(TAG, "Sign in with google successful");
             user = new User(result.getSignInAccount());
-            HttpRequest.post(this, API.URL.signIn(), API.BODY.signIn(user));
-            //onRequestComplete(0, null);
+            //HttpRequest.post(this, API.URL.signIn(), API.BODY.signIn(user));
+            onRequestComplete(0, null);
         }
         else{
             //Why would this happen?

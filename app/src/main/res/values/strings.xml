@@ -28,10 +28,12 @@
     <string name="course_editor_header">Enter the relevant course information</string>
     <string name="course_editor_code_hint">Code (ie. ENGL 1010)</string>
     <string name="course_editor_name_hint">Name (ie. English Composition)</string>
+    <string name="course_editor_location_hint">Location (ie. Patterson 123)</string>
     <string name="course_editor_meeting_time_hint">Meeting time</string>
     <string name="course_editor_last_meeting_date_hint">Last meeting date</string>
     <string name="course_editor_error_code">Introduce a code</string>
     <string name="course_editor_error_name">Introduce a name</string>
+    <string name="course_editor_error_location">Introduce a location</string>
     <string name="course_editor_error_meeting_time">Introduce a meeting time</string>
     <string name="course_editor_error_last_meeting_date">Introduce a last meeting date</string>
     <string name="course_editor_create">Create</string>
@@ -54,6 +56,7 @@
     <string name="add_course_label">Add to my schedule</string>
     <string name="add_course_verify">Please, verify this is your course</string>
     <string name="add_course_course">Course</string>
+    <string name="add_course_location">Location</string>
     <string name="add_course_meeting_time">Meeting time</string>
     <string name="add_course_last_meeting">Last meeting date</string>
     <string name="add_course_instructor">Instructor</string>
@@ -61,6 +64,7 @@
 
     <!-- CourseActivity -->
     <string name="course_info_header">Course information</string>
+    <string name="course_location">Location</string>
     <string name="course_meeting_time">Meeting time</string>
     <string name="course_last_meeting">Last meeting date</string>
     <string name="course_instructor">Instructor</string>
