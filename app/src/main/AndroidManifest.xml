@@ -44,6 +44,8 @@
 
         <activity android:name=".activity.CourseActivity" />
 
+        <activity android:name=".activity.PeopleActivity" />
+
         <activity android:name=".activity.ChatActivity" />
 
         <activity
