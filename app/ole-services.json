@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "123754374341",
+    "firebase_url": "https://officehours-c22de.firebaseio.com",
+    "project_id": "officehours-c22de",
+    "storage_bucket": "officehours-c22de.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123754374341:android:a973d09d90efaa6b",
+        "android_client_info": {
+          "package_name": "org.tndata.officehours"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123754374341-p181074ai4cpj2lkh974umsrmgup8p7g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.tndata.officehours",
+            "certificate_hash": "724CD795C972A915639775CFB5C01C247D32820B"
+          }
+        },
+        {
+          "client_id": "123754374341-8ug3otempcpmoi7rmaa6dkd362vor46l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8A_4R6iXPv_YLTqatZ2Z7b3SPYRA2dAI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123754374341-8ug3otempcpmoi7rmaa6dkd362vor46l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
