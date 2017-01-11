@@ -200,31 +200,14 @@ public class CourseEditorActivity
             HttpRequest.post(this, API.URL.courses(), API.BODY.postPutCourse(course));
         }
         else{
-            //Editing
+            //course.setCode(binding.courseEditorCode.getText().toString().trim());
+            course.setName(binding.courseEditorName.getText().toString().trim());
+            course.setMeetingTime(meetingTime);
+            //course.setLastMeetingDate(lastMeetingDate);
+            HttpRequest.put(null, API.URL.courses(), API.BODY.postPutCourse(course));
+            setResult(RESULT_OK, new Intent().putExtra(COURSE_KEY, course));
+            finish();
         }
-        /*new Handler().postDelayed(new Runnable(){
-            @Override
-            public void run(){
-                if (course == null){
-                    Course course = new Course(
-                            binding.courseEditorCode.getText().toString().trim(),
-                            binding.courseEditorName.getText().toString().trim(),
-                            meetingTime,
-                            lastMeetingDate,
-                            ((OfficeHoursApp)getApplication()).getUser().getName()
-                    );
-                    setResult(RESULT_OK, new Intent().putExtra(COURSE_KEY, course));
-                }
-                else{
-                    course.setCode(binding.courseEditorCode.getText().toString().trim());
-                    course.setName(binding.courseEditorName.getText().toString().trim());
-                    course.setMeetingTime(meetingTime);
-                    course.setLastMeetingDate(lastMeetingDate);
-                    setResult(RESULT_OK, new Intent().putExtra(COURSE_KEY, course));
-                }
-                finish();
-            }
-        }, 2500);*/
     }
 
     /**
@@ -261,15 +244,14 @@ public class CourseEditorActivity
     @Override
     public void onProcessResult(int requestCode, ResultSet result){
         if (result instanceof Course){
-            Course course = (Course)result;
-
+            ((Course)result).process();
         }
     }
 
     @Override
     public void onParseSuccess(int requestCode, ResultSet result){
         if (result instanceof Course){
-            setResult(RESULT_OK, new Intent().putExtra(COURSE_KEY, (Course) result));
+            setResult(RESULT_OK, new Intent().putExtra(COURSE_KEY, (Course)result));
             finish();
         }
     }

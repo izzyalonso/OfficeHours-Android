@@ -79,10 +79,7 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
         if (result instanceof ParserModels.CourseList){
             List<Course> courses = ((ParserModels.CourseList)result).results;
             for (Course course:courses){
-                course.getInstructor().asInstructor();
-                for (Person student:course.getStudents()){
-                    student.asStudent();
-                }
+                course.process();
             }
             application.setCourses(courses);
         }
