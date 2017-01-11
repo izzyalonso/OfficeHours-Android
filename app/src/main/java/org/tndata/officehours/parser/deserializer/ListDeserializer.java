@@ -40,7 +40,11 @@ public class ListDeserializer extends ParserMethods implements JsonDeserializer<
             for (JsonElement element:item.getAsJsonArray()){
                 try{
                     Log.d("ListDeserializer", element.toString());
-                    String type = ((JsonObject)element).get("object_type").getAsString();
+                    JsonElement typeElement = ((JsonObject)element).get("object_type");
+                    String type = null;
+                    if (typeElement != null){
+                        type = typeElement.getAsString();
+                    }
                     list.add((T)sGson.fromJson(element, Util.getTypeOf(type)));
                 }
                 catch (ClassCastException ccx){

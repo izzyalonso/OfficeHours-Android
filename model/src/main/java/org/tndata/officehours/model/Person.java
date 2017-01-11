@@ -50,6 +50,15 @@ public class Person extends Base{
     }
 
     @Override
+    public String toString(){
+        String result = "Person #" + getId() + ": " + getName();
+        if (isInstructor()){
+            result += " (instructor)";
+        }
+        return result;
+    }
+
+    @Override
     public void writeToParcel(Parcel parcel, int flags){
         super.writeToParcel(parcel, flags);
         parcel.writeString(name);

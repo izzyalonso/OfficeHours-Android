@@ -137,6 +137,14 @@ public class Course extends Base{
         return accessCode;
     }
 
+    public Person getInstructor(){
+        return instructor;
+    }
+
+    public List<Person> getStudents(){
+        return students;
+    }
+
     /**
      * Instructor name getter.
      *
@@ -182,6 +190,18 @@ public class Course extends Base{
         this.lastMeetingDate = lastMeetingDate;
     }
 
+    public void setInstructor(Person instructor){
+        this.instructor = instructor;
+    }
+
+    public void setStudents(List<Person> students){
+        this.students = students;
+    }
+
+    @Override
+    public String toString(){
+        return "Course #" + getId() + ": " + getName() + " -> " + getLocation();
+    }
 
     /*------------------*
      * PARCELABLE STUFF *

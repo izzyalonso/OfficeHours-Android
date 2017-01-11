@@ -17,6 +17,7 @@ import org.tndata.officehours.R;
 import org.tndata.officehours.adapter.ScheduleAdapter;
 import org.tndata.officehours.model.User;
 import org.tndata.officehours.util.CustomItemDecoration;
+import org.tndata.officehours.util.DataSynchronizer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,8 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
         binding.scheduleList.setLayoutManager(new LinearLayoutManager(this));
         binding.scheduleList.setAdapter(adapter);
         binding.scheduleList.addItemDecoration(new CustomItemDecoration(this, 12));
+
+        DataSynchronizer.sync(this);
     }
 
     @Override

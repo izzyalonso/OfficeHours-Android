@@ -2,10 +2,13 @@ package org.tndata.officehours.util;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.tndata.officehours.OfficeHoursApp;
+import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.ResultSet;
 import org.tndata.officehours.parser.Parser;
+import org.tndata.officehours.parser.ParserModels;
 
 import es.sandwatch.httprequests.HttpRequest;
 import es.sandwatch.httprequests.HttpRequestError;
@@ -49,7 +52,8 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
     @Override
     public void onRequestComplete(int requestCode, String result){
         if (requestCode == getCoursesRC){
-
+            Log.d(TAG, result);
+            Parser.parse(result, ParserModels.CourseList.class, this);
         }
     }
 
@@ -65,11 +69,33 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
 
     @Override
     public void onParseSuccess(int requestCode, ResultSet result){
-
+        for (Course course:((ParserModels.CourseList)result).results){
+            Log.d(TAG, course.toString());
+            Log.d(TAG, course.getInstructor().toString());
+        }
     }
 
     @Override
     public void onParseFailed(int requestCode){
 
+    }
+
+
+    /**
+     * Callback interface for DataSynchronizer.
+     *
+     * @author Ismael Alonso
+     * @version 1.0.0
+     */
+    public interface Callback{
+        /**
+         * Called when the data has been loaded.
+         */
+        void onDataLoaded();
+
+        /**
+         * Called when the data load has failed.
+         */
+        void onDataLoadFailed();
     }
 }
