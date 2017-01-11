@@ -54,6 +54,10 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
             binding.courseAccessCodeHint.setVisibility(View.GONE);
             binding.courseAccessCode.setVisibility(View.GONE);
         }
+        else{
+            binding.courseInstructorHint.setVisibility(View.GONE);
+            binding.courseInstructor.setVisibility(View.GONE);
+        }
 
         binding.courseChatRoom.setOnClickListener(this);
     }

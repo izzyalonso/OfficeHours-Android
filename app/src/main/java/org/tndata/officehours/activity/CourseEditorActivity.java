@@ -78,6 +78,7 @@ public class CourseEditorActivity
 
             //binding.courseEditorCode.setText(course.getCode());
             binding.courseEditorName.setText(course.getName());
+            binding.courseEditorLocation.setText(course.getLocation());
             binding.courseEditorMeetingTime.setText(meetingTime);
             binding.courseEditorLastMeetingDate.setText(lastMeetingDate);
 

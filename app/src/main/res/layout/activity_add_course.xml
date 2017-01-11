@@ -91,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:textSize="18sp"
-                    android:text="Placeholder" />
+                    android:text="@{course.getInstructor().getName()}" />
 
                 <Button
                     android:id="@+id/add_course_add"

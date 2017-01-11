@@ -80,6 +80,7 @@
                     android:visibility="gone" />
 
                 <TextView
+                    android:id="@+id/course_instructor_hint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -88,11 +89,12 @@
                     android:text="@string/course_instructor" />
 
                 <TextView
+                    android:id="@+id/course_instructor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:textSize="18sp"
-                    android:text="Placeholder" />
+                    android:text="@{course.getInstructor().getName()}" />
 
                 <TextView
                     android:id="@+id/course_access_code_hint"
