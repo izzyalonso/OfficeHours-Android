@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -137,10 +138,20 @@ public class Course extends Base{
         return accessCode;
     }
 
+    /**
+     * Instructor getter.
+     *
+     * @return the instructor of this course.
+     */
     public Person getInstructor(){
         return instructor;
     }
 
+    /**
+     * Student getter.
+     *
+     * @return the list of students enrolled in this course.
+     */
     public List<Person> getStudents(){
         return students;
     }
@@ -190,10 +201,20 @@ public class Course extends Base{
         this.lastMeetingDate = lastMeetingDate;
     }
 
+    /**
+     * Instructor setter.
+     *
+     * @param instructor the instructor of this course.
+     */
     public void setInstructor(Person instructor){
         this.instructor = instructor;
     }
 
+    /**
+     * Student setter.
+     *
+     * @param students the students enrolled in this course.
+     */
     public void setStudents(List<Person> students){
         this.students = students;
     }
@@ -216,6 +237,8 @@ public class Course extends Base{
         parcel.writeString(meetingTime);
         parcel.writeString(lastMeetingDate);
         parcel.writeString(accessCode);
+        parcel.writeParcelable(instructor, flags);
+        parcel.writeTypedList(students);
     }
 
     public static final Creator<Course> CREATOR = new Creator<Course>(){
@@ -243,5 +266,8 @@ public class Course extends Base{
         meetingTime = src.readString();
         lastMeetingDate = src.readString();
         accessCode = src.readString();
+        instructor = src.readParcelable(Person.class.getClassLoader());
+        students = new ArrayList<>();
+        src.readTypedList(students, Person.CREATOR);
     }
 }
