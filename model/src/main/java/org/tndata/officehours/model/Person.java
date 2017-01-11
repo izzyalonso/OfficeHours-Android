@@ -2,7 +2,10 @@ package org.tndata.officehours.model;
 
 
 import android.os.Parcel;
-import android.os.Parcelable;
+import android.support.annotation.NonNull;
+
+import com.google.gson.annotations.SerializedName;
+
 
 /**
  * Model representing a user other than whoever is using the app
@@ -10,14 +13,36 @@ import android.os.Parcelable;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class Person implements Parcelable{
-    private long id;
-    private String photoUrl;
+public class Person extends Base{
+    @SerializedName("name")
     private String name;
+    @SerializedName("avatar")
+    private String avatar;
+
+    private boolean isInstructor;
 
 
-    public String getPhotoUrl(){
-        return photoUrl;
+    /**
+     * Constructor.
+     *
+     * @param id the id of the person.
+     * @param name the name of the person.
+     * @param avatar the photo url of the person.
+     * @param isInstructor whether the person is an instructor.
+     */
+    public Person(long id, @NonNull String name, @NonNull String avatar, boolean isInstructor){
+        super(id);
+        this.isInstructor = isInstructor;
+        this.avatar = avatar;
+        this.name = name;
+    }
+
+    public boolean isInstructor(){
+        return isInstructor;
+    }
+
+    public String getAvatar(){
+        return avatar;
     }
 
     public String getName(){
@@ -25,15 +50,11 @@ public class Person implements Parcelable{
     }
 
     @Override
-    public int describeContents(){
-        return 0;
-    }
-
-    @Override
     public void writeToParcel(Parcel parcel, int flags){
-        parcel.writeLong(id);
-        parcel.writeString(photoUrl);
+        super.writeToParcel(parcel, flags);
         parcel.writeString(name);
+        parcel.writeString(avatar);
+        parcel.writeByte((byte)(isInstructor ? 1 : 0));
     }
 
     public static final Creator<Person> CREATOR = new Creator<Person>(){
@@ -49,8 +70,9 @@ public class Person implements Parcelable{
     };
 
     private Person(Parcel in){
-        id = in.readLong();
-        photoUrl = in.readString();
+        super(in);
         name = in.readString();
+        avatar = in.readString();
+        isInstructor = in.readByte() == 1;
     }
 }

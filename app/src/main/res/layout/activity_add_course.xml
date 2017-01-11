@@ -46,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:textSize="18sp"
-                    android:text="@{course.getDisplayName()}" />
+                    android:text="@{course.getName()}" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -91,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:textSize="18sp"
-                    android:text="@{course.getInstructorName()}" />
+                    android:text="Placeholder" />
 
                 <Button
                     android:id="@+id/add_course_add"

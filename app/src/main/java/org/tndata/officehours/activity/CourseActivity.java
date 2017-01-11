@@ -47,7 +47,7 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
         course = getIntent().getParcelableExtra(COURSE_KEY);
         binding.setCourse(course);
 
-        binding.courseToolbar.toolbar.setTitle(course.getDisplayName());
+        binding.courseToolbar.toolbar.setTitle(course.getName());
         setSupportActionBar(binding.courseToolbar.toolbar);
 
         if (((OfficeHoursApp)getApplication()).getUser().isStudent()){
@@ -83,7 +83,7 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
         if (requestCode == EDIT_RC){
             if (resultCode == RESULT_OK){
                 course = data.getParcelableExtra(CourseEditorActivity.COURSE_KEY);
-                binding.courseToolbar.toolbar.setTitle(course.getDisplayName());
+                binding.courseToolbar.toolbar.setTitle(course.getName());
                 binding.setCourse(course);
             }
         }

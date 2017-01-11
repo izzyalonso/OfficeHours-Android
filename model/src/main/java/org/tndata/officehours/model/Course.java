@@ -2,10 +2,11 @@ package org.tndata.officehours.model;
 
 
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 
 /**
@@ -14,11 +15,9 @@ import com.google.gson.annotations.SerializedName;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class Course implements Parcelable{
-    @SerializedName("id")
-    private long id;
-    @SerializedName("code")
-    private String code;
+public class Course extends Base{
+    //@SerializedName("code")
+    //private String code;
     @SerializedName("name")
     private String name;
     @SerializedName("location")
@@ -29,61 +28,50 @@ public class Course implements Parcelable{
     private String lastMeetingDate;
     @SerializedName("access_code")
     private String accessCode;
-    @SerializedName("instructor_name")
-    private String instructorName;
+
+    @SerializedName("teacher")
+    private Person instructor;
+    @SerializedName("students")
+    private List<Person> students;
 
 
     /**
      * Constructor. This one is meant to be used when creating courses locally, before posting
      * them to the backend.
      *
-     * @param code the code of the course.
+     * //@param code the code of the course.
      * @param name the name of the course.
      * @param location the location of the course.
      * @param meetingTime a representation of the days and times the course meets.
      * @param lastMeetingDate the last day the class meets.
-     * @param instructorName the name of the instructor who teaches the course.
      */
-    public Course(@NonNull String code, @NonNull String name, @NonNull String location,
-                  @NonNull String meetingTime, @NonNull String lastMeetingDate,
-                  @NonNull String instructorName){
+    public Course(/*@NonNull String code, */@NonNull String name, @NonNull String location,
+                  @NonNull String meetingTime, @NonNull String lastMeetingDate){
 
-        this(-1, code, name, location, meetingTime, lastMeetingDate, "", instructorName);
+        this(-1, /*code,*/ name, location, meetingTime, lastMeetingDate, "");
     }
 
     /**
      * Constructor. This one is meant to be used when creating courses from database records.
      *
      * @param id the id of the course.
-     * @param code the code of the course.
+     * //@param code the code of the course.
      * @param name the name of the course.
      * @param location the location of the course.
      * @param meetingTime a representation of the days and times the course meets.
      * @param lastMeetingDate the last day the class meets.
      * @param accessCode the code that grants access to the course.
-     * @param instructorName the name of the instructor who teaches the course.
      */
-    public Course(long id, @NonNull String code, @NonNull String name, @NonNull String location,
+    public Course(long id, /*@NonNull String code,*/ @NonNull String name, @NonNull String location,
                   @NonNull String meetingTime, @NonNull String lastMeetingDate,
-                  @NonNull String accessCode, @NonNull String instructorName){
+                  @NonNull String accessCode){
 
-        this.id = id;
-        this.code = code;
+        super(id);
         this.name = name;
         this.location = location;
         this.meetingTime = meetingTime;
         this.lastMeetingDate = lastMeetingDate;
         this.accessCode = accessCode;
-        this.instructorName = instructorName;
-    }
-
-    /**
-     * Id getter.
-     *
-     * @return the id.
-     */
-    public long getId(){
-        return id;
     }
 
     /**
@@ -91,9 +79,9 @@ public class Course implements Parcelable{
      *
      * @return the course code.
      */
-    public String getCode(){
+    /*public String getCode(){
         return code;
-    }
+    }*/
 
     /**
      * Name getter.
@@ -109,9 +97,9 @@ public class Course implements Parcelable{
      *
      * @return the display name of the course
      */
-    public String getDisplayName(){
+    /*public String getDisplayName(){
         return code + ": " + name;
-    }
+    }*/
 
     /**
      * Location getter.
@@ -154,18 +142,18 @@ public class Course implements Parcelable{
      *
      * @return the name of this course's instructor.
      */
-    public String getInstructorName(){
+    /*public String getInstructorName(){
         return instructorName;
-    }
+    }*/
 
     /**
      * Code setter.
      *
      * @param code the course code.
      */
-    public void setCode(String code){
+    /*public void setCode(String code){
         this.code = code;
-    }
+    }*/
 
     /**
      * Name setter.
@@ -200,20 +188,14 @@ public class Course implements Parcelable{
      *------------------*/
 
     @Override
-    public int describeContents(){
-        return 0;
-    }
-
-    @Override
     public void writeToParcel(Parcel parcel, int flags){
-        parcel.writeLong(id);
-        parcel.writeString(code);
+        super.writeToParcel(parcel, flags);
+        //parcel.writeString(code);
         parcel.writeString(name);
         parcel.writeString(location);
         parcel.writeString(meetingTime);
         parcel.writeString(lastMeetingDate);
         parcel.writeString(accessCode);
-        parcel.writeString(instructorName);
     }
 
     public static final Creator<Course> CREATOR = new Creator<Course>(){
@@ -234,13 +216,12 @@ public class Course implements Parcelable{
      * @param src the source parcel.
      */
     protected Course(Parcel src){
-        id = src.readLong();
-        code = src.readString();
+        super(src);
+        //code = src.readString();
         name = src.readString();
         location = src.readString();
         meetingTime = src.readString();
         lastMeetingDate = src.readString();
         accessCode = src.readString();
-        instructorName = src.readString();
     }
 }

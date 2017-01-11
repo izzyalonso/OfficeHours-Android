@@ -68,14 +68,16 @@
                     android:layout_marginTop="8dp"
                     android:textColor="@color/accent"
                     android:textSize="14sp"
-                    android:text="@string/course_last_meeting" />
+                    android:text="@string/course_last_meeting"
+                    android:visibility="gone" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:textSize="18sp"
-                    android:text="@{course.getLastMeetingDate()}" />
+                    android:text="@{course.getLastMeetingDate()}"
+                    android:visibility="gone" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -90,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:textSize="18sp"
-                    android:text="@{course.getInstructorName()}" />
+                    android:text="Placeholder" />
 
                 <TextView
                     android:id="@+id/course_access_code_hint"

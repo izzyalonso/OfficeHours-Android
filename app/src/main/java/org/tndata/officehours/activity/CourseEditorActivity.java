@@ -4,17 +4,17 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 
-import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityCourseEditorBinding;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.ResultSet;
+import org.tndata.officehours.parser.Parser;
 import org.tndata.officehours.util.API;
 
 import java.util.Calendar;
@@ -34,7 +34,8 @@ public class CourseEditorActivity
         implements
                 View.OnClickListener,
                 DatePickerDialog.OnDateSetListener,
-                HttpRequest.RequestCallback{
+                HttpRequest.RequestCallback,
+                Parser.ParserCallback{
 
     private static final String TAG = "CourseEditorActivity";
     
@@ -75,7 +76,7 @@ public class CourseEditorActivity
             meetingTime = course.getMeetingTime();
             lastMeetingDate = course.getLastMeetingDate();
 
-            binding.courseEditorCode.setText(course.getCode());
+            //binding.courseEditorCode.setText(course.getCode());
             binding.courseEditorName.setText(course.getName());
             binding.courseEditorMeetingTime.setText(meetingTime);
             binding.courseEditorLastMeetingDate.setText(lastMeetingDate);
@@ -158,11 +159,11 @@ public class CourseEditorActivity
      * @return true if the form is filled properly, false otherwise.
      */
     private boolean areFieldsSet(){
-        if (binding.courseEditorCode.getText().toString().trim().isEmpty()){
+        /*if (binding.courseEditorCode.getText().toString().trim().isEmpty()){
             binding.courseEditorError.setText(R.string.course_editor_error_code);
             return false;
-        }
-        else if (binding.courseEditorName.getText().toString().trim().isEmpty()){
+        }*/
+        if (binding.courseEditorName.getText().toString().trim().isEmpty()){
             binding.courseEditorError.setText(R.string.course_editor_error_name);
             return false;
         }
@@ -174,10 +175,10 @@ public class CourseEditorActivity
             binding.courseEditorError.setText(R.string.course_editor_error_meeting_time);
             return false;
         }
-        else if (lastMeetingDate.isEmpty()){
+        /*else if (lastMeetingDate.isEmpty()){
             binding.courseEditorError.setText(R.string.course_editor_error_last_meeting_date);
             return false;
-        }
+        }*/
         return true;
     }
 
@@ -189,12 +190,12 @@ public class CourseEditorActivity
         if (course == null){
             //New
             course = new Course(
-                    binding.courseEditorCode.getText().toString().trim(),
+                    //binding.courseEditorCode.getText().toString().trim(),
                     binding.courseEditorName.getText().toString().trim(),
                     binding.courseEditorLocation.getText().toString().trim(),
                     meetingTime,
-                    lastMeetingDate,
-                    ((OfficeHoursApp)getApplication()).getUser().getName()
+                    lastMeetingDate//,
+                    //((OfficeHoursApp)getApplication()).getUser().getName()
             );
             HttpRequest.post(this, API.URL.courses(), API.BODY.postPutCourse(course));
         }
@@ -249,10 +250,32 @@ public class CourseEditorActivity
     @Override
     public void onRequestComplete(int requestCode, String result){
         Log.d(TAG, result);
+        Parser.parse(result, Course.class, this);
     }
 
     @Override
     public void onRequestFailed(int requestCode, HttpRequestError error){
         Log.d(TAG, error.toString());
+    }
+
+    @Override
+    public void onProcessResult(int requestCode, ResultSet result){
+        if (result instanceof Course){
+            Course course = (Course)result;
+
+        }
+    }
+
+    @Override
+    public void onParseSuccess(int requestCode, ResultSet result){
+        if (result instanceof Course){
+            setResult(RESULT_OK, new Intent().putExtra(COURSE_KEY, (Course) result));
+            finish();
+        }
+    }
+
+    @Override
+    public void onParseFailed(int requestCode){
+
     }
 }

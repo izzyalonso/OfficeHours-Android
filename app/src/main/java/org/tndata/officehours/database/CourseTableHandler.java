@@ -29,33 +29,27 @@ public class CourseTableHandler extends TableHandler{
     static final String CREATE = "CREATE TABLE " + CourseEntry.TABLE + " ("
             + CourseEntry.ID + " INTEGER PRIMARY KEY, "
             + CourseEntry.CLOUD_ID + " INTEGER, "
-            + CourseEntry.CODE + " TEXT, "
             + CourseEntry.NAME + " TEXT, "
             + CourseEntry.LOCATION + " TEXT, "
             + CourseEntry.MEETING_TIME + " TEXT, "
             + CourseEntry.EXPIRATION_DATE + " TEXT, "
-            + CourseEntry.ACCESS_CODE + " TEXT, "
-            + CourseEntry.INSTRUCTOR_NAME + " TEXT)";
+            + CourseEntry.ACCESS_CODE + " TEXT)";
 
     private static final String INSERT = "INSERT INTO " + CourseEntry.TABLE + " ("
             + CourseEntry.CLOUD_ID + ", "
-            + CourseEntry.CODE + ", "
             + CourseEntry.NAME + ", "
             + CourseEntry.LOCATION + ", "
             + CourseEntry.MEETING_TIME + ", "
             + CourseEntry.EXPIRATION_DATE + ", "
-            + CourseEntry.ACCESS_CODE + ", "
-            + CourseEntry.INSTRUCTOR_NAME + ") "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            + CourseEntry.ACCESS_CODE + ") "
+            + "VALUES (?, ?, ?, ?, ?, ?)";
 
     private static final String UPDATE = "UPDATE " + CourseEntry.TABLE + " SET "
-            + CourseEntry.CODE + "=?, "
             + CourseEntry.NAME + "=?, "
             + CourseEntry.LOCATION + "=?, "
             + CourseEntry.MEETING_TIME + "=?, "
             + CourseEntry.EXPIRATION_DATE + "=?, "
-            + CourseEntry.ACCESS_CODE + "=?, "
-            + CourseEntry.INSTRUCTOR_NAME + "=? "
+            + CourseEntry.ACCESS_CODE + "=? "
             + "WHERE " + CourseEntry.CLOUD_ID + "=?";
 
     private static final String SELECT = "SELECT * FROM " + CourseEntry.TABLE;
@@ -87,13 +81,11 @@ public class CourseTableHandler extends TableHandler{
         //Prepare the statement
         SQLiteStatement stmt = db.compileStatement(INSERT);
         stmt.bindLong(1, course.getId());
-        stmt.bindString(2, course.getCode());
-        stmt.bindString(3, course.getName());
-        stmt.bindString(4, course.getLocation());
-        stmt.bindString(5, course.getMeetingTime());
-        stmt.bindString(6, course.getLastMeetingDate());
-        stmt.bindString(7, course.getAccessCode());
-        stmt.bindString(8, course.getInstructorName());
+        stmt.bindString(2, course.getName());
+        stmt.bindString(3, course.getLocation());
+        stmt.bindString(4, course.getMeetingTime());
+        stmt.bindString(5, course.getLastMeetingDate());
+        stmt.bindString(6, course.getAccessCode());
 
         //Execute the query
         stmt.executeInsert();
@@ -119,13 +111,11 @@ public class CourseTableHandler extends TableHandler{
 
             //Bindings
             stmt.bindLong(1, course.getId());
-            stmt.bindString(2, course.getCode());
-            stmt.bindString(3, course.getName());
-            stmt.bindString(4, course.getLocation());
-            stmt.bindString(5, course.getMeetingTime());
-            stmt.bindString(6, course.getLastMeetingDate());
-            stmt.bindString(7, course.getAccessCode());
-            stmt.bindString(8, course.getInstructorName());
+            stmt.bindString(2, course.getName());
+            stmt.bindString(3, course.getLocation());
+            stmt.bindString(4, course.getMeetingTime());
+            stmt.bindString(5, course.getLastMeetingDate());
+            stmt.bindString(6, course.getAccessCode());
 
             //Execution
             stmt.executeInsert();
@@ -150,14 +140,12 @@ public class CourseTableHandler extends TableHandler{
 
         //Prepare the statement
         SQLiteStatement stmt = db.compileStatement(UPDATE);
-        stmt.bindString(1, course.getCode());
-        stmt.bindString(2, course.getName());
-        stmt.bindString(3, course.getLocation());
-        stmt.bindString(4, course.getMeetingTime());
-        stmt.bindString(5, course.getLastMeetingDate());
-        stmt.bindString(6, course.getAccessCode());
-        stmt.bindString(7, course.getInstructorName());
-        stmt.bindLong(8, course.getId());
+        stmt.bindString(1, course.getName());
+        stmt.bindString(2, course.getLocation());
+        stmt.bindString(3, course.getMeetingTime());
+        stmt.bindString(4, course.getLastMeetingDate());
+        stmt.bindString(5, course.getAccessCode());
+        stmt.bindLong(6, course.getId());
 
         //Execute the query
         stmt.execute();
@@ -185,13 +173,11 @@ public class CourseTableHandler extends TableHandler{
                 //Create the Instructor course and add it to the list
                 courses.add(new Course(
                         getInt(cursor, CourseEntry.CLOUD_ID),
-                        getString(cursor, CourseEntry.CODE),
                         getString(cursor, CourseEntry.NAME),
                         getString(cursor, CourseEntry.LOCATION),
                         getString(cursor, CourseEntry.MEETING_TIME),
                         getString(cursor, CourseEntry.EXPIRATION_DATE),
-                        getString(cursor, CourseEntry.ACCESS_CODE),
-                        getString(cursor, CourseEntry.INSTRUCTOR_NAME)
+                        getString(cursor, CourseEntry.ACCESS_CODE)
                 ));
             }
             //Move on until the cursor is empty

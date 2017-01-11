@@ -39,9 +39,9 @@ public class PersonHolder extends RecyclerView.ViewHolder implements View.OnClic
      * @param person the person to use to populate the holder.
      */
     public void setPerson(@NonNull Person person){
-        if (!person.getPhotoUrl().isEmpty()){
+        if (!person.getAvatar().isEmpty()){
             ImageLoader.Options options = new ImageLoader.Options().setCropToCircle(true);
-            ImageLoader.loadBitmap(binding.personPhoto, person.getPhotoUrl(), options);
+            ImageLoader.loadBitmap(binding.personPhoto, person.getAvatar(), options);
         }
         binding.personName.setText(person.getName());
     }

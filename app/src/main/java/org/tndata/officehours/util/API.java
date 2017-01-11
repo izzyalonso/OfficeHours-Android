@@ -68,12 +68,11 @@ public class API{
         public static JSONObject postPutCourse(@NonNull Course course){
             JSONObject body = new JSONObject();
             try{
-                body.put("_code", course.getCode());
+                //body.put("_code", course.getCode());
                 body.put("name", course.getName());
                 body.put("location", course.getLocation());
-                body.put("start_time", "");
-                body.put("meeting_time", course.getMeetingTime());
-                body.put("last_meeting_date", course.getLastMeetingDate());
+                body.put("meetingtime", course.getMeetingTime());
+                //body.put("last_meeting_date", course.getLastMeetingDate());
             }
             catch (JSONException jx){
                 jx.printStackTrace();
