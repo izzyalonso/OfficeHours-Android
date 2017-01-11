@@ -32,21 +32,44 @@ public class Person extends Base{
      */
     public Person(long id, @NonNull String name, @NonNull String avatar, boolean isInstructor){
         super(id);
-        this.isInstructor = isInstructor;
-        this.avatar = avatar;
         this.name = name;
+        this.avatar = avatar;
+        this.isInstructor = isInstructor;
     }
 
-    public boolean isInstructor(){
-        return isInstructor;
+    /**
+     * Name getter.
+     *
+     * @return the name of the person.
+     */
+    public String getName(){
+        return name;
     }
 
+    /**
+     * Avatar getter.
+     *
+     * @return the avatar of the person.
+     */
     public String getAvatar(){
         return avatar;
     }
 
-    public String getName(){
-        return name;
+    /**
+     * Tells whether the person is an instructor.
+     *
+     * @return true if instructor, false if student.
+     */
+    public boolean isInstructor(){
+        return isInstructor;
+    }
+
+    public void asInstructor(){
+        isInstructor = true;
+    }
+
+    public void asStudent(){
+        isInstructor = false;
     }
 
     @Override

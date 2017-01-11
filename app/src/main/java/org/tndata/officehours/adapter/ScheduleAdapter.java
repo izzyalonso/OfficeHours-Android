@@ -63,6 +63,11 @@ public class ScheduleAdapter
         holder.setCourse(courses.get(position));
     }
 
+    public void setCourses(List<Course> courses){
+        this.courses = courses;
+        notifyDataSetChanged();
+    }
+
     public void addCourse(@NonNull Course course){
         courses.add(course);
         notifyItemChanged(courses.size()-2);

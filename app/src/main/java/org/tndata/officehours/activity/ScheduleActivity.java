@@ -29,7 +29,7 @@ import java.util.List;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapter.Listener{
+public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapter.Listener, DataSynchronizer.Callback{
     private static final int ADD_CODE_RC = 7529;
     private static final int NEW_COURSE_RC = 6392;
 
@@ -55,7 +55,7 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
         binding.scheduleList.setAdapter(adapter);
         binding.scheduleList.addItemDecoration(new CustomItemDecoration(this, 12));
 
-        DataSynchronizer.sync(this);
+        DataSynchronizer.sync(this, this);
     }
 
     @Override
@@ -105,5 +105,15 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
     @Override
     public void onCourseSelected(@NonNull Course course){
         startActivity(CourseActivity.getIntent(this, course));
+    }
+
+    @Override
+    public void onDataLoaded(){
+        adapter.setCourses(((OfficeHoursApp)getApplication()).getCourses());
+    }
+
+    @Override
+    public void onDataLoadFailed(){
+
     }
 }

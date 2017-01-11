@@ -6,9 +6,12 @@ import android.util.Log;
 
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.Person;
 import org.tndata.officehours.model.ResultSet;
 import org.tndata.officehours.parser.Parser;
 import org.tndata.officehours.parser.ParserModels;
+
+import java.util.List;
 
 import es.sandwatch.httprequests.HttpRequest;
 import es.sandwatch.httprequests.HttpRequestError;
@@ -28,22 +31,31 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
      * Starts the synchronization process.
      *
      * @param context a reference to the context.
+     * @param callback the callback object.
      */
-    public static void sync(@NonNull Context context){
-        new DataSynchronizer(context);
+    public static void sync(@NonNull Context context, @NonNull Callback callback){
+        new DataSynchronizer(context, callback);
     }
 
 
-    //Reference to the app
+    //Reference to the app and the callback object
     private OfficeHoursApp application;
+    private Callback callback;
 
     //Things we need to update
     private int getProfileRC;
     private int getCoursesRC;
 
 
-    private DataSynchronizer(@NonNull Context context){
+    /**
+     * Constructor.
+     *
+     * @param context a reference to the context.
+     * @param callback the callback object.
+     */
+    private DataSynchronizer(@NonNull Context context, @NonNull Callback callback){
         application = (OfficeHoursApp)context.getApplicationContext();
+        this.callback = callback;
 
         getCoursesRC = HttpRequest.get(this, API.URL.courses());
     }
@@ -64,7 +76,16 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
 
     @Override
     public void onProcessResult(int requestCode, ResultSet result){
-
+        if (result instanceof ParserModels.CourseList){
+            List<Course> courses = ((ParserModels.CourseList)result).results;
+            for (Course course:courses){
+                course.getInstructor().asInstructor();
+                for (Person student:course.getStudents()){
+                    student.asStudent();
+                }
+            }
+            application.setCourses(courses);
+        }
     }
 
     @Override
@@ -72,12 +93,13 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
         for (Course course:((ParserModels.CourseList)result).results){
             Log.d(TAG, course.toString());
             Log.d(TAG, course.getInstructor().toString());
+            callback.onDataLoaded();
         }
     }
 
     @Override
     public void onParseFailed(int requestCode){
-
+        callback.onDataLoadFailed();
     }
 
 
