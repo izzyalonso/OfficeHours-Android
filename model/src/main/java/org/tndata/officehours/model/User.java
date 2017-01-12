@@ -205,7 +205,7 @@ public class User{
         editor.putBoolean("user.isOnBoardingComplete", isOnBoardingComplete);
 
         editor.putString("user.token", token);
-        editor.apply();
+        editor.commit();
     }
 
     /**

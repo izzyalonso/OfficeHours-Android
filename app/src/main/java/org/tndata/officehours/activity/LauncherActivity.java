@@ -21,8 +21,8 @@ import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityLauncherBinding;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.User;
-import org.tndata.officehours.util.API;
-import org.tndata.officehours.util.DatabaseReader;
+import org.tndata.officehours.database.DatabaseReader;
+import org.tndata.officehours.util.DataSynchronizer;
 
 import java.util.List;
 
@@ -42,10 +42,13 @@ public class LauncherActivity
                 View.OnClickListener,
                 GoogleApiClient.OnConnectionFailedListener,
                 HttpRequest.RequestCallback,
+                DataSynchronizer.Callback,
                 DatabaseReader.Listener{
 
-    private static final String TAG = "LauncherActivity";
+    public static final String FROM_ON_BOARDING_KEY = "org.tndata.officehours.Launcher.FromOnBoarding";
 
+
+    private static final String TAG = "LauncherActivity";
     private static final int GOOGLE_SIGN_IN_RC = 5327;
 
 
@@ -67,7 +70,12 @@ public class LauncherActivity
             binding.launcherProgress.setVisibility(View.VISIBLE);
             ((OfficeHoursApp)getApplication()).setUser(user);
             if (user.isOnBoardingComplete()){
-                DatabaseReader.start(this, this);
+                if (getIntent().getBooleanExtra(FROM_ON_BOARDING_KEY, false)){
+                    DataSynchronizer.sync(this, this);
+                }
+                else{
+                    DatabaseReader.start(this, this);
+                }
             }
             else{
                 startActivity(new Intent(this, OnBoardingActivity.class));
@@ -75,18 +83,15 @@ public class LauncherActivity
             }
         }
         else{
-            //Set listeners
-            /*user = new User();
+            user = new User();
+            HttpRequest.addHeader("Authorization", "Token " + user.getToken());
             user.writeToPreferences(this);
             ((OfficeHoursApp)getApplication()).setUser(user);
-            if (user.isOnBoardingComplete()){
-                loadData();
-            }
-            else{
-                startActivity(new Intent(this, OnBoardingActivity.class));
-            }
-            finish();*/
-            binding.launcherGoogleSignIn.setOnClickListener(this);
+            startActivity(new Intent(this, OnBoardingActivity.class));
+            finish();
+
+            //Set listeners
+            /*binding.launcherGoogleSignIn.setOnClickListener(this);
 
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     //.requestServerAuthCode(getString(R.string.server_client_id))
@@ -97,7 +102,7 @@ public class LauncherActivity
             googleApiClient = new GoogleApiClient.Builder(this)
                     .enableAutoManage(this, this)
                     .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                    .build();
+                    .build();*/
         }
     }
 
@@ -146,6 +151,7 @@ public class LauncherActivity
 
     @Override
     public void onRequestComplete(int requestCode, String result){
+        //TODO if needs on boarding -> on boarding, otherwise, launch the synchronizer
         user.writeToPreferences(this);
         ((OfficeHoursApp)getApplication()).setUser(user);
         startActivity(new Intent(this, OnBoardingActivity.class));
@@ -155,6 +161,17 @@ public class LauncherActivity
     @Override
     public void onRequestFailed(int requestCode, HttpRequestError error){
         Log.d(TAG, error.toString());
+    }
+
+    @Override
+    public void onDataLoaded(){
+        startActivity(new Intent(this, ScheduleActivity.class));
+        finish();
+    }
+
+    @Override
+    public void onDataLoadFailed(){
+
     }
 
     @Override

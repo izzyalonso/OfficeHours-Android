@@ -1,11 +1,10 @@
-package org.tndata.officehours.util;
+package org.tndata.officehours.database;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import org.tndata.officehours.activity.TimeSlotPickerActivity;
-import org.tndata.officehours.database.CourseTableHandler;
 import org.tndata.officehours.model.Course;
 
 import java.util.List;

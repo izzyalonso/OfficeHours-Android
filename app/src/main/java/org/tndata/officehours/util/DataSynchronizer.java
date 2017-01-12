@@ -7,7 +7,9 @@ import android.util.Log;
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.activity.TimeSlotPickerActivity;
 import org.tndata.officehours.database.CourseTableHandler;
+import org.tndata.officehours.database.PersonTableHandler;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.Person;
 import org.tndata.officehours.model.ResultSet;
 import org.tndata.officehours.parser.Parser;
 import org.tndata.officehours.parser.ParserModels;
@@ -80,23 +82,24 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
     public void onProcessResult(int requestCode, ResultSet result){
         if (result instanceof ParserModels.CourseList){
             //Open a connection to the database
-            CourseTableHandler handler = new CourseTableHandler(application);
+            CourseTableHandler courseHandler = new CourseTableHandler(application);
+            PersonTableHandler personHandler = new PersonTableHandler(application);
 
             //Get the lists of courses in the backend and the database
             List<Course> backendCourses = ((ParserModels.CourseList)result).results;
-            List<Course> dbCourses = handler.getCourses();
+            List<Course> dbCourses = courseHandler.getCourses();
 
             //List of courses in the backend not available in the database, to be bulk written
             List<Course> newCourses = new ArrayList<>();
 
-            //Compare the two lists.
+            //Compare the two lists
             for (Course course:backendCourses){
                 if (dbCourses.contains(course)){
                     //Remove so we have a record of which courses need to be removed
                     Course dbCourse = dbCourses.remove(dbCourses.indexOf(course));
                     if (!course.parametersMatch(dbCourse)){
                         //If the course exists and needs updating, update it
-                        handler.updateCourse(course);
+                        courseHandler.updateCourse(course);
                     }
                 }
                 else{
@@ -111,12 +114,45 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
                                 course.getMeetingTime(), false
                         )
                 );
+
+
+                List<Person> backendPeople = course.getStudents();
+                List<Person> dbPeople = personHandler.getPeople(course);
+
+                List<Person> newPeople = new ArrayList<>();
+
+                Person instructor = course.getInstructor();
+                //If the instructors mismatch, add the new one to the saving list
+                if (!dbPeople.contains(instructor)){
+                    newPeople.add(instructor);
+                }
+
+                //This is the same process followed by course matching, the only difference is
+                //  that people are not editable for the time being
+                for (Person person:backendPeople){
+                    if (dbPeople.contains(person)){
+                        dbPeople.remove(dbPeople.indexOf(person));
+                    }
+                    else{
+                        newPeople.add(person);
+                    }
+                }
+
+                for (Person person:dbPeople){
+                    personHandler.deletePerson(person, course);
+                }
+                personHandler.savePeople(newPeople, course);
             }
+
+            //If a course needs to be deleted, delete both the course and the people in it
             for (Course course:dbCourses){
-                handler.deleteCourse(course);
+                courseHandler.deleteCourse(course);
+                personHandler.deletePeople(course);
             }
-            handler.saveCourses(newCourses);
-            handler.close();
+            courseHandler.saveCourses(newCourses);
+
+            personHandler.close();
+            courseHandler.close();
             application.setCourses(backendCourses);
         }
     }

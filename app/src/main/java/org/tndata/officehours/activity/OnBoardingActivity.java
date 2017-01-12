@@ -25,7 +25,12 @@ import java.util.ArrayList;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class OnBoardingActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener{
+public class OnBoardingActivity
+        extends AppCompatActivity
+        implements
+                View.OnClickListener,
+                CompoundButton.OnCheckedChangeListener{
+
     private static final int TIME_SLOT_PICKER_RC = 2753;
 
 
@@ -168,7 +173,9 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
             user.setPhoneNumber(phone);
             user.onBoardingCompleted();
             user.writeToPreferences(this);
-            startActivity(new Intent(this, ScheduleActivity.class));
+            Intent launcher = new Intent(this, LauncherActivity.class)
+                    .putExtra(LauncherActivity.FROM_ON_BOARDING_KEY, true);
+            startActivity(launcher);
             finish();
         }
     }
