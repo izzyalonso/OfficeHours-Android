@@ -49,6 +49,9 @@ public class CourseTableHandler extends TableHandler{
             + CourseEntry.ACCESS_CODE + "=? "
             + "WHERE " + CourseEntry.CLOUD_ID + "=?";
 
+    private static final String DELETE = "DELETE FROM " + CourseEntry.TABLE
+            + " WHERE " + CourseEntry.CLOUD_ID + "=?";
+
     private static final String SELECT = "SELECT * FROM " + CourseEntry.TABLE;
 
 
@@ -142,9 +145,24 @@ public class CourseTableHandler extends TableHandler{
         stmt.bindLong(5, course.getId());
 
         //Execute the query
-        stmt.execute();
+        stmt.executeUpdateDelete();
 
         //Close up
+        stmt.close();
+    }
+
+    /**
+     * Deletes a course from the database.
+     *
+     * @param course the course to be deleted.
+     */
+    public void deleteCourse(@NonNull Course course){
+        SQLiteDatabase db = getDatabase();
+
+        SQLiteStatement stmt = db.compileStatement(DELETE);
+        stmt.bindLong(1, course.getId());
+        stmt.executeUpdateDelete();
+
         stmt.close();
     }
 

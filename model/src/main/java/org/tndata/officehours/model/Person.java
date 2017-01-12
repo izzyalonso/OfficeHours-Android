@@ -82,6 +82,11 @@ public class Person extends Base{
     }
 
     @Override
+    public boolean equals(Object o){
+        return o instanceof Person && ((Person)o).getId() == getId();
+    }
+
+    @Override
     public void writeToParcel(Parcel parcel, int flags){
         super.writeToParcel(parcel, flags);
         parcel.writeString(name);

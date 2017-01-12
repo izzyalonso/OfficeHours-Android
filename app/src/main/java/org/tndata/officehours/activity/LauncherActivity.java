@@ -3,7 +3,6 @@ package org.tndata.officehours.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +19,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityLauncherBinding;
+import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.User;
 import org.tndata.officehours.util.API;
+import org.tndata.officehours.util.DatabaseReader;
+
+import java.util.List;
 
 import es.sandwatch.httprequests.HttpRequest;
 import es.sandwatch.httprequests.HttpRequestError;
@@ -38,7 +41,8 @@ public class LauncherActivity
         implements
                 View.OnClickListener,
                 GoogleApiClient.OnConnectionFailedListener,
-                HttpRequest.RequestCallback{
+                HttpRequest.RequestCallback,
+                DatabaseReader.Listener{
 
     private static final String TAG = "LauncherActivity";
 
@@ -63,13 +67,7 @@ public class LauncherActivity
             binding.launcherProgress.setVisibility(View.VISIBLE);
             ((OfficeHoursApp)getApplication()).setUser(user);
             if (user.isOnBoardingComplete()){
-                new Handler().postDelayed(new Runnable(){
-                    @Override
-                    public void run(){
-                        loadData();
-                        finish();
-                    }
-                }, 3000);
+                DatabaseReader.start(this, this);
             }
             else{
                 startActivity(new Intent(this, OnBoardingActivity.class));
@@ -146,11 +144,6 @@ public class LauncherActivity
         binding.launcherGoogleSignIn.setEnabled(false);
     }
 
-    private void loadData(){
-        //TODO Load from DB
-        startActivity(new Intent(this, ScheduleActivity.class));
-    }
-
     @Override
     public void onRequestComplete(int requestCode, String result){
         user.writeToPreferences(this);
@@ -162,5 +155,12 @@ public class LauncherActivity
     @Override
     public void onRequestFailed(int requestCode, HttpRequestError error){
         Log.d(TAG, error.toString());
+    }
+
+    @Override
+    public void onComplete(List<Course> courses){
+        ((OfficeHoursApp)getApplication()).setCourses(courses);
+        startActivity(new Intent(this, ScheduleActivity.class));
+        finish();
     }
 }

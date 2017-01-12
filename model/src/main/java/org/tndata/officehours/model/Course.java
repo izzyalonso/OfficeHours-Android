@@ -25,7 +25,7 @@ public class Course extends Base{
     private String location;
     @SerializedName("meetingtime")
     private String meetingTime;
-    @SerializedName("access_code")
+    @SerializedName("code")
     private String accessCode;
 
     @SerializedName("teacher")
@@ -229,11 +229,7 @@ public class Course extends Base{
 
     @Override
     public boolean equals(Object o){
-        if (o instanceof Course){
-            Course course = (Course)o;
-            return course.getId() == getId();
-        }
-        return false;
+        return o instanceof Course && ((Course)o).getId() == getId();
     }
 
     /**

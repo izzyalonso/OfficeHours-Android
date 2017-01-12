@@ -45,7 +45,7 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
 
         setSupportActionBar(binding.scheduleToolbar.toolbar);
 
-        adapter = new ScheduleAdapter(this, this, new ArrayList<Course>());
+        adapter = new ScheduleAdapter(this, this, ((OfficeHoursApp)getApplication()).getCourses());
         binding.scheduleList.setLayoutManager(new LinearLayoutManager(this));
         binding.scheduleList.setAdapter(adapter);
         binding.scheduleList.addItemDecoration(new CustomItemDecoration(this, 12));

@@ -6,12 +6,13 @@ import android.util.Log;
 
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.activity.TimeSlotPickerActivity;
+import org.tndata.officehours.database.CourseTableHandler;
 import org.tndata.officehours.model.Course;
-import org.tndata.officehours.model.Person;
 import org.tndata.officehours.model.ResultSet;
 import org.tndata.officehours.parser.Parser;
 import org.tndata.officehours.parser.ParserModels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import es.sandwatch.httprequests.HttpRequest;
@@ -78,8 +79,32 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
     @Override
     public void onProcessResult(int requestCode, ResultSet result){
         if (result instanceof ParserModels.CourseList){
-            List<Course> courses = ((ParserModels.CourseList)result).results;
-            for (Course course:courses){
+            //Open a connection to the database
+            CourseTableHandler handler = new CourseTableHandler(application);
+
+            //Get the lists of courses in the backend and the database
+            List<Course> backendCourses = ((ParserModels.CourseList)result).results;
+            List<Course> dbCourses = handler.getCourses();
+
+            //List of courses in the backend not available in the database, to be bulk written
+            List<Course> newCourses = new ArrayList<>();
+
+            //Compare the two lists.
+            for (Course course:backendCourses){
+                if (dbCourses.contains(course)){
+                    //Remove so we have a record of which courses need to be removed
+                    Course dbCourse = dbCourses.remove(dbCourses.indexOf(course));
+                    if (!course.parametersMatch(dbCourse)){
+                        //If the course exists and needs updating, update it
+                        handler.updateCourse(course);
+                    }
+                }
+                else{
+                    //If the course doesn't exist add it to the list to bulk add later
+                    newCourses.add(course);
+                }
+
+                //Process the course
                 course.process();
                 course.setFormattedMeetingTime(
                         TimeSlotPickerActivity.get12HourFormattedString(
@@ -87,7 +112,12 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
                         )
                 );
             }
-            application.setCourses(courses);
+            for (Course course:dbCourses){
+                handler.deleteCourse(course);
+            }
+            handler.saveCourses(newCourses);
+            handler.close();
+            application.setCourses(backendCourses);
         }
     }
 
