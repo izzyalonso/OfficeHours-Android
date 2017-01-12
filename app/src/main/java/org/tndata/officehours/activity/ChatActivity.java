@@ -12,6 +12,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+
 /**
  * Created by ialonso on 1/4/17.
  */

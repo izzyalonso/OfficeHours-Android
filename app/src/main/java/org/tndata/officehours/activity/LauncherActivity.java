@@ -3,6 +3,7 @@ package org.tndata.officehours.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -58,18 +59,26 @@ public class LauncherActivity
 
         User user = User.readFromPreferences(this);
         if (user != null){
+            binding.launcherGoogleSignIn.setVisibility(View.GONE);
+            binding.launcherProgress.setVisibility(View.VISIBLE);
             ((OfficeHoursApp)getApplication()).setUser(user);
             if (user.isOnBoardingComplete()){
-                loadData();
+                new Handler().postDelayed(new Runnable(){
+                    @Override
+                    public void run(){
+                        loadData();
+                        finish();
+                    }
+                }, 3000);
             }
             else{
                 startActivity(new Intent(this, OnBoardingActivity.class));
+                finish();
             }
-            finish();
         }
         else{
             //Set listeners
-            user = new User();
+            /*user = new User();
             user.writeToPreferences(this);
             ((OfficeHoursApp)getApplication()).setUser(user);
             if (user.isOnBoardingComplete()){
@@ -78,8 +87,8 @@ public class LauncherActivity
             else{
                 startActivity(new Intent(this, OnBoardingActivity.class));
             }
-            finish();
-            /*binding.launcherGooogleSignIn.setOnClickListener(this);
+            finish();*/
+            binding.launcherGoogleSignIn.setOnClickListener(this);
 
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     //.requestServerAuthCode(getString(R.string.server_client_id))
@@ -90,13 +99,13 @@ public class LauncherActivity
             googleApiClient = new GoogleApiClient.Builder(this)
                     .enableAutoManage(this, this)
                     .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                    .build();*/
+                    .build();
         }
     }
 
     @Override
     public void onClick(View view){
-        if (view.getId() == R.id.launcher_gooogle_sign_in){
+        if (view.getId() == R.id.launcher_google_sign_in){
             signInWithGoogle();
         }
     }
@@ -134,7 +143,7 @@ public class LauncherActivity
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult){
         Log.e(TAG, "Couldn't connect to GoogleApiClient");
-        binding.launcherGooogleSignIn.setEnabled(false);
+        binding.launcherGoogleSignIn.setEnabled(false);
     }
 
     private void loadData(){

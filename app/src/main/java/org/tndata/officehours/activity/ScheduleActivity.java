@@ -45,12 +45,7 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
 
         setSupportActionBar(binding.scheduleToolbar.toolbar);
 
-        List<Course> courses = new ArrayList<>();
-        courses.add(new Course("Intro to cs", "Dunn 255", "MW 11:00-12:25", "12/25/2016"));
-        courses.add(new Course("Discrete math", "Dunn 230",  "TR 11:00-12:25", "12/25/2016"));
-        courses.add(new Course("Some higher level course", "Dunn 235", "MWF 11:00-12:00", "12/25/2016"));
-
-        adapter = new ScheduleAdapter(this, this, courses);
+        adapter = new ScheduleAdapter(this, this, new ArrayList<Course>());
         binding.scheduleList.setLayoutManager(new LinearLayoutManager(this));
         binding.scheduleList.setAdapter(adapter);
         binding.scheduleList.addItemDecoration(new CustomItemDecoration(this, 12));

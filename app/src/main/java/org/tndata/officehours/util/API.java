@@ -38,14 +38,39 @@ public class API{
 
     }
 
-
+    /**
+     * Class containing information about the API endpoint URLS.
+     *
+     * @author Ismael Alonso
+     * @version 1.0.0
+     */
     public static class URL{
+        /**
+         * Gets the endpoint to POST a user who is signing in.
+         *
+         * @return the named endpoint.
+         */
         public static String signIn(){
             return BASE_URL + "users/oauth/";
         }
 
+        /**
+         * Gets the API endpoint for GETting and POSTing courses.
+         *
+         * @return the named endpoint.
+         */
         public static String courses(){
             return BASE_URL + "courses/";
+        }
+
+        /**
+         * Gets the API endpoint for PUTting courses.
+         *
+         * @param id the id of the course to update.
+         * @return the named endpoint.
+         */
+        public static String courses(long id){
+            return BASE_URL + "courses/" + id + "/";
         }
     }
 

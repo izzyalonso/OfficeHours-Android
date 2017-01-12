@@ -79,7 +79,7 @@ public class CourseEditorActivity
             //binding.courseEditorCode.setText(course.getCode());
             binding.courseEditorName.setText(course.getName());
             binding.courseEditorLocation.setText(course.getLocation());
-            binding.courseEditorMeetingTime.setText(meetingTime);
+            binding.courseEditorMeetingTime.setText(course.getFormattedMeetingTime());
             binding.courseEditorLastMeetingDate.setText(lastMeetingDate);
 
             binding.courseEditorToolbar.toolbar.setTitle(R.string.course_editor_label_edit);
@@ -92,11 +92,11 @@ public class CourseEditorActivity
         switch (view.getId()){
             case R.id.course_editor_meeting_time:
                 Intent slotPicker;
-                if (meetingTime.isEmpty()){
-                    slotPicker = TimeSlotPickerActivity.getIntent(this, true, false);
+                if (meetingTime == null || meetingTime.isEmpty()){
+                    slotPicker = TimeSlotPickerActivity.getIntent(this, true, true, false);
                 }
                 else{
-                    slotPicker = TimeSlotPickerActivity.getIntent(this, meetingTime, true, false);
+                    slotPicker = TimeSlotPickerActivity.getIntent(this, meetingTime, true, true, false);
                 }
                 startActivityForResult(slotPicker, TIME_SLOT_PICKER_RC);
                 break;
@@ -172,7 +172,7 @@ public class CourseEditorActivity
             binding.courseEditorError.setText(R.string.course_editor_error_location);
             return false;
         }
-        else if (meetingTime.isEmpty()){
+        else if (meetingTime == null || meetingTime.isEmpty()){
             binding.courseEditorError.setText(R.string.course_editor_error_meeting_time);
             return false;
         }
@@ -204,8 +204,10 @@ public class CourseEditorActivity
             //course.setCode(binding.courseEditorCode.getText().toString().trim());
             course.setName(binding.courseEditorName.getText().toString().trim());
             course.setMeetingTime(meetingTime);
+            String formatted = TimeSlotPickerActivity.get12HourFormattedString(meetingTime, false);
+            course.setFormattedMeetingTime(formatted);
             //course.setLastMeetingDate(lastMeetingDate);
-            HttpRequest.put(null, API.URL.courses(), API.BODY.postPutCourse(course));
+            HttpRequest.put(null, API.URL.courses(course.getId()), API.BODY.postPutCourse(course));
             setResult(RESULT_OK, new Intent().putExtra(COURSE_KEY, course));
             finish();
         }
@@ -240,12 +242,16 @@ public class CourseEditorActivity
     @Override
     public void onRequestFailed(int requestCode, HttpRequestError error){
         Log.d(TAG, error.toString());
+        Log.d(TAG, error.getMessage());
     }
 
     @Override
     public void onProcessResult(int requestCode, ResultSet result){
         if (result instanceof Course){
-            ((Course)result).process();
+            Course course = (Course)result;
+            course.process();
+            String formatted = TimeSlotPickerActivity.get12HourFormattedString(meetingTime, false);
+            course.setFormattedMeetingTime(formatted);
         }
     }
 

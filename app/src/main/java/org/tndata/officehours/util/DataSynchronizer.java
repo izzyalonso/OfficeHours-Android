@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.tndata.officehours.OfficeHoursApp;
+import org.tndata.officehours.activity.TimeSlotPickerActivity;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Person;
 import org.tndata.officehours.model.ResultSet;
@@ -80,6 +81,11 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
             List<Course> courses = ((ParserModels.CourseList)result).results;
             for (Course course:courses){
                 course.process();
+                course.setFormattedMeetingTime(
+                        TimeSlotPickerActivity.get12HourFormattedString(
+                                course.getMeetingTime(), false
+                        )
+                );
             }
             application.setCourses(courses);
         }

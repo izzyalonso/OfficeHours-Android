@@ -23,7 +23,7 @@ public class Course extends Base{
     private String name;
     @SerializedName("location")
     private String location;
-    @SerializedName("meeting_time")
+    @SerializedName("meetingtime")
     private String meetingTime;
     @SerializedName("last_meeting_date")
     private String lastMeetingDate;
@@ -34,6 +34,9 @@ public class Course extends Base{
     private Person instructor;
     @SerializedName("students")
     private List<Person> students;
+
+
+    private String formattedMeetingTime;
 
 
     /**
@@ -71,6 +74,7 @@ public class Course extends Base{
         this.name = name;
         this.location = location;
         this.meetingTime = meetingTime;
+        formattedMeetingTime = "";
         this.lastMeetingDate = lastMeetingDate;
         this.accessCode = accessCode;
     }
@@ -118,6 +122,10 @@ public class Course extends Base{
      */
     public String getMeetingTime(){
         return meetingTime;
+    }
+
+    public String getFormattedMeetingTime(){
+        return formattedMeetingTime;
     }
 
     /**
@@ -192,6 +200,10 @@ public class Course extends Base{
         this.meetingTime = meetingTime;
     }
 
+    public void setFormattedMeetingTime(String formattedMeetingTime){
+        this.formattedMeetingTime = formattedMeetingTime;
+    }
+
     /**
      * Last meeting date setter.
      *
@@ -245,6 +257,7 @@ public class Course extends Base{
         parcel.writeString(name);
         parcel.writeString(location);
         parcel.writeString(meetingTime);
+        parcel.writeString(formattedMeetingTime);
         parcel.writeString(lastMeetingDate);
         parcel.writeString(accessCode);
         parcel.writeParcelable(instructor, flags);
@@ -274,6 +287,7 @@ public class Course extends Base{
         name = src.readString();
         location = src.readString();
         meetingTime = src.readString();
+        formattedMeetingTime = src.readString();
         lastMeetingDate = src.readString();
         accessCode = src.readString();
         instructor = src.readParcelable(Person.class.getClassLoader());
