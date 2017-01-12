@@ -49,7 +49,7 @@ public class CourseEditorActivity
     private Course course;
 
     private String meetingTime;
-    private String lastMeetingDate;
+    //private String lastMeetingDate;
 
 
     @Override
@@ -67,20 +67,20 @@ public class CourseEditorActivity
         if (course == null){
             //If no course was delivered, initialize everything to zero
             meetingTime = "";
-            lastMeetingDate = "";
+            //lastMeetingDate = "";
 
             binding.courseEditorToolbar.toolbar.setTitle(R.string.course_editor_label_new);
         }
         else{
             //If a course was delivered, populate all fields
             meetingTime = course.getMeetingTime();
-            lastMeetingDate = course.getLastMeetingDate();
+            //lastMeetingDate = course.getLastMeetingDate();
 
             //binding.courseEditorCode.setText(course.getCode());
             binding.courseEditorName.setText(course.getName());
             binding.courseEditorLocation.setText(course.getLocation());
             binding.courseEditorMeetingTime.setText(course.getFormattedMeetingTime());
-            binding.courseEditorLastMeetingDate.setText(lastMeetingDate);
+            //binding.courseEditorLastMeetingDate.setText(lastMeetingDate);
 
             binding.courseEditorToolbar.toolbar.setTitle(R.string.course_editor_label_edit);
             binding.courseEditorDone.setText(R.string.course_editor_save);
@@ -102,7 +102,7 @@ public class CourseEditorActivity
                 break;
 
             case R.id.course_editor_last_meeting_date:
-                pickLastMeetingDate();
+                //pickLastMeetingDate();
                 break;
 
             case R.id.course_editor_done:
@@ -129,7 +129,7 @@ public class CourseEditorActivity
     /**
      * Fires the last meeting date picker.
      */
-    private void pickLastMeetingDate(){
+    /*private void pickLastMeetingDate(){
         int year, month, day;
         if (lastMeetingDate.isEmpty()){
             Calendar calendar = Calendar.getInstance();
@@ -145,12 +145,12 @@ public class CourseEditorActivity
         }
 
         new DatePickerDialog(this, this, year, month, day).show();
-    }
+    }*/
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth){
-        lastMeetingDate = (monthOfYear+1) + "/" + dayOfMonth + "/" + year;
-        binding.courseEditorLastMeetingDate.setText(lastMeetingDate);
+        //lastMeetingDate = (monthOfYear+1) + "/" + dayOfMonth + "/" + year;
+        //binding.courseEditorLastMeetingDate.setText(lastMeetingDate);
     }
 
     /**
@@ -194,8 +194,8 @@ public class CourseEditorActivity
                     //binding.courseEditorCode.getText().toString().trim(),
                     binding.courseEditorName.getText().toString().trim(),
                     binding.courseEditorLocation.getText().toString().trim(),
-                    meetingTime,
-                    lastMeetingDate//,
+                    meetingTime//,
+                    //lastMeetingDate//,
                     //((OfficeHoursApp)getApplication()).getUser().getName()
             );
             HttpRequest.post(this, API.URL.courses(), API.BODY.postPutCourse(course));

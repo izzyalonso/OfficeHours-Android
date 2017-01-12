@@ -25,8 +25,6 @@ public class Course extends Base{
     private String location;
     @SerializedName("meetingtime")
     private String meetingTime;
-    @SerializedName("last_meeting_date")
-    private String lastMeetingDate;
     @SerializedName("access_code")
     private String accessCode;
 
@@ -47,12 +45,11 @@ public class Course extends Base{
      * @param name the name of the course.
      * @param location the location of the course.
      * @param meetingTime a representation of the days and times the course meets.
-     * @param lastMeetingDate the last day the class meets.
      */
     public Course(/*@NonNull String code, */@NonNull String name, @NonNull String location,
-                  @NonNull String meetingTime, @NonNull String lastMeetingDate){
+                  @NonNull String meetingTime){
 
-        this(-1, /*code,*/ name, location, meetingTime, lastMeetingDate, "");
+        this(-1, /*code,*/ name, location, meetingTime, "");
     }
 
     /**
@@ -63,19 +60,16 @@ public class Course extends Base{
      * @param name the name of the course.
      * @param location the location of the course.
      * @param meetingTime a representation of the days and times the course meets.
-     * @param lastMeetingDate the last day the class meets.
      * @param accessCode the code that grants access to the course.
      */
     public Course(long id, /*@NonNull String code,*/ @NonNull String name, @NonNull String location,
-                  @NonNull String meetingTime, @NonNull String lastMeetingDate,
-                  @NonNull String accessCode){
+                  @NonNull String meetingTime, @NonNull String accessCode){
 
         super(id);
         this.name = name;
         this.location = location;
         this.meetingTime = meetingTime;
         formattedMeetingTime = "";
-        this.lastMeetingDate = lastMeetingDate;
         this.accessCode = accessCode;
     }
 
@@ -126,15 +120,6 @@ public class Course extends Base{
 
     public String getFormattedMeetingTime(){
         return formattedMeetingTime;
-    }
-
-    /**
-     * Last meeting date getter.
-     *
-     * @return the expiration date.
-     */
-    public String getLastMeetingDate(){
-        return lastMeetingDate;
     }
 
     /**
@@ -200,17 +185,13 @@ public class Course extends Base{
         this.meetingTime = meetingTime;
     }
 
+    /**
+     * Sets the formatted meeting time.
+     *
+     * @param formattedMeetingTime formatted (K:mm a) meeting time of the course.
+     */
     public void setFormattedMeetingTime(String formattedMeetingTime){
         this.formattedMeetingTime = formattedMeetingTime;
-    }
-
-    /**
-     * Last meeting date setter.
-     *
-     * @param lastMeetingDate the last meeting date of the course.
-     */
-    public void setLastMeetingDate(String lastMeetingDate){
-        this.lastMeetingDate = lastMeetingDate;
     }
 
     /**
@@ -246,6 +227,31 @@ public class Course extends Base{
         return "Course #" + getId() + ": " + getName() + " -> " + getLocation();
     }
 
+    @Override
+    public boolean equals(Object o){
+        if (o instanceof Course){
+            Course course = (Course)o;
+            return course.getId() == getId();
+        }
+        return false;
+    }
+
+    /**
+     * Compares the courses field by field, whereas equals only compares IDs.
+     *
+     * @param course the course to be compared.
+     * @return true if the course's parameters are the same.
+     */
+    public boolean parametersMatch(Course course){
+        if (equals(course)){
+            boolean match = name.equals(course.getName());
+            match &= location.equals(course.getLocation());
+            return match && meetingTime.equals(course.getMeetingTime());
+        }
+        return false;
+    }
+
+
     /*------------------*
      * PARCELABLE STUFF *
      *------------------*/
@@ -258,7 +264,6 @@ public class Course extends Base{
         parcel.writeString(location);
         parcel.writeString(meetingTime);
         parcel.writeString(formattedMeetingTime);
-        parcel.writeString(lastMeetingDate);
         parcel.writeString(accessCode);
         parcel.writeParcelable(instructor, flags);
         parcel.writeTypedList(students);
@@ -288,7 +293,6 @@ public class Course extends Base{
         location = src.readString();
         meetingTime = src.readString();
         formattedMeetingTime = src.readString();
-        lastMeetingDate = src.readString();
         accessCode = src.readString();
         instructor = src.readParcelable(Person.class.getClassLoader());
         students = new ArrayList<>();

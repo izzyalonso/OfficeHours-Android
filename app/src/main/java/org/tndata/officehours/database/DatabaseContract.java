@@ -18,7 +18,6 @@ class DatabaseContract{
         static final String NAME = "name";
         static final String LOCATION = "location";
         static final String MEETING_TIME = "meeting_time";
-        static final String EXPIRATION_DATE = "expiration_date";
         static final String ACCESS_CODE = "access_code";
     }
 
