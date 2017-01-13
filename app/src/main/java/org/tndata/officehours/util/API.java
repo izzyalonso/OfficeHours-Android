@@ -72,6 +72,15 @@ public class API{
         public static String courses(long id){
             return BASE_URL + "courses/" + id + "/";
         }
+
+        /**
+         * Gets the API endpoint to enroll a user in a course.
+         *
+         * @return the named endpoint.
+         */
+        public static String courseEnroll(){
+            return courses() + "enroll/";
+        }
     }
 
     public static class BODY{
@@ -98,6 +107,17 @@ public class API{
                 body.put("location", course.getLocation());
                 body.put("meetingtime", course.getMeetingTime());
                 //body.put("last_meeting_date", course.getLastMeetingDate());
+            }
+            catch (JSONException jx){
+                jx.printStackTrace();
+            }
+            return body;
+        }
+
+        public static JSONObject courseEnroll(@NonNull String code){
+            JSONObject body = new JSONObject();
+            try{
+                body.put("code", code);
             }
             catch (JSONException jx){
                 jx.printStackTrace();

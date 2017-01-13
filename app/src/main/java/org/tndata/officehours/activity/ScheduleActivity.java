@@ -19,9 +19,6 @@ import org.tndata.officehours.model.User;
 import org.tndata.officehours.util.CustomItemDecoration;
 import org.tndata.officehours.util.DataSynchronizer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * Activity that displays a student's add
@@ -84,6 +81,7 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
             if (resultCode == RESULT_OK){
                 Course course = data.getParcelableExtra(AddCodeActivity.COURSE_KEY);
                 adapter.addCourse(course);
+                onCourseSelected(course);
             }
         }
         else if (requestCode == NEW_COURSE_RC){
