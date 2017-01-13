@@ -21,14 +21,14 @@ import java.util.List;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class ListDeserializer extends ParserMethods implements JsonDeserializer<List<?>>{
+public class ListDeserializer implements JsonDeserializer<List<?>>{
     @Override
     public List<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
         return parse(json);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> List<T> parse(JsonElement item){
+    private <T> List<T> parse(JsonElement item){
         //Create the list where the parsed objects will be put
         List<T> list = new ArrayList<>();
 
@@ -40,15 +40,10 @@ public class ListDeserializer extends ParserMethods implements JsonDeserializer<
             for (JsonElement element:item.getAsJsonArray()){
                 try{
                     Log.d("ListDeserializer", element.toString());
-                    JsonElement typeElement = ((JsonObject)element).get("object_type");
-                    String type = null;
-                    if (typeElement != null){
-                        type = typeElement.getAsString();
-                    }
-                    list.add((T)sGson.fromJson(element, Util.getTypeOf(type)));
+                    list.add((T)ParserMethods.sGson.fromJson(element, Util.getTypeOf((JsonObject)element)));
                 }
                 catch (ClassCastException ccx){
-                    list.add((T)sGson.fromJson(element, Long.class));
+                    list.add((T)ParserMethods.sGson.fromJson(element, Long.class));
                     Log.d("LongList", list.size()+"");
                 }
             }
