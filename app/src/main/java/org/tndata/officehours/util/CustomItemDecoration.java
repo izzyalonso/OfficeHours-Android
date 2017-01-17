@@ -3,6 +3,7 @@ package org.tndata.officehours.util;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
@@ -15,7 +16,8 @@ import android.view.View;
  * @version 1.0.0
  */
 public class CustomItemDecoration extends RecyclerView.ItemDecoration{
-    private int mMargin;
+    private Context context;
+    private int margin;
 
 
     /**
@@ -24,25 +26,30 @@ public class CustomItemDecoration extends RecyclerView.ItemDecoration{
      * @param context a reference to the context.
      * @param marginInDp the maximum spacing between items, items, and edges.
      */
-    public CustomItemDecoration(Context context, int marginInDp){
-        mMargin = getPixels(context, marginInDp);
+    public CustomItemDecoration(@NonNull Context context, int marginInDp){
+        this.context = context;
+        margin = getPixels(marginInDp);
     }
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state){
-        outRect.top = mMargin/2;
-        outRect.left = mMargin;
-        outRect.bottom = mMargin/2;
-        outRect.right = mMargin;
+        outRect.top = margin/2;
+        outRect.left = margin;
+        outRect.bottom = margin/2;
+        outRect.right = margin;
         if (parent.getChildAdapterPosition(view) == 0){
-            outRect.top = mMargin;
+            outRect.top = margin;
         }
         else if (parent.getChildAdapterPosition(view) == parent.getAdapter().getItemCount()-1){
-            outRect.bottom = mMargin;
+            outRect.bottom = margin;
         }
     }
 
-    private int getPixels(Context context, int densityPixels){
+    public Context getContext(){
+        return context;
+    }
+
+    protected int getPixels(int densityPixels){
         return (int)Math.ceil(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, densityPixels,
                 context.getResources().getDisplayMetrics()));
     }

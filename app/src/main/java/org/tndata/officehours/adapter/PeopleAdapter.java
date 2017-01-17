@@ -2,6 +2,9 @@ package org.tndata.officehours.adapter;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -50,6 +53,7 @@ public class PeopleAdapter
         LayoutInflater inflater = LayoutInflater.from(context);
         int resource = R.layout.item_person;
         ItemPersonBinding binding = DataBindingUtil.inflate(inflater, resource, parent, false);
+
         return new PersonHolder(binding, this);
     }
 

@@ -2,6 +2,7 @@ package org.tndata.officehours.model;
 
 
 import android.os.Parcel;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
@@ -18,6 +19,9 @@ public class Person extends Base{
     private String name;
     @SerializedName("avatar")
     private String avatar;
+
+    @ColorInt
+    private int color;
 
     private boolean isInstructor;
 
@@ -53,6 +57,15 @@ public class Person extends Base{
      */
     public String getAvatar(){
         return avatar;
+    }
+
+    @ColorInt
+    public int getColor(){
+        return color;
+    }
+
+    public void setColor(@ColorInt int color){
+        this.color = color;
     }
 
     /**

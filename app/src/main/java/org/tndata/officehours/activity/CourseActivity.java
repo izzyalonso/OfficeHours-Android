@@ -60,6 +60,7 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         binding.courseChatRoom.setOnClickListener(this);
+        binding.coursePeople.setOnClickListener(this);
     }
 
     @Override
@@ -98,6 +99,16 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view){
-        startActivity(new Intent(this, ChatActivity.class));
+        switch (view.getId()){
+            case R.id.course_people:
+                Intent people = new Intent(this, PeopleActivity.class)
+                        .putExtra(PeopleActivity.COURSE_KEY, course);
+                startActivity(people);
+                break;
+
+            case R.id.course_chat_room:
+                startActivity(new Intent(this, ChatActivity.class));
+                break;
+        }
     }
 }
