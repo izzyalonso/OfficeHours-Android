@@ -1,11 +1,15 @@
 package org.tndata.officehours.activity;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import org.apache.http.message.BasicNameValuePair;
+import org.tndata.officehours.R;
+import org.tndata.officehours.databinding.ActivityChatBinding;
+import org.tndata.officehours.model.Person;
 import org.tndata.officehours.util.WebSocketClient;
 
 import java.net.URI;
@@ -17,22 +21,31 @@ import java.util.ArrayList;
  * Created by ialonso on 1/4/17.
  */
 public class ChatActivity extends AppCompatActivity implements WebSocketClient.Listener{
-    private static final String TAG = "SocketTest";
+    private static final String TAG = "ChatActivity";
+
+    public static final String PERSON_KEY = "org.tndata.officehours.ChatActivity.Person";
 
 
+    private ActivityChatBinding binding;
     private WebSocketClient socketClient;
+
+    private Person person;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_chat);
 
-        try{
-            socketClient = new WebSocketClient(new URI("wss://staging.tndata.org/chat/ialonso/"), this, new ArrayList<BasicNameValuePair>());
-            socketClient.connect();
-        }
-        catch (URISyntaxException usx){
-            usx.printStackTrace();
+        person = getIntent().getParcelableExtra(PERSON_KEY);
+        if (person != null){
+            try{
+                socketClient = new WebSocketClient(new URI("wss://staging.tndata.org/chat/" + person.getId() + "/"), this, new ArrayList<BasicNameValuePair>());
+                socketClient.connect();
+            }
+            catch (URISyntaxException usx){
+                usx.printStackTrace();
+            }
         }
     }
 

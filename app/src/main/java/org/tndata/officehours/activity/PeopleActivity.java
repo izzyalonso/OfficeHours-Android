@@ -1,6 +1,7 @@
 package org.tndata.officehours.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -69,7 +70,7 @@ public class PeopleActivity extends AppCompatActivity implements PeopleAdapter.L
 
     @Override
     public void onPersonSelected(@NonNull Person person){
-
+        startActivity(new Intent(this, ChatActivity.class).putExtra(ChatActivity.PERSON_KEY, person));
     }
 
 
