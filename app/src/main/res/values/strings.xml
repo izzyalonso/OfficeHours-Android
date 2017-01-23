@@ -52,6 +52,11 @@
     <string name="time_slot_picker_to">to</string>
     <string name="time_slot_picker_done">done</string>
 
+    <!-- AddCodeActivity -->
+    <string name="add_code_title">Add Code</string>
+    <string name="add_code_hint">X</string>
+    <string name="add_code_error">Invalid code</string>
+
     <!-- AddCourseActivity -->
     <string name="add_course_label">Add to my schedule</string>
     <string name="add_course_verify">Please, verify this is your course</string>

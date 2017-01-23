@@ -32,7 +32,7 @@
 
         <activity
             android:name=".activity.AddCodeActivity"
-            android:label="Add Code"
+            android:label="@string/add_code_title"
             android:theme="@style/DialogActivityTheme"
             android:windowSoftInputMode="stateVisible" />
 
