@@ -7,9 +7,55 @@
         android:layout_height="match_parent"
         android:background="#700077FF">
 
-        <include
+        <android.support.v7.widget.Toolbar
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:toolbar="http://schemas.android.com/apk/res-auto"
             android:id="@+id/chat_toolbar"
-            layout="@layout/toolbar" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            toolbar:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical" >
+
+                <RelativeLayout
+                    android:id="@+id/chat_avatar_container"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:background="@drawable/circle_white" >
+
+                    <TextView
+                        android:id="@+id/chat_initials"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:id="@+id/chat_avatar"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/chat_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:textSize="17sp"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/chat_messages"

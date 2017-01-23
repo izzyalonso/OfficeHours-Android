@@ -104,6 +104,7 @@ public class Person extends Base{
         super.writeToParcel(parcel, flags);
         parcel.writeString(name);
         parcel.writeString(avatar);
+        parcel.writeInt(color);
         parcel.writeByte((byte)(isInstructor ? 1 : 0));
     }
 
@@ -123,6 +124,7 @@ public class Person extends Base{
         super(in);
         name = in.readString();
         avatar = in.readString();
+        color = in.readInt();
         isInstructor = in.readByte() == 1;
     }
 }

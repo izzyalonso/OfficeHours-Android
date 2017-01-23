@@ -46,9 +46,6 @@ public class PersonHolder extends RecyclerView.ViewHolder implements View.OnClic
      */
     public void setPerson(@NonNull Person person){
         Drawable drawable = binding.personAvatarContainer.getBackground();
-        if (drawable == null){
-            Log.e("PersonHolder", "drawable is null");
-        }
         GradientDrawable gradientDrawable = (GradientDrawable)drawable;
         gradientDrawable.setColor(person.getColor());
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN){
