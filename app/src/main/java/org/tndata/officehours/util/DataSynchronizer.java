@@ -162,8 +162,8 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
         for (Course course:((ParserModels.CourseList)result).results){
             Log.d(TAG, course.toString());
             Log.d(TAG, course.getInstructor().toString());
-            callback.onDataLoaded();
         }
+        callback.onDataLoaded();
     }
 
     @Override
