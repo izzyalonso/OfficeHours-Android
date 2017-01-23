@@ -69,7 +69,7 @@ public class LauncherActivity
             binding.launcherGoogleSignIn.setVisibility(View.GONE);
             binding.launcherProgress.setVisibility(View.VISIBLE);
             ((OfficeHoursApp)getApplication()).setUser(user);
-            if (!user.isOnBoardingComplete()){
+            if (user.isOnBoardingComplete()){
                 if (getIntent().getBooleanExtra(FROM_ON_BOARDING_KEY, false)){
                     DataSynchronizer.sync(this, this);
                 }
