@@ -107,7 +107,7 @@ public class OnBoardingActivity
     @Override
     public void onClick(View view){
         if (view.getId() == R.id.on_boarding_office_hours_add){
-            startActivityForResult(TimeSlotPickerActivity.getIntent(this, false, false, false), TIME_SLOT_PICKER_RC);
+            startActivityForResult(TimeSlotPickerActivity.getIntent(this, true, false, false), TIME_SLOT_PICKER_RC);
         }
         else if (view.getId() == R.id.on_boarding_finish){
             finishOnBoarding();
