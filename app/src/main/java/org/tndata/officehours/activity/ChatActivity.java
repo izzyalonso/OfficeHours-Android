@@ -26,6 +26,7 @@ import org.tndata.officehours.model.Message;
 import org.tndata.officehours.model.Person;
 import org.tndata.officehours.model.ResultSet;
 import org.tndata.officehours.parser.Parser;
+import org.tndata.officehours.util.API;
 import org.tndata.officehours.util.CustomItemDecoration;
 import org.tndata.officehours.util.ImageLoader;
 import org.tndata.officehours.util.WebSocketClient;
@@ -139,7 +140,7 @@ public class ChatActivity
             binding.chatSend.setOnClickListener(this);
 
             try{
-                socketClient = new WebSocketClient(new URI("wss://staging.tndata.org/chat/" + person.getId() + "/"), this, new ArrayList<BasicNameValuePair>());
+                socketClient = new WebSocketClient(new URI("wss://staging.tndata.org/chat/1/"), this, new ArrayList<BasicNameValuePair>());
                 socketClient.connect();
             }
             catch (URISyntaxException usx){
@@ -163,6 +164,8 @@ public class ChatActivity
             Message message = new Message(app.getUser().getId(), newMessage);
             adapter.addMessage(message);
             binding.chatNewMessage.setText("");
+
+            socketClient.send(API.BODY.chatMessage(((OfficeHoursApp)getApplication()).getUser(), message.getText()));
         }
     }
 

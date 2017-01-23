@@ -15,6 +15,7 @@ import org.tndata.officehours.databinding.ItemMyMessageBinding;
 import org.tndata.officehours.holder.ContactMessageHolder;
 import org.tndata.officehours.holder.MyMessageHolder;
 import org.tndata.officehours.model.Message;
+import org.tndata.officehours.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +34,13 @@ public class ChatAdapter extends RecyclerView.Adapter{
     private RecyclerView recyclerView;
     private List<Message> messages;
 
-    private long currentUserId;
+    private User user;
 
 
     public ChatAdapter(@NonNull Context context){
         this.context = context;
         messages = new ArrayList<>();
-        currentUserId = ((OfficeHoursApp)context.getApplicationContext()).getUser().getId();
+        user = ((OfficeHoursApp)context.getApplicationContext()).getUser();
     }
 
     @Override
@@ -56,7 +57,7 @@ public class ChatAdapter extends RecyclerView.Adapter{
 
     @Override
     public int getItemViewType(int position){
-        if (messages.get(position).getSenderId() == currentUserId){
+        if (messages.get(position).getSenderId() == user.getId()){
             return TYPE_MY_MESSAGE;
         }
         else{

@@ -124,5 +124,18 @@ public class API{
             }
             return body;
         }
+
+        public static String chatMessage(@NonNull User user, @NonNull String text){
+            JSONObject body = new JSONObject();
+            try{
+                body.put("text", text);
+                body.put("from", 121);
+                body.put("token", user.getToken());
+            }
+            catch (JSONException jx){
+                jx.printStackTrace();
+            }
+            return body.toString();
+        }
     }
 }
