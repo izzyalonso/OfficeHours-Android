@@ -38,6 +38,7 @@ public class User{
     private boolean isOnBoardingComplete;
 
     //Fields retrieved from the API
+    private long id;
     private String token;
 
 
@@ -159,6 +160,10 @@ public class User{
 
     public boolean isOnBoardingComplete(){
         return isOnBoardingComplete;
+    }
+
+    public long getId(){
+        return id;
     }
 
     public String getToken(){

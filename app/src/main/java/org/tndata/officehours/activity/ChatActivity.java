@@ -12,14 +12,19 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 
 import org.apache.http.message.BasicNameValuePair;
+import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
+import org.tndata.officehours.adapter.ChatAdapter;
 import org.tndata.officehours.databinding.ActivityChatBinding;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.Message;
 import org.tndata.officehours.model.Person;
+import org.tndata.officehours.util.CustomItemDecoration;
 import org.tndata.officehours.util.ImageLoader;
 import org.tndata.officehours.util.WebSocketClient;
 
@@ -34,7 +39,7 @@ import java.util.ArrayList;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class ChatActivity extends AppCompatActivity implements WebSocketClient.Listener{
+public class ChatActivity extends AppCompatActivity implements WebSocketClient.Listener, View.OnClickListener{
     private static final String TAG = "ChatActivity";
 
     private static final String PERSON_KEY = "org.tndata.officehours.ChatActivity.Person";
@@ -69,6 +74,8 @@ public class ChatActivity extends AppCompatActivity implements WebSocketClient.L
 
     private Person person;
     private Course course;
+
+    private ChatAdapter adapter;
 
 
     @Override
@@ -112,6 +119,14 @@ public class ChatActivity extends AppCompatActivity implements WebSocketClient.L
             binding.chatName.setTypeface(Typeface.createFromAsset(assetManager, font));
             binding.chatName.setText(person.getName());
 
+            adapter = new ChatAdapter(this);
+
+            binding.chatMessages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
+            binding.chatMessages.addItemDecoration(new CustomItemDecoration(this, 8));
+            binding.chatMessages.setAdapter(adapter);
+
+            binding.chatSend.setOnClickListener(this);
+
             try{
                 socketClient = new WebSocketClient(new URI("wss://staging.tndata.org/chat/" + person.getId() + "/"), this, new ArrayList<BasicNameValuePair>());
                 socketClient.connect();
@@ -119,6 +134,24 @@ public class ChatActivity extends AppCompatActivity implements WebSocketClient.L
             catch (URISyntaxException usx){
                 usx.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.chat_send:
+                sendMessage();
+        }
+    }
+
+    private void sendMessage(){
+        String newMessage = binding.chatNewMessage.getText().toString().trim();
+        if (!newMessage.isEmpty()){
+            OfficeHoursApp app = (OfficeHoursApp)getApplication();
+            Message message = new Message(app.getUser().getId(), newMessage);
+            adapter.addMessage(message);
+            binding.chatNewMessage.setText("");
         }
     }
 
