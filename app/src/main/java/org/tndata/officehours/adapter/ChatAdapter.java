@@ -26,12 +26,25 @@ public class ChatAdapter extends RecyclerView.Adapter{
 
 
     private Context context;
+    private RecyclerView recyclerView;
     private List<Message> myMessages;
 
 
     public ChatAdapter(@NonNull Context context){
         this.context = context;
         myMessages = new ArrayList<>();
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView){
+        this.recyclerView = recyclerView;
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView){
+        if (this.recyclerView == recyclerView){
+            this.recyclerView = null;
+        }
     }
 
     @Override
@@ -60,6 +73,9 @@ public class ChatAdapter extends RecyclerView.Adapter{
 
     public void addMessage(Message message){
         myMessages.add(message);
-        notifyItemInserted(0);
+        notifyDataSetChanged();
+        if (recyclerView != null){
+            recyclerView.scrollToPosition(0);
+        }
     }
 }

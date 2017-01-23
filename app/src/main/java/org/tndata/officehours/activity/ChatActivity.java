@@ -119,9 +119,12 @@ public class ChatActivity extends AppCompatActivity implements WebSocketClient.L
             binding.chatName.setTypeface(Typeface.createFromAsset(assetManager, font));
             binding.chatName.setText(person.getName());
 
+            //Create the layout manager and the adapter
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            layoutManager.setReverseLayout(true);
             adapter = new ChatAdapter(this);
 
-            binding.chatMessages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
+            binding.chatMessages.setLayoutManager(layoutManager);
             binding.chatMessages.addItemDecoration(new CustomItemDecoration(this, 8));
             binding.chatMessages.setAdapter(adapter);
 
