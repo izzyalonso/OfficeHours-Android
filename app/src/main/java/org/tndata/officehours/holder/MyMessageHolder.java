@@ -34,6 +34,6 @@ public class MyMessageHolder extends RecyclerView.ViewHolder{
      */
     public void setMessage(@NonNull Message message){
         binding.myMessageText.setText(message.getText());
-        binding.myMessageTime.setText("Timestamp");
+        binding.myMessageTime.setText("1:24 PM");
     }
 }

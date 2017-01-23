@@ -4,7 +4,9 @@ package org.tndata.officehours.util;
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -37,11 +39,29 @@ public class CustomItemDecoration extends RecyclerView.ItemDecoration{
         outRect.left = margin;
         outRect.bottom = margin/2;
         outRect.right = margin;
-        if (parent.getChildAdapterPosition(view) == 0){
-            outRect.top = margin;
+
+        boolean reversed = false;
+        RecyclerView.LayoutManager manager = parent.getLayoutManager();
+        if (manager instanceof LinearLayoutManager){
+            reversed = ((LinearLayoutManager)manager).getReverseLayout();
         }
-        else if (parent.getChildAdapterPosition(view) == parent.getAdapter().getItemCount()-1){
-            outRect.bottom = margin;
+
+        int position = parent.getChildAdapterPosition(view);
+        if (position == 0){
+            if (reversed){
+                outRect.bottom = margin;
+            }
+            else{
+                outRect.top = margin;
+            }
+        }
+        else if (position == parent.getAdapter().getItemCount()-1){
+            if (reversed){
+                outRect.top = margin;
+            }
+            else{
+                outRect.bottom = margin;
+            }
         }
     }
 
