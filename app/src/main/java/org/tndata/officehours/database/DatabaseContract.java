@@ -31,4 +31,14 @@ class DatabaseContract{
         static final String AVATAR = "avatar";
         static final String IS_INSTRUCTOR = "is_instructor";
     }
+
+    static abstract class MessageEntry implements BaseColumns{
+        static final String TABLE = "Message";
+
+        static final String ID = _ID;
+        static final String SENDER_ID = "sender_id";
+        static final String TEXT = "text";
+        static final String IS_READ = "read";
+        static final String TIMESTAMP = "timestamp";
+    }
 }
