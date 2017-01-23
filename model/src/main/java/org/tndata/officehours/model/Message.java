@@ -4,11 +4,16 @@ import com.google.gson.annotations.SerializedName;
 
 
 /**
- * Created by ialonso on 1/23/17.
+ * Model for a chat message.
+ *
+ * @author Ismael Alonso
+ * @version 1.0.0
  */
-public class Message{
+public class Message implements ResultSet{
     @SerializedName("from_id")
     private long senderId;
+    @SerializedName("from")
+    private String sender;
     @SerializedName("text")
     private String text;
 
@@ -20,6 +25,10 @@ public class Message{
 
     public long getSenderId(){
         return senderId;
+    }
+
+    public String getSender(){
+        return sender;
     }
 
     public String getText(){

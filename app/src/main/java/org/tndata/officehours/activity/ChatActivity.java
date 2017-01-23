@@ -24,6 +24,8 @@ import org.tndata.officehours.databinding.ActivityChatBinding;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Message;
 import org.tndata.officehours.model.Person;
+import org.tndata.officehours.model.ResultSet;
+import org.tndata.officehours.parser.Parser;
 import org.tndata.officehours.util.CustomItemDecoration;
 import org.tndata.officehours.util.ImageLoader;
 import org.tndata.officehours.util.WebSocketClient;
@@ -39,7 +41,13 @@ import java.util.ArrayList;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class ChatActivity extends AppCompatActivity implements WebSocketClient.Listener, View.OnClickListener{
+public class ChatActivity
+        extends AppCompatActivity
+        implements
+                WebSocketClient.Listener,
+                View.OnClickListener,
+                Parser.ParserCallback{
+
     private static final String TAG = "ChatActivity";
 
     private static final String PERSON_KEY = "org.tndata.officehours.ChatActivity.Person";
@@ -167,6 +175,7 @@ public class ChatActivity extends AppCompatActivity implements WebSocketClient.L
     public void onMessage(String message){
         Log.d(TAG, "onMessage()");
         Log.d(TAG, message);
+        Parser.parse(message, Message.class, this);
     }
 
     @Override
@@ -184,5 +193,25 @@ public class ChatActivity extends AppCompatActivity implements WebSocketClient.L
     public void onError(Exception error){
         Log.d(TAG, "onError()");
         error.printStackTrace();
+    }
+
+    @Override
+    public void onProcessResult(int requestCode, ResultSet result){
+
+    }
+
+    @Override
+    public void onParseSuccess(int requestCode, ResultSet result){
+        if (result instanceof Message){
+            Message message = (Message)result;
+            if (!message.getSender().equals("system")){
+                adapter.addMessage(message);
+            }
+        }
+    }
+
+    @Override
+    public void onParseFailed(int requestCode){
+
     }
 }
