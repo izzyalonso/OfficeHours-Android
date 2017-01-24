@@ -16,11 +16,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 
-import com.koushikdutta.async.ByteBufferList;
-import com.koushikdutta.async.DataEmitter;
-import com.koushikdutta.async.callback.DataCallback;
-import com.koushikdutta.async.http.AsyncHttpClient;
-import com.koushikdutta.async.http.WebSocket;
+import com.neovisionaries.ws.client.WebSocket;
+import com.neovisionaries.ws.client.WebSocketAdapter;
+import com.neovisionaries.ws.client.WebSocketFactory;
+import com.neovisionaries.ws.client.WebSocketListener;
 
 import org.apache.http.message.BasicNameValuePair;
 import org.tndata.officehours.OfficeHoursApp;
@@ -40,6 +39,8 @@ import org.tndata.officehours.util.WebSocketClient;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -52,7 +53,6 @@ public class ChatActivity
         extends AppCompatActivity
         implements
                 WebSocketClient.Listener,
-                AsyncHttpClient.WebSocketConnectCallback, WebSocket.StringCallback, DataCallback,
                 View.OnClickListener,
                 Parser.ParserCallback{
 
@@ -87,7 +87,8 @@ public class ChatActivity
 
     private ActivityChatBinding binding;
     private WebSocketClient socketClient;
-    private WebSocket webSocket;
+
+    private WebSocket socket;
 
     private Person person;
     private Course course;
@@ -147,15 +148,33 @@ public class ChatActivity
 
             binding.chatSend.setOnClickListener(this);
 
-            try{
-                socketClient = new WebSocketClient(new URI("wss://staging.tndata.org/chat/1/"), this, new ArrayList<BasicNameValuePair>());
+            /*try{
+                socketClient = new WebSocketClient(new URI("ws://staging.tndata.org:8000/chat/1/"), this, new ArrayList<BasicNameValuePair>());
                 socketClient.connect();
             }
             catch (URISyntaxException usx){
                 usx.printStackTrace();
-            }
+            }*/
 
-            //AsyncHttpClient.getDefaultInstance().websocket("wss://staging.tndata.org/chat/1/", null, this);
+            try{
+                socket = new WebSocketFactory().createSocket("wss://staging.tndata.org:8000/chat/1/");
+                socket.addListener(new WebSocketAdapter(){
+                    @Override
+                    public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception{
+                        Log.d(TAG, "onConnected()");
+                    }
+
+                    @Override
+                    public void onTextMessage(WebSocket websocket, String text) throws Exception{
+                        Log.d(TAG, text);
+                    }
+                });
+                socket.connectAsynchronously();
+            }
+            catch (Exception x){
+                x.printStackTrace();
+                Log.e(TAG, x.getMessage());
+            }
         }
     }
 
@@ -175,8 +194,8 @@ public class ChatActivity
             adapter.addMessage(message);
             binding.chatNewMessage.setText("");
 
-            socketClient.send(API.BODY.chatMessage(((OfficeHoursApp)getApplication()).getUser(), message.getText()));
-            //webSocket.send(API.BODY.chatMessage(((OfficeHoursApp)getApplication()).getUser(), message.getText()));
+            //socketClient.send(API.BODY.chatMessage(((OfficeHoursApp)getApplication()).getUser(), message.getText()));
+            socket.sendText(API.BODY.chatMessage(((OfficeHoursApp)getApplication()).getUser(), message.getText()));
         }
     }
 
@@ -227,33 +246,5 @@ public class ChatActivity
     @Override
     public void onParseFailed(int requestCode){
 
-    }
-
-    @Override
-    public void onCompleted(Exception ex, WebSocket webSocket){
-        Log.d(TAG, "onCompleted()");
-        if (ex != null){
-            ex.printStackTrace();
-            Log.e(TAG, ex.toString());
-        }
-        else{
-            Log.d(TAG, "connected to socket");
-            this.webSocket = webSocket;
-            webSocket.setStringCallback(this);
-            webSocket.setDataCallback(this);
-        }
-    }
-
-    @Override
-    public void onStringAvailable(String s){
-        Log.d(TAG, "onStringAvailable()");
-        Log.d(TAG, s);
-    }
-
-    @Override
-    public void onDataAvailable(DataEmitter emitter, ByteBufferList bb){
-        Log.d(TAG, "onDataAvailable()");
-        Log.d(TAG, bb.readString());
-        bb.recycle();
     }
 }
