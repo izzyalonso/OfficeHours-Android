@@ -5,6 +5,7 @@
             name="course"
             type="org.tndata.officehours.model.Course" />
     </data>
+
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
@@ -63,6 +64,30 @@
                     android:text="@{course.getFormattedMeetingTime()}" />
 
                 <LinearLayout
+                    android:id="@+id/course_access_code"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/accent"
+                        android:textSize="14sp"
+                        android:text="@string/course_access_code" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textSize="18sp"
+                        android:text="@{course.getAccessCode()}" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/course_instructor_container"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
@@ -96,52 +121,66 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
-                            android:src="@drawable/ic_message_text_white_24dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginStart="8dp"
+                            android:src="@drawable/ic_message_white_24dp"
                             android:tint="@color/primary"
                             android:background="?selectableItemBackgroundBorderless"/>
 
                     </LinearLayout>
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/course_access_code_hint"
+                <LinearLayout
+                    android:id="@+id/course_enrollment_container"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@color/accent"
-                    android:textSize="14sp"
-                    android:text="@string/course_access_code" />
+                    android:layout_marginTop="8dp" >
 
-                <TextView
-                    android:id="@+id/course_access_code"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:textSize="18sp"
-                    android:text="@{course.getAccessCode()}" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/accent"
+                        android:textSize="14sp"
+                        android:text="@string/course_enrollment" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="16dp"
-                    android:background="@color/divider" />
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp" >
 
-                <TextView
-                    android:id="@+id/course_people"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:textSize="18sp"
-                    android:text="People in this course" />
+                        <TextView
+                            android:id="@+id/course_enrollment"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/course_chat_room"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textSize="18sp"
-                    android:text="Chat room of sorts?" />
+                        <ImageView
+                            android:id="@+id/course_enrollment_list"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginStart="8dp"
+                            android:src="@drawable/ic_people_white_24dp"
+                            android:tint="@color/primary"
+                            android:background="?selectableItemBackgroundBorderless"/>
 
+                        <ImageView
+                            android:id="@+id/course_enrollment_broadcast"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginStart="8dp"
+                            android:src="@drawable/ic_broadcast_white_24dp"
+                            android:tint="@color/primary"
+                            android:background="?selectableItemBackgroundBorderless"/>
+
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

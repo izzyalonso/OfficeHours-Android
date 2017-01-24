@@ -54,16 +54,19 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
         setSupportActionBar(binding.courseToolbar.toolbar);
 
         if (((OfficeHoursApp)getApplication()).getUser().isStudent()){
-            binding.courseAccessCodeHint.setVisibility(View.GONE);
             binding.courseAccessCode.setVisibility(View.GONE);
             binding.courseInstructorChat.setOnClickListener(this);
+            //TODO move these two to instructor
+            binding.courseEnrollmentList.setOnClickListener(this);
+            binding.courseEnrollmentBroadcast.setOnClickListener(this);
         }
         else{
             binding.courseInstructorContainer.setVisibility(View.GONE);
+            //TODO move this to student
+            binding.courseEnrollmentContainer.setVisibility(View.GONE);
         }
-
-        binding.courseChatRoom.setOnClickListener(this);
-        binding.coursePeople.setOnClickListener(this);
+        String content = getString(R.string.course_enrollment_content, course.getStudents().size());
+        binding.courseEnrollment.setText(content);
     }
 
     @Override
@@ -107,13 +110,13 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
                 //TODO start a chat with the dude
                 break;
 
-            case R.id.course_people:
+            case R.id.course_enrollment_list:
                 String name = course.getName() + " students";
                 ArrayList<Person> people = new ArrayList<>(course.getStudents());
                 startActivity(PeopleActivity.getIntent(this, name, people));
                 break;
 
-            case R.id.course_chat_room:
+            case R.id.course_enrollment_broadcast:
                 startActivity(new Intent(this, ChatActivity.class));
                 break;
         }

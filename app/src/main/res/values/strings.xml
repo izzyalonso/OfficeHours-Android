@@ -82,6 +82,8 @@
     <string name="course_last_meeting">Last meeting date</string>
     <string name="course_instructor">Instructor</string>
     <string name="course_access_code">Access code</string>
+    <string name="course_enrollment">Enrollment</string>
+    <string name="course_enrollment_content">%1$d students</string>
     
     <string name="server_client_id">123754374341-8ug3otempcpmoi7rmaa6dkd362vor46l.apps.googleusercontent.com</string>
 
