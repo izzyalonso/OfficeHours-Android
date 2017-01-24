@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.security.KeyManagementException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -238,9 +239,11 @@ public class WebSocketClient {
                         if (mSocket == null) {
                             throw new IllegalStateException("Socket not connected");
                         }
+                        Log.d(TAG, "Sending frame");
                         OutputStream outputStream = mSocket.getOutputStream();
                         outputStream.write(frame);
                         outputStream.flush();
+                        Log.d(TAG, "Stream flushed");
                     }
                 } catch (IOException e) {
                     mListener.onError(e);
