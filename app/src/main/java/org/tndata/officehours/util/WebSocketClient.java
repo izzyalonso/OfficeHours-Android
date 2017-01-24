@@ -21,13 +21,13 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.security.KeyManagementException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-public class WebSocketClient {
+
+public class WebSocketClient{
     private static final String TAG = "WebSocketClient";
 
     private URI                      mURI;
@@ -239,11 +239,9 @@ public class WebSocketClient {
                         if (mSocket == null) {
                             throw new IllegalStateException("Socket not connected");
                         }
-                        Log.d(TAG, "Sending frame");
                         OutputStream outputStream = mSocket.getOutputStream();
                         outputStream.write(frame);
                         outputStream.flush();
-                        Log.d(TAG, "Stream flushed");
                     }
                 } catch (IOException e) {
                     mListener.onError(e);
@@ -252,12 +250,12 @@ public class WebSocketClient {
         });
     }
 
-    public interface Listener {
-        public void onConnect();
-        public void onMessage(String message);
-        public void onMessage(byte[] data);
-        public void onDisconnect(int code, String reason);
-        public void onError(Exception error);
+    public interface Listener{
+        void onConnect();
+        void onMessage(String message);
+        void onMessage(byte[] data);
+        void onDisconnect(int code, String reason);
+        void onError(Exception error);
     }
 
     private SSLSocketFactory getSSLSocketFactory() throws NoSuchAlgorithmException, KeyManagementException {

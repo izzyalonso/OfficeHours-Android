@@ -16,11 +16,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 
-import com.neovisionaries.ws.client.WebSocket;
-import com.neovisionaries.ws.client.WebSocketAdapter;
-import com.neovisionaries.ws.client.WebSocketFactory;
-import com.neovisionaries.ws.client.WebSocketListener;
-
 import org.apache.http.message.BasicNameValuePair;
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
@@ -87,8 +82,6 @@ public class ChatActivity
 
     private ActivityChatBinding binding;
     private WebSocketClient socketClient;
-
-    private WebSocket socket;
 
     private Person person;
     private Course course;
@@ -157,26 +150,6 @@ public class ChatActivity
             catch (URISyntaxException usx){
                 usx.printStackTrace();
             }
-
-            /*try{
-                socket = new WebSocketFactory().createSocket("wss://staging.tndata.org:8000/chat/1/");
-                socket.addListener(new WebSocketAdapter(){
-                    @Override
-                    public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception{
-                        Log.d(TAG, "onConnected()");
-                    }
-
-                    @Override
-                    public void onTextMessage(WebSocket websocket, String text) throws Exception{
-                        Log.d(TAG, text);
-                    }
-                });
-                socket.connectAsynchronously();
-            }
-            catch (Exception x){
-                x.printStackTrace();
-                Log.e(TAG, x.getMessage());
-            }*/
         }
     }
 
@@ -197,7 +170,6 @@ public class ChatActivity
             binding.chatNewMessage.setText("");
 
             socketClient.send(API.BODY.chatMessage(((OfficeHoursApp)getApplication()).getUser(), message.getText()));
-            //socket.sendText(API.BODY.chatMessage(((OfficeHoursApp)getApplication()).getUser(), message.getText()));
         }
     }
 
