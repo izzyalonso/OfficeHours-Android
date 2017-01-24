@@ -27,6 +27,10 @@ public class Message extends Base{
     private long timestamp;
 
 
+    public Message(long senderId, @NonNull String text){
+        this(-1, senderId, text, -1);
+    }
+
     public Message(long senderId, @NonNull String text, long timestamp){
         this(-1, senderId, text, timestamp);
     }

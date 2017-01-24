@@ -154,9 +154,8 @@ public class MessageTableHandler extends TableHandler{
 
         ArrayList<Message> messages = new ArrayList<>();
 
-        //If there are rows in the cursor returned by the query
+        //If there are rows in the cursor returned by the query, read them
         if (cursor.moveToFirst()){
-            //For each item
             do{
                 Message message = new Message(
                         getLong(cursor, MessageEntry.CLOUD_ID),
