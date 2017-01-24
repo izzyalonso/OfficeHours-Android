@@ -182,7 +182,7 @@ public class CourseTableHandler extends TableHandler{
         if (cursor.moveToFirst()){
             //For each item
             do{
-                //Create the Instructor course and schedule_instructor it to the list
+                //Create the course and add it to the list
                 courses.add(new Course(
                         getLong(cursor, CourseEntry.CLOUD_ID),
                         getString(cursor, CourseEntry.NAME),

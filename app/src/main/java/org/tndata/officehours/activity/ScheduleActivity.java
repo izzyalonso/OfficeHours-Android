@@ -56,6 +56,7 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
+        //The student menu contains an option to see all instructors
         if (app.getUser().isStudent()){
             getMenuInflater().inflate(R.menu.schedule_student, menu);
         }
@@ -77,12 +78,15 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
             return true;
         }
         else if (item.getItemId() == R.id.schedule_faculty){
+            //Gather a list of unique instructors
             ArrayList<Person> instructors = new ArrayList<>();
             for (Course course:app.getCourses()){
                 if (!instructors.contains(course.getInstructor())){
                     instructors.add(course.getInstructor());
                 }
             }
+
+            //Start the activity to display them with the appropriate title
             String title = getString(R.string.schedule_my_instructors_label);
             startActivity(PeopleActivity.getIntent(this, title, instructors));
         }

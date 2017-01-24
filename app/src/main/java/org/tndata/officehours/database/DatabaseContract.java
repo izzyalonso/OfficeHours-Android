@@ -36,6 +36,7 @@ class DatabaseContract{
         static final String TABLE = "Message";
 
         static final String ID = _ID;
+        static final String CLOUD_ID = "cloud_id";
         static final String SENDER_ID = "sender_id";
         static final String TEXT = "text";
         static final String IS_READ = "read";
