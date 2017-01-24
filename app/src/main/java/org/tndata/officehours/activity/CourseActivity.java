@@ -56,10 +56,10 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
         if (((OfficeHoursApp)getApplication()).getUser().isStudent()){
             binding.courseAccessCodeHint.setVisibility(View.GONE);
             binding.courseAccessCode.setVisibility(View.GONE);
+            binding.courseInstructorChat.setOnClickListener(this);
         }
         else{
-            binding.courseInstructorHint.setVisibility(View.GONE);
-            binding.courseInstructor.setVisibility(View.GONE);
+            binding.courseInstructorContainer.setVisibility(View.GONE);
         }
 
         binding.courseChatRoom.setOnClickListener(this);
@@ -103,6 +103,10 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view){
         switch (view.getId()){
+            case R.id.course_instructor_chat:
+                //TODO start a chat with the dude
+                break;
+
             case R.id.course_people:
                 String name = course.getName() + " students";
                 ArrayList<Person> people = new ArrayList<>(course.getStudents());
