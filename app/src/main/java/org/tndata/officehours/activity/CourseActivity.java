@@ -16,6 +16,9 @@ import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityCourseBinding;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.Person;
+
+import java.util.ArrayList;
 
 
 /**
@@ -101,9 +104,9 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view){
         switch (view.getId()){
             case R.id.course_people:
-                Intent people = new Intent(this, PeopleActivity.class)
-                        .putExtra(PeopleActivity.COURSE_KEY, course);
-                startActivity(people);
+                String name = course.getName() + " students";
+                ArrayList<Person> people = new ArrayList<>(course.getStudents());
+                startActivity(PeopleActivity.getIntent(this, name, people));
                 break;
 
             case R.id.course_chat_room:

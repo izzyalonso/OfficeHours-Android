@@ -1,6 +1,7 @@
 package org.tndata.officehours.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,7 +18,6 @@ import android.view.View;
 import org.tndata.officehours.R;
 import org.tndata.officehours.adapter.PeopleAdapter;
 import org.tndata.officehours.databinding.ActivityPeopleBinding;
-import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Person;
 import org.tndata.officehours.util.CustomItemDecoration;
 
@@ -32,10 +32,28 @@ import java.util.List;
  * @version 1.0.0
  */
 public class PeopleActivity extends AppCompatActivity implements PeopleAdapter.Listener{
-    public static final String COURSE_KEY = "org.tndata.officehours.People.Course";
+    private static final String NAME_KEY = "org.tndata.officehours.People.Name";
+    private static final String PEOPLE_KEY = "org.tndata.officehours.People.People";
 
 
     private static final String TAG = "PeopleActivity";
+
+
+    /**
+     * Gets the intent to properly launch the activity.
+     *
+     * @param context a reference to the context.
+     * @param name the name of the activity.
+     * @param people the list of people to display.
+     * @return the intent to lunch the activity.
+     */
+    public static Intent getIntent(@NonNull Context context, @NonNull String name,
+                                   @NonNull ArrayList<Person> people){
+
+        return new Intent(context, PeopleActivity.class)
+                .putExtra(NAME_KEY, name)
+                .putParcelableArrayListExtra(PEOPLE_KEY, people);
+    }
 
 
     private ActivityPeopleBinding binding;
@@ -46,14 +64,10 @@ public class PeopleActivity extends AppCompatActivity implements PeopleAdapter.L
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_people);
 
-        Course course = getIntent().getParcelableExtra(COURSE_KEY);
-
-        setTitle(course.getName());
+        setTitle(getIntent().getExtras().getString(NAME_KEY, ""));
         setSupportActionBar(binding.peopleToolbar.toolbar);
 
-        List<Person> people = new ArrayList<>();
-        people.add(course.getInstructor());
-        people.addAll(course.getStudents());
+        List<Person> people = getIntent().getParcelableArrayListExtra(PEOPLE_KEY);
 
         int[] color = new int[5];
         color[0] = Color.CYAN;
@@ -77,6 +91,12 @@ public class PeopleActivity extends AppCompatActivity implements PeopleAdapter.L
     }
 
 
+    /**
+     * ItemDecoration class that adds dividers to the functionality already provided by the parent.
+     *
+     * @author Ismael Alonso
+     * @version 1.0.0
+     */
     private class PeopleItemDecoration extends CustomItemDecoration{
         private Drawable divider;
 
@@ -86,7 +106,8 @@ public class PeopleActivity extends AppCompatActivity implements PeopleAdapter.L
          *
          * @param context a reference to the context.
          */
-        public PeopleItemDecoration(@NonNull Context context){
+        @SuppressWarnings("deprecation")
+        private PeopleItemDecoration(@NonNull Context context){
             super(context, 12);
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
