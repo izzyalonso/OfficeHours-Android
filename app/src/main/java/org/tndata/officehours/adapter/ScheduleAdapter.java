@@ -16,7 +16,7 @@ import java.util.List;
 
 
 /**
- * Adapter used in ScheduleActivity to display the student's add
+ * Adapter used in ScheduleActivity to display the student's schedule_instructor
  *
  * @author Ismael Alonso
  * @version 1.0.0

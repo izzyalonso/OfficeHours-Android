@@ -177,7 +177,7 @@ public class PersonTableHandler extends TableHandler{
         if (cursor.moveToFirst()){
             //For each item
             do{
-                //Create the Instructor course and add it to the list
+                //Create the Instructor course and schedule_instructor it to the list
                 people.add(new Person(
                         getInt(cursor, PersonEntry.CLOUD_ID),
                         getString(cursor, PersonEntry.NAME),

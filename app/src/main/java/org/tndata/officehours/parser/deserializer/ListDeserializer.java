@@ -36,7 +36,7 @@ public class ListDeserializer implements JsonDeserializer<List<?>>{
         //  those to return an empty List, which is what that represents. That
         //  is not regular expected behavior though
         if (!item.toString().equals("{}")){
-            //Parse all the elements of the array and add them to the list
+            //Parse all the elements of the array and schedule_instructor them to the list
             for (JsonElement element:item.getAsJsonArray()){
                 try{
                     Log.d("ListDeserializer", element.toString());

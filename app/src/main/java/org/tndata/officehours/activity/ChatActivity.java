@@ -148,15 +148,17 @@ public class ChatActivity
 
             binding.chatSend.setOnClickListener(this);
 
-            /*try{
-                socketClient = new WebSocketClient(new URI("ws://staging.tndata.org:8000/chat/1/"), this, new ArrayList<BasicNameValuePair>());
+            try{
+                List<BasicNameValuePair> headers = new ArrayList<>();
+                headers.add(new BasicNameValuePair("Authorization", "Token 9ca707815e8ccd22f630de6077f5d3689c6da878"));
+                socketClient = new WebSocketClient(new URI("wss://staging.tndata.org/chat/1/"), this, headers);
                 socketClient.connect();
             }
             catch (URISyntaxException usx){
                 usx.printStackTrace();
-            }*/
+            }
 
-            try{
+            /*try{
                 socket = new WebSocketFactory().createSocket("wss://staging.tndata.org:8000/chat/1/");
                 socket.addListener(new WebSocketAdapter(){
                     @Override
@@ -174,7 +176,7 @@ public class ChatActivity
             catch (Exception x){
                 x.printStackTrace();
                 Log.e(TAG, x.getMessage());
-            }
+            }*/
         }
     }
 
@@ -194,8 +196,8 @@ public class ChatActivity
             adapter.addMessage(message);
             binding.chatNewMessage.setText("");
 
-            //socketClient.send(API.BODY.chatMessage(((OfficeHoursApp)getApplication()).getUser(), message.getText()));
-            socket.sendText(API.BODY.chatMessage(((OfficeHoursApp)getApplication()).getUser(), message.getText()));
+            socketClient.send(API.BODY.chatMessage(((OfficeHoursApp)getApplication()).getUser(), message.getText()));
+            //socket.sendText(API.BODY.chatMessage(((OfficeHoursApp)getApplication()).getUser(), message.getText()));
         }
     }
 

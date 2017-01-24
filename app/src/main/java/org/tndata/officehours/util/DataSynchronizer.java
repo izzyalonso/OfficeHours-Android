@@ -103,7 +103,7 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
                     }
                 }
                 else{
-                    //If the course doesn't exist add it to the list to bulk add later
+                    //If the course doesn't exist schedule_instructor it to the list to bulk schedule_instructor later
                     newCourses.add(course);
                 }
 
@@ -122,7 +122,7 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
                 List<Person> newPeople = new ArrayList<>();
 
                 Person instructor = course.getInstructor();
-                //If the instructors mismatch, add the new one to the saving list
+                //If the instructors mismatch, schedule_instructor the new one to the saving list
                 if (!dbPeople.contains(instructor)){
                     newPeople.add(instructor);
                 }

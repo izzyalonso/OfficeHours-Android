@@ -22,6 +22,14 @@
     <string name="on_boarding_error_email">What\'s your email address?</string>
     <string name="on_boarding_error_email_invalid">Please, introduce a valid email address</string>
 
+    <!-- ScheduleActivity -->
+    <string name="schedule_menu_add">Add a course</string>
+    <string name="schedule_menu_add_condensed">Add</string>
+    <string name="schedule_menu_faculty">See my instructors</string>
+    <string name="schedule_menu_faculty_condensed">Instructors</string>
+    <string name="schedule_menu_logout">Sign out</string>
+    <string name="schedule_my_instructors_label">My instructors</string>
+
     <!-- CourseEditorActivity -->
     <string name="course_editor_label_new">New course</string>
     <string name="course_editor_label_edit">Edit course</string>
