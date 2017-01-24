@@ -125,7 +125,8 @@
                             android:layout_marginStart="8dp"
                             android:src="@drawable/ic_message_white_24dp"
                             android:tint="@color/primary"
-                            android:background="?selectableItemBackgroundBorderless"/>
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/course_instructor_chat_cd" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -166,7 +167,8 @@
                             android:layout_marginStart="8dp"
                             android:src="@drawable/ic_people_white_24dp"
                             android:tint="@color/primary"
-                            android:background="?selectableItemBackgroundBorderless"/>
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/course_enrollment_list_cd" />
 
                         <ImageView
                             android:id="@+id/course_enrollment_broadcast"
@@ -177,7 +179,8 @@
                             android:layout_marginStart="8dp"
                             android:src="@drawable/ic_broadcast_white_24dp"
                             android:tint="@color/primary"
-                            android:background="?selectableItemBackgroundBorderless"/>
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/course_enrollment_broadcast_cd" />
 
                     </LinearLayout>
                 </LinearLayout>
