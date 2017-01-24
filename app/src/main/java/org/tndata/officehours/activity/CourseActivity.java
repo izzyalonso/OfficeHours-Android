@@ -55,15 +55,13 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
 
         if (((OfficeHoursApp)getApplication()).getUser().isStudent()){
             binding.courseAccessCode.setVisibility(View.GONE);
+            binding.courseEnrollmentContainer.setVisibility(View.GONE);
             binding.courseInstructorChat.setOnClickListener(this);
-            //TODO move these two to instructor
-            binding.courseEnrollmentList.setOnClickListener(this);
-            binding.courseEnrollmentBroadcast.setOnClickListener(this);
         }
         else{
             binding.courseInstructorContainer.setVisibility(View.GONE);
-            //TODO move this to student
-            binding.courseEnrollmentContainer.setVisibility(View.GONE);
+            binding.courseEnrollmentList.setOnClickListener(this);
+            binding.courseEnrollmentBroadcast.setOnClickListener(this);
         }
         String content = getString(R.string.course_enrollment_content, course.getStudents().size());
         binding.courseEnrollment.setText(content);
