@@ -35,7 +35,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -80,8 +79,11 @@ public class ChatActivity
     }
 
 
+    private OfficeHoursApp app;
+
     private ActivityChatBinding binding;
     private WebSocketClient socketClient;
+    private boolean connected;
 
     private Person person;
     private Course course;
@@ -92,6 +94,7 @@ public class ChatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        app = (OfficeHoursApp)getApplication();
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chat);
 
         setSupportActionBar(binding.chatToolbar);
@@ -143,14 +146,27 @@ public class ChatActivity
 
             try{
                 List<BasicNameValuePair> headers = new ArrayList<>();
-                headers.add(new BasicNameValuePair("Authorization", "Token 9ca707815e8ccd22f630de6077f5d3689c6da878"));
+                headers.add(new BasicNameValuePair("Authorization", "Token " + app.getUser().getToken()));
                 socketClient = new WebSocketClient(new URI("wss://staging.tndata.org/chat/1/"), this, headers);
-                socketClient.connect();
+
+                connected = false;
             }
             catch (URISyntaxException usx){
                 usx.printStackTrace();
             }
         }
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        socketClient.connect();
+    }
+
+    @Override
+    protected void onStop(){
+        socketClient.disconnect();
+        super.onStop();
     }
 
     @Override
@@ -175,25 +191,27 @@ public class ChatActivity
 
     @Override
     public void onConnect(){
-        Log.d(TAG, "onConnect()");
+        Log.d(TAG, "Connected to the websocket");
+        connected = true;
     }
 
     @Override
     public void onMessage(String message){
-        Log.d(TAG, "onMessage()");
-        Log.d(TAG, message);
+        Log.d(TAG, "Message received as a String");
         Parser.parse(message, Message.class, this);
     }
 
     @Override
     public void onMessage(byte[] data){
-        Log.d(TAG, "onMessage()");
+        Log.d(TAG, "Message received as a byte stream");
+        String message = new String(data);
+        Parser.parse(message, Message.class, this);
     }
 
     @Override
     public void onDisconnect(int code, String reason){
-        Log.d(TAG, "onDisconnect()");
-        Log.d(TAG, reason);
+        Log.d(TAG, "Disconnected from the socket, reason: " + reason);
+        connected = false;
     }
 
     @Override
@@ -204,13 +222,16 @@ public class ChatActivity
 
     @Override
     public void onProcessResult(int requestCode, ResultSet result){
-
+        if (result instanceof Message){
+            ((Message)result).process();
+        }
     }
 
     @Override
     public void onParseSuccess(int requestCode, ResultSet result){
         if (result instanceof Message){
             Message message = (Message)result;
+            Log.d(TAG, message.toString());
             if (!message.getSender().equals("system")){
                 adapter.addMessage(message);
             }

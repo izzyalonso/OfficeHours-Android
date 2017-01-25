@@ -72,6 +72,11 @@ public class Message extends Base{
     }
 
     @Override
+    public String toString(){
+        return "Message (id: " + getId() +  ", sender: " + senderId + "): " + text;
+    }
+
+    @Override
     public void writeToParcel(Parcel parcel, int flags){
         super.writeToParcel(parcel, flags);
         parcel.writeLong(senderId);

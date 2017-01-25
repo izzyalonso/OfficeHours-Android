@@ -55,6 +55,12 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
     }
 
     @Override
+    protected void onDestroy(){
+        System.out.println("onDestroy() got called");
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu){
         //The student menu contains an option to see all instructors
         if (app.getUser().isStudent()){

@@ -19,19 +19,29 @@ public class API{
     //Api urls and app configuration
     public static final boolean STAGING = BuildConfig.DEBUG;
     private static final boolean USE_NGROK_TUNNEL = false;
-    private static final String TNDATA_BASE_URL = "https://app.tndata.org/api/";
-    private static final String TNDATA_STAGING_URL = "https://staging.tndata.org/api/";
+    private static final String APP_API_URL = "https://app.tndata.org/api/";
+    private static final String STAGING_API_URL = "https://staging.tndata.org/api/";
     private static final String NGROK_TUNNEL_URL = "https://tndata.ngrok.io/api/";
 
     @SuppressWarnings("ConstantConditions")
-    private static final String BASE_URL =
+    private static final String API_URL =
             USE_NGROK_TUNNEL ?
                     NGROK_TUNNEL_URL
                     :
                     STAGING ?
-                            TNDATA_STAGING_URL
+                            STAGING_API_URL
                             :
-                            TNDATA_BASE_URL;
+                            APP_API_URL;
+
+
+    private static final String APP_SOCKET_URL = "wss://app.tndata.org/";
+    private static final String STAGING_SOCKET_URL = "wss://staging.tndata.org/";
+
+    private static final String SOCKET_URL =
+            STAGING ?
+                    STAGING_SOCKET_URL
+                    :
+                    APP_SOCKET_URL;
 
 
     private API(){
@@ -51,7 +61,7 @@ public class API{
          * @return the named endpoint.
          */
         public static String signIn(){
-            return BASE_URL + "users/oauth/";
+            return API_URL + "users/oauth/";
         }
 
         /**
@@ -60,7 +70,7 @@ public class API{
          * @return the named endpoint.
          */
         public static String courses(){
-            return BASE_URL + "courses/";
+            return API_URL + "courses/";
         }
 
         /**
@@ -70,7 +80,7 @@ public class API{
          * @return the named endpoint.
          */
         public static String courses(long id){
-            return BASE_URL + "courses/" + id + "/";
+            return API_URL + "courses/" + id + "/";
         }
 
         /**
@@ -80,6 +90,16 @@ public class API{
          */
         public static String courseEnroll(){
             return courses() + "enroll/";
+        }
+
+        /**
+         * Gets the url to a websocket to chat with a user.
+         *
+         * @param userId the id of the user.
+         * @return the url to the mentioned websocket.
+         */
+        public static String chatSocket(long userId){
+            return SOCKET_URL + "chat/" + userId + "/";
         }
     }
 

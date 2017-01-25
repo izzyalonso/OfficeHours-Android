@@ -54,6 +54,9 @@ public class PersonTableHandler extends TableHandler{
             + PersonEntry.TABLE
             + " WHERE " + PersonEntry.COURSE_ID + "=?";
 
+    private static final String SELECT_DISTINCT_ID = "SELECT DISTINCT " + PersonEntry.CLOUD_ID
+            + " FROM " + PersonEntry.TABLE;
+
 
     /**
      * Constructor.
@@ -123,7 +126,7 @@ public class PersonTableHandler extends TableHandler{
         db.setTransactionSuccessful();
         db.endTransaction();
 
-        //Close the database
+        //Close the statement
         stmt.close();
     }
 
@@ -175,9 +178,8 @@ public class PersonTableHandler extends TableHandler{
 
         //If there are rows in the cursor returned by the query
         if (cursor.moveToFirst()){
-            //For each item
+            //Populate the list of people
             do{
-                //Create the Instructor course and schedule_instructor it to the list
                 people.add(new Person(
                         getInt(cursor, PersonEntry.CLOUD_ID),
                         getString(cursor, PersonEntry.NAME),
@@ -189,9 +191,37 @@ public class PersonTableHandler extends TableHandler{
             while (cursor.moveToNext());
         }
 
-        //Close both, the cursor and the database
+        //Close the cursor
         cursor.close();
 
         return people;
+    }
+
+    /**
+     * Gets a list of unique ids of people in the database.
+     *
+     * @return a list of ids.
+     */
+    public ArrayList<Long> getUniqueUserIds(){
+        //Open a readable database and execute the query
+        SQLiteDatabase db = getDatabase();
+        Cursor cursor = db.rawQuery(SELECT_DISTINCT_ID, null);
+
+        ArrayList<Long> ids = new ArrayList<>();
+
+        //If there are rows in the cursor returned by the query
+        if (cursor.moveToFirst()){
+            //For each item
+            do{
+                ids.add(getLong(cursor, PersonEntry.CLOUD_ID));
+            }
+            //Move on until the cursor is empty
+            while (cursor.moveToNext());
+        }
+
+        //Close the cursor
+        cursor.close();
+
+        return ids;
     }
 }
