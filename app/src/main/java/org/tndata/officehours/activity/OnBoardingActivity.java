@@ -8,18 +8,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityOnBoardingBinding;
 import org.tndata.officehours.model.User;
+import org.tndata.officehours.util.API;
 import org.tndata.officehours.util.ImageLoader;
 
 import java.util.ArrayList;
 
+import es.sandwatch.httprequests.HttpRequest;
+import es.sandwatch.httprequests.HttpRequestError;
+
 
 /**
  * Class that handles on boarding.
+ *
+ * TODO save office hours
  *
  * @author Ismael Alonso
  * @version 1.0.0
@@ -28,7 +35,8 @@ public class OnBoardingActivity
         extends AppCompatActivity
         implements
                 View.OnClickListener,
-                CompoundButton.OnCheckedChangeListener{
+                CompoundButton.OnCheckedChangeListener,
+                HttpRequest.RequestCallback{
 
     private static final int TIME_SLOT_PICKER_RC = 2753;
 
@@ -172,10 +180,26 @@ public class OnBoardingActivity
             user.setPhoneNumber(phone);
             user.onBoardingCompleted();
             user.writeToPreferences(this);
-            Intent launcher = new Intent(this, LauncherActivity.class)
-                    .putExtra(LauncherActivity.FROM_ON_BOARDING_KEY, true);
-            startActivity(launcher);
-            finish();
+
+            HttpRequest.put(this, API.URL.profile(user), API.BODY.profile(user));
+            binding.onBoardingProgress.setVisibility(View.VISIBLE);
+            binding.onBoardingFinish.setEnabled(false);
         }
+    }
+
+    @Override
+    public void onRequestComplete(int requestCode, String result){
+        Intent launcher = new Intent(this, LauncherActivity.class)
+                .putExtra(LauncherActivity.FROM_ON_BOARDING_KEY, true);
+        startActivity(launcher);
+        finish();
+    }
+
+    @Override
+    public void onRequestFailed(int requestCode, HttpRequestError error){
+        binding.onBoardingProgress.setVisibility(View.GONE);
+        binding.onBoardingFinish.setEnabled(true);
+
+        Toast.makeText(this, R.string.on_boarding_error_network, Toast.LENGTH_LONG).show();
     }
 }

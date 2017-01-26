@@ -21,6 +21,7 @@
     <string name="on_boarding_error_name">What\'s your name?</string>
     <string name="on_boarding_error_email">What\'s your email address?</string>
     <string name="on_boarding_error_email_invalid">Please, introduce a valid email address</string>
+    <string name="on_boarding_error_network">Unable to save your profile at the moment</string>
 
     <!-- ScheduleActivity -->
     <string name="schedule_menu_add">Add a course</string>

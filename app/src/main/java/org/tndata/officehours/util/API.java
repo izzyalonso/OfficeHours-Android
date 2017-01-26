@@ -67,6 +67,15 @@ public class API{
         }
 
         /**
+         * Gets the url to update the user's profile.
+         *
+         * @return the named endpoint.
+         */
+        public static String profile(@NonNull User user){
+            return API_URL + "users/profile/" + user.getProfileId() + "/";
+        }
+
+        /**
          * Gets the API endpoint for GETting and POSTing courses.
          *
          * @return the named endpoint.
@@ -114,6 +123,20 @@ public class API{
                 body.put("last_name", account.getFamilyName());
                 body.put("image_url", account.getPhotoUrl());
                 body.put("oauth_token", account.getIdToken());
+            }
+            catch (JSONException jx){
+                jx.printStackTrace();
+            }
+            return body;
+        }
+
+        public static JSONObject profile(@NonNull User user){
+            JSONObject body = new JSONObject();
+            try{
+                body.put("first_name", user.getFirstName());
+                body.put("last_name", user.getLastName());
+                body.put("phone", user.getPhoneNumber());
+                body.put("needs_onboarding", !user.isOnBoardingComplete());
             }
             catch (JSONException jx){
                 jx.printStackTrace();

@@ -214,6 +214,12 @@
                         android:textColor="@color/error"
                         android:visibility="gone" />
 
+                    <ProgressBar
+                        android:id="@+id/on_boarding_progress"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:visibility="gone" />
+
                     <Button
                         android:id="@+id/on_boarding_finish"
                         android:layout_width="wrap_content"

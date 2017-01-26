@@ -23,6 +23,9 @@ import java.util.List;
 public class User extends Base{
     private static final String PREFERENCE_FILE = "OfficeHoursUserPreferences";
 
+    @SerializedName("profile_id")
+    private long profileId;
+
     //Fields retrieved from the API
     @SerializedName("email")
     private String email;
@@ -73,6 +76,10 @@ public class User extends Base{
 
     public void onBoardingCompleted(){
         needsOnBoarding = false;
+    }
+
+    public long getProfileId(){
+        return profileId;
     }
 
     public String getEmail(){
@@ -152,6 +159,7 @@ public class User extends Base{
         SharedPreferences.Editor editor = user.edit();
 
         editor.putLong("user.id", getId());
+        editor.putLong("user.profile_id", profileId);
         editor.putString("user.email", email);
         editor.putString("user.firstName", firstName);
         editor.putString("user.lastName", lastName);
@@ -217,6 +225,7 @@ public class User extends Base{
      */
     private User(SharedPreferences preferences){
         super(preferences.getLong("user.id", -1));
+        profileId = preferences.getLong("user.profile_id", -1);
         email = preferences.getString("user.email", "");
         firstName = preferences.getString("user.firstName", "");
         lastName = preferences.getString("user.lastName", "");
