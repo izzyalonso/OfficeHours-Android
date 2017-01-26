@@ -4,10 +4,12 @@ package org.tndata.officehours.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,26 +22,28 @@ import java.util.List;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class User{
+public class User extends Base{
     private static final String PREFERENCE_FILE = "OfficeHoursUserPreferences";
 
-    //Fields retrieved from Google
+    //Fields retrieved from the API
+    @SerializedName("email")
     private String email;
-    private String googleToken;
-
-    //Fields set during on boarding, some of these are pre-populated with Google's
-    private AccountType accountType;
-    private List<String> officeHours;
+    @SerializedName("first_name")
     private String firstName;
+    @SerializedName("last_name")
     private String lastName;
+    @SerializedName("google_image")
     private String photoUrl;
     private String schoolEmail;
     private String phoneNumber;
     private boolean isOnBoardingComplete;
 
-    //Fields retrieved from the API
-    private long id;
+    @SerializedName("token")
     private String token;
+
+    //Fields set during on boarding, some of these are pre-populated with Google's
+    private AccountType accountType;
+    private List<String> officeHours;
 
 
     /**
@@ -48,9 +52,9 @@ public class User{
      * @param account the result of signing in with Google.
      */
     public User(GoogleSignInAccount account){
+        super(-1);
         email = account.getEmail();
         //googleToken = account.getServerAuthCode();
-        googleToken = account.getIdToken();
         accountType = null; //Unknown yet
         firstName = account.getGivenName();
         lastName = account.getFamilyName();
@@ -60,21 +64,6 @@ public class User{
         phoneNumber = "";
         isOnBoardingComplete = false;
         token = null;
-    }
-
-    //Temp
-    public User(){
-        email = "";
-        //googleToken = account.getServerAuthCode();
-        //googleToken = account.getIdToken();
-        accountType = null; //Unknown yet
-        firstName = "";
-        lastName = "";
-        photoUrl = "";
-        schoolEmail = email;
-        phoneNumber = "";
-        isOnBoardingComplete = false;
-        token = "";
     }
 
     public void setAsStudent(){
@@ -112,10 +101,6 @@ public class User{
 
     public String getEmail(){
         return email;
-    }
-
-    public String getGoogleToken(){
-        return googleToken;
     }
 
     public boolean hasDefinedType(){
@@ -162,12 +147,12 @@ public class User{
         return isOnBoardingComplete;
     }
 
-    public long getId(){
-        return id;
-    }
-
     public String getToken(){
         return token;
+    }
+
+    public void process(){
+
     }
 
 
@@ -182,8 +167,16 @@ public class User{
         SharedPreferences user = context.getSharedPreferences(PREFERENCE_FILE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = user.edit();
 
+        editor.putLong("user.id", getId());
         editor.putString("user.email", email);
-        editor.putString("user.googleToken", googleToken);
+        editor.putString("user.firstName", firstName);
+        editor.putString("user.lastName", lastName);
+        editor.putString("user.photoUrl", photoUrl);
+        editor.putString("user.schoolEmail", schoolEmail);
+        editor.putString("user.phoneNumber", phoneNumber);
+        editor.putBoolean("user.isOnBoardingComplete", isOnBoardingComplete);
+
+        editor.putString("user.token", token);
 
         //NOTE: account type will be null before going through on boarding
         if (accountType == null){
@@ -202,14 +195,7 @@ public class User{
                 editor.putString("user.officeHours", officeHoursCsv);
             }
         }
-        editor.putString("user.firstName", firstName);
-        editor.putString("user.lastName", lastName);
-        editor.putString("user.photoUrl", photoUrl);
-        editor.putString("user.schoolEmail", schoolEmail);
-        editor.putString("user.phoneNumber", phoneNumber);
-        editor.putBoolean("user.isOnBoardingComplete", isOnBoardingComplete);
 
-        editor.putString("user.token", token);
         editor.commit();
     }
 
@@ -246,16 +232,8 @@ public class User{
      * @param preferences the preference map to read the user from.
      */
     private User(SharedPreferences preferences){
+        super(preferences.getLong("user.id", -1));
         email = preferences.getString("user.email", "");
-        googleToken = preferences.getString("user.googleToken", "");
-
-        accountType = AccountType.getAccountType(preferences.getString("user.accountType", ""));
-        if (accountType == AccountType.TEACHER){
-            String officeHoursCsv = preferences.getString("user.officeHours", "");
-            if (!officeHoursCsv.isEmpty()){
-                officeHours = new ArrayList<>(Arrays.asList(officeHoursCsv.split(",")));
-            }
-        }
         firstName = preferences.getString("user.firstName", "");
         lastName = preferences.getString("user.lastName", "");
         photoUrl = preferences.getString("user.photoUrl", "");
@@ -264,8 +242,38 @@ public class User{
         isOnBoardingComplete = preferences.getBoolean("user.isOnBoardingComplete", false);
 
         token = preferences.getString("user.token", "");
+
+        accountType = AccountType.getAccountType(preferences.getString("user.accountType", ""));
+        if (accountType == AccountType.TEACHER){
+            String officeHoursCsv = preferences.getString("user.officeHours", "");
+            if (!officeHoursCsv.isEmpty()){
+                officeHours = new ArrayList<>(Arrays.asList(officeHoursCsv.split(",")));
+            }
+        }
     }
 
+    @Override
+    public void writeToParcel(Parcel parcel, int flags){
+        super.writeToParcel(parcel, flags);
+        //TODO: not needed at the moment
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>(){
+        @Override
+        public User createFromParcel(Parcel source){
+            return new User(source);
+        }
+
+        @Override
+        public User[] newArray(int size){
+            return new User[size];
+        }
+    };
+
+    private User(Parcel src){
+        super(src);
+        //TODO: not needed at the moment
+    }
 
     /**
      * Types of accounts supported by the platform.
@@ -310,10 +318,10 @@ public class User{
             if (descriptor == null){
                 return null;
             }
-            if (descriptor.equals("student")){
+            else if (descriptor.equals("student")){
                 return STUDENT;
             }
-            if (descriptor.equals("teacher")){
+            else if (descriptor.equals("teacher")){
                 return TEACHER;
             }
             return null;

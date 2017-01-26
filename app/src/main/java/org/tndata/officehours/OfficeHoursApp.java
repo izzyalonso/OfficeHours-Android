@@ -23,6 +23,7 @@ public class OfficeHoursApp extends Application{
 
     public void setUser(User user){
         this.user = user;
+        HttpRequest.addHeader("Authorization", "Token " + user.getToken());
     }
 
     public User getUser(){

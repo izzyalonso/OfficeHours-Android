@@ -20,8 +20,11 @@ import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityLauncherBinding;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.ResultSet;
 import org.tndata.officehours.model.User;
 import org.tndata.officehours.database.DatabaseReader;
+import org.tndata.officehours.parser.Parser;
+import org.tndata.officehours.util.API;
 import org.tndata.officehours.util.DataSynchronizer;
 
 import java.util.List;
@@ -42,6 +45,7 @@ public class LauncherActivity
                 View.OnClickListener,
                 GoogleApiClient.OnConnectionFailedListener,
                 HttpRequest.RequestCallback,
+                Parser.ParserCallback,
                 DataSynchronizer.Callback,
                 DatabaseReader.Listener{
 
@@ -53,10 +57,7 @@ public class LauncherActivity
 
 
     private ActivityLauncherBinding binding;
-
     private GoogleApiClient googleApiClient;
-
-    private User user;
 
 
     @Override
@@ -83,15 +84,8 @@ public class LauncherActivity
             }
         }
         else{
-            user = new User();
-            HttpRequest.addHeader("Authorization", "Token " + user.getToken());
-            user.writeToPreferences(this);
-            ((OfficeHoursApp)getApplication()).setUser(user);
-            startActivity(new Intent(this, OnBoardingActivity.class));
-            finish();
-
             //Set listeners
-            /*binding.launcherGoogleSignIn.setOnClickListener(this);
+            binding.launcherGoogleSignIn.setOnClickListener(this);
 
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     //.requestServerAuthCode(getString(R.string.server_client_id))
@@ -102,7 +96,7 @@ public class LauncherActivity
             googleApiClient = new GoogleApiClient.Builder(this)
                     .enableAutoManage(this, this)
                     .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                    .build();*/
+                    .build();
         }
     }
 
@@ -132,13 +126,12 @@ public class LauncherActivity
     private void handleGoogleSignInResult(GoogleSignInResult result){
         if (result.isSuccess()){
             Log.i(TAG, "Sign in with google successful");
-            user = new User(result.getSignInAccount());
-            //HttpRequest.post(this, API.URL.signIn(), API.BODY.signIn(user));
-            onRequestComplete(0, null);
+            HttpRequest.post(this, API.URL.signIn(), API.BODY.signIn(result.getSignInAccount()));
         }
         else{
             //Why would this happen?
             Log.e(TAG, "Sign in with Google failed");
+            Log.e(TAG, result.getStatus().toString());
             Toast.makeText(this, "Couldn't sign in", Toast.LENGTH_LONG).show();
         }
     }
@@ -151,16 +144,41 @@ public class LauncherActivity
 
     @Override
     public void onRequestComplete(int requestCode, String result){
-        //TODO if needs on boarding -> on boarding, otherwise, launch the synchronizer
-        user.writeToPreferences(this);
-        ((OfficeHoursApp)getApplication()).setUser(user);
-        startActivity(new Intent(this, OnBoardingActivity.class));
-        finish();
+        Log.i(TAG, "Authentication with the backend succeeded");
+        Parser.parse(result, User.class, this);
     }
 
     @Override
     public void onRequestFailed(int requestCode, HttpRequestError error){
         Log.d(TAG, error.toString());
+    }
+
+    @Override
+    public void onProcessResult(int requestCode, ResultSet result){
+        if (result instanceof User){
+            ((User)result).process();
+        }
+    }
+
+    @Override
+    public void onParseSuccess(int requestCode, ResultSet result){
+        if (result instanceof User){
+            User user = (User)result;
+            user.writeToPreferences(this);
+            ((OfficeHoursApp)getApplication()).setUser(user);
+            if (user.isOnBoardingComplete()){
+                DataSynchronizer.sync(this, this);
+            }
+            else{
+                startActivity(new Intent(this, OnBoardingActivity.class));
+                finish();
+            }
+        }
+    }
+
+    @Override
+    public void onParseFailed(int requestCode){
+
     }
 
     @Override

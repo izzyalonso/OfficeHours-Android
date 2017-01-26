@@ -2,6 +2,8 @@ package org.tndata.officehours.util;
 
 import android.support.annotation.NonNull;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.tndata.officehours.BuildConfig;
@@ -104,14 +106,14 @@ public class API{
     }
 
     public static class BODY{
-        public static JSONObject signIn(User user){
+        public static JSONObject signIn(GoogleSignInAccount account){
             JSONObject body = new JSONObject();
             try{
-                body.put("email", user.getEmail());
-                body.put("first_name", user.getFirstName());
-                body.put("last_name", user.getLastName());
-                body.put("image_url", "");
-                body.put("oauth_token", user.getGoogleToken());
+                body.put("email", account.getEmail());
+                body.put("first_name", account.getGivenName());
+                body.put("last_name", account.getFamilyName());
+                body.put("image_url", account.getPhotoUrl());
+                body.put("oauth_token", account.getIdToken());
             }
             catch (JSONException jx){
                 jx.printStackTrace();
@@ -149,7 +151,7 @@ public class API{
             JSONObject body = new JSONObject();
             try{
                 body.put("text", text);
-                body.put("from", 121);
+                body.put("from", user.getId());
                 body.put("token", user.getToken());
             }
             catch (JSONException jx){
