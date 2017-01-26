@@ -17,7 +17,7 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/add_logout"
+        android:id="@+id/schedule_logout"
         android:title="@string/schedule_menu_logout"
         app:showAsAction="never" />
 

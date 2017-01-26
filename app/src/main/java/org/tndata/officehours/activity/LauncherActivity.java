@@ -155,15 +155,14 @@ public class LauncherActivity
 
     @Override
     public void onProcessResult(int requestCode, ResultSet result){
-        if (result instanceof User){
-            ((User)result).process();
-        }
+        //Unused
     }
 
     @Override
     public void onParseSuccess(int requestCode, ResultSet result){
         if (result instanceof User){
             User user = (User)result;
+            Log.d(TAG, user.toString());
             user.writeToPreferences(this);
             ((OfficeHoursApp)getApplication()).setUser(user);
             if (user.isOnBoardingComplete()){

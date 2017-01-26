@@ -3,12 +3,10 @@ package org.tndata.officehours.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -35,8 +33,10 @@ public class User extends Base{
     @SerializedName("google_image")
     private String photoUrl;
     private String schoolEmail;
+    @SerializedName("phone")
     private String phoneNumber;
-    private boolean isOnBoardingComplete;
+    @SerializedName("needs_onboarding")
+    private boolean needsOnBoarding;
 
     @SerializedName("token")
     private String token;
@@ -45,26 +45,6 @@ public class User extends Base{
     private AccountType accountType;
     private List<String> officeHours;
 
-
-    /**
-     * Constructor. Called when a user signs in with Google.
-     *
-     * @param account the result of signing in with Google.
-     */
-    public User(GoogleSignInAccount account){
-        super(-1);
-        email = account.getEmail();
-        //googleToken = account.getServerAuthCode();
-        accountType = null; //Unknown yet
-        firstName = account.getGivenName();
-        lastName = account.getFamilyName();
-        Uri url = account.getPhotoUrl();
-        photoUrl = url == null ? "" : account.getPhotoUrl().toString();
-        schoolEmail = email;
-        phoneNumber = "";
-        isOnBoardingComplete = false;
-        token = null;
-    }
 
     public void setAsStudent(){
         accountType = AccountType.STUDENT;
@@ -92,11 +72,7 @@ public class User extends Base{
     }
 
     public void onBoardingCompleted(){
-        isOnBoardingComplete = true;
-    }
-
-    public void setToken(String token){
-        this.token = token;
+        needsOnBoarding = false;
     }
 
     public String getEmail(){
@@ -144,17 +120,25 @@ public class User extends Base{
     }
 
     public boolean isOnBoardingComplete(){
-        return isOnBoardingComplete;
+        return !needsOnBoarding;
     }
 
     public String getToken(){
         return token;
     }
 
-    public void process(){
-
+    @Override
+    public String toString(){
+        String result = "User #" + getId() + ": " + firstName + " " + lastName;
+        result += " (" + email +", " + phoneNumber + "). ";
+        if (needsOnBoarding){
+            result += "Needs on-boarding.";
+        }
+        else{
+            result += "Doesn't need on-boarding.";
+        }
+        return result;
     }
-
 
     //START: User persistence in Shared Preferences
 
@@ -174,7 +158,7 @@ public class User extends Base{
         editor.putString("user.photoUrl", photoUrl);
         editor.putString("user.schoolEmail", schoolEmail);
         editor.putString("user.phoneNumber", phoneNumber);
-        editor.putBoolean("user.isOnBoardingComplete", isOnBoardingComplete);
+        editor.putBoolean("user.needsOnBoarding", needsOnBoarding);
 
         editor.putString("user.token", token);
 
@@ -239,7 +223,7 @@ public class User extends Base{
         photoUrl = preferences.getString("user.photoUrl", "");
         schoolEmail = preferences.getString("user.schoolEmail", "");
         phoneNumber = preferences.getString("user.phoneNumber", "");
-        isOnBoardingComplete = preferences.getBoolean("user.isOnBoardingComplete", false);
+        needsOnBoarding = preferences.getBoolean("user.needsOnBoarding", true);
 
         token = preferences.getString("user.token", "");
 

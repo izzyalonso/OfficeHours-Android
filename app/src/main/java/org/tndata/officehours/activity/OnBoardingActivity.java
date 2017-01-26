@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -158,14 +157,14 @@ public class OnBoardingActivity
             binding.onBoardingError.setText(R.string.on_boarding_error_name);
             binding.onBoardingError.setVisibility(View.VISIBLE);
         }
-        else if (email.isEmpty()){
+        /*else if (email.isEmpty()){
             binding.onBoardingError.setText(R.string.on_boarding_error_email);
             binding.onBoardingError.setVisibility(View.VISIBLE);
         }
         else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             binding.onBoardingError.setText(R.string.on_boarding_error_email_invalid);
             binding.onBoardingError.setVisibility(View.VISIBLE);
-        }
+        }*/
         else{
             user.setOfficeHours(officeHours);
             user.setName(firstName, lastName);
