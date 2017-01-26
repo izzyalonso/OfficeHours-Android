@@ -66,6 +66,10 @@ public class API{
             return API_URL + "users/oauth/";
         }
 
+        public static String officeHours(){
+            return API_URL + "officehours/";
+        }
+
         /**
          * Gets the url to update the user's profile.
          *
@@ -123,6 +127,17 @@ public class API{
                 body.put("last_name", account.getFamilyName());
                 body.put("image_url", account.getPhotoUrl());
                 body.put("oauth_token", account.getIdToken());
+            }
+            catch (JSONException jx){
+                jx.printStackTrace();
+            }
+            return body;
+        }
+
+        public static JSONObject officeHours(@NonNull String slot){
+            JSONObject body = new JSONObject();
+            try{
+                body.put("meetingtime", slot);
             }
             catch (JSONException jx){
                 jx.printStackTrace();

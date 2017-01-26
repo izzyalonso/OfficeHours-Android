@@ -18,6 +18,8 @@ import org.tndata.officehours.util.API;
 import org.tndata.officehours.util.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import es.sandwatch.httprequests.HttpRequest;
 import es.sandwatch.httprequests.HttpRequestError;
@@ -26,7 +28,6 @@ import es.sandwatch.httprequests.HttpRequestError;
 /**
  * Class that handles on boarding.
  *
- * TODO save office hours
  *
  * @author Ismael Alonso
  * @version 1.0.0
@@ -45,6 +46,8 @@ public class OnBoardingActivity
 
     private User user;
     private ArrayList<String> officeHours;
+    private Set<Integer> officeHoursRequestCodes;
+    private int profileRequestCode;
 
 
     @Override
@@ -181,7 +184,15 @@ public class OnBoardingActivity
             user.onBoardingCompleted();
             user.writeToPreferences(this);
 
-            HttpRequest.put(this, API.URL.profile(user), API.BODY.profile(user));
+            if (user.isTeacher() && !officeHours.isEmpty()){
+                officeHoursRequestCodes = new HashSet<>();
+                for (String slot:officeHours){
+                    officeHoursRequestCodes.add(HttpRequest.post(this, API.URL.officeHours(), API.BODY.officeHours(slot)));
+                }
+            }
+            else{
+                profileRequestCode = HttpRequest.put(this, API.URL.profile(user), API.BODY.profile(user));
+            }
             binding.onBoardingProgress.setVisibility(View.VISIBLE);
             binding.onBoardingFinish.setEnabled(false);
         }
@@ -189,10 +200,18 @@ public class OnBoardingActivity
 
     @Override
     public void onRequestComplete(int requestCode, String result){
-        Intent launcher = new Intent(this, LauncherActivity.class)
-                .putExtra(LauncherActivity.FROM_ON_BOARDING_KEY, true);
-        startActivity(launcher);
-        finish();
+        if (officeHoursRequestCodes.contains(requestCode)){
+            officeHoursRequestCodes.remove(requestCode);
+            if (officeHoursRequestCodes.isEmpty()){
+                profileRequestCode = HttpRequest.put(this, API.URL.profile(user), API.BODY.profile(user));
+            }
+        }
+        else if (requestCode == profileRequestCode){
+            Intent launcher = new Intent(this, LauncherActivity.class)
+                    .putExtra(LauncherActivity.FROM_ON_BOARDING_KEY, true);
+            startActivity(launcher);
+            finish();
+        }
     }
 
     @Override
