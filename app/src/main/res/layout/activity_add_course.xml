@@ -46,7 +46,22 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:textSize="18sp"
-                    android:text="@{course.getDisplayName()}" />
+                    android:text="@{course.getName()}" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/accent"
+                    android:textSize="14sp"
+                    android:text="@string/add_course_location" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textSize="18sp"
+                    android:text="@{course.getLocation()}" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -61,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:textSize="18sp"
-                    android:text="@{course.getMeetingTime()}" />
+                    android:text="@{course.getFormattedMeetingTime()}" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -76,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:textSize="18sp"
-                    android:text="@{course.getInstructorName()}" />
+                    android:text="@{course.getInstructor().getName()}" />
 
                 <Button
                     android:id="@+id/add_course_add"

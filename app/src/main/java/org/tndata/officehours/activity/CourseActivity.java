@@ -16,6 +16,9 @@ import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityCourseBinding;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.Person;
+
+import java.util.ArrayList;
 
 
 /**
@@ -24,7 +27,7 @@ import org.tndata.officehours.model.Course;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class CourseActivity extends AppCompatActivity{
+public class CourseActivity extends AppCompatActivity implements View.OnClickListener{
     private static final String COURSE_KEY = "org.tndata.officehours.Course.Course";
 
     private static final int EDIT_RC = 6293;
@@ -47,13 +50,21 @@ public class CourseActivity extends AppCompatActivity{
         course = getIntent().getParcelableExtra(COURSE_KEY);
         binding.setCourse(course);
 
-        binding.courseToolbar.toolbar.setTitle(course.getDisplayName());
+        binding.courseToolbar.toolbar.setTitle(course.getName());
         setSupportActionBar(binding.courseToolbar.toolbar);
 
         if (((OfficeHoursApp)getApplication()).getUser().isStudent()){
-            binding.courseAccessCodeHint.setVisibility(View.GONE);
             binding.courseAccessCode.setVisibility(View.GONE);
+            binding.courseEnrollmentContainer.setVisibility(View.GONE);
+            binding.courseInstructorChat.setOnClickListener(this);
         }
+        else{
+            binding.courseInstructorContainer.setVisibility(View.GONE);
+            binding.courseEnrollmentList.setOnClickListener(this);
+            binding.courseEnrollmentBroadcast.setOnClickListener(this);
+        }
+        String content = getString(R.string.course_enrollment_content, course.getStudents().size());
+        binding.courseEnrollment.setText(content);
     }
 
     @Override
@@ -81,12 +92,31 @@ public class CourseActivity extends AppCompatActivity{
         if (requestCode == EDIT_RC){
             if (resultCode == RESULT_OK){
                 course = data.getParcelableExtra(CourseEditorActivity.COURSE_KEY);
-                binding.courseToolbar.toolbar.setTitle(course.getDisplayName());
+                binding.courseToolbar.toolbar.setTitle(course.getName());
                 binding.setCourse(course);
             }
         }
         else{
             super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.course_instructor_chat:
+                //TODO start a chat with the dude
+                break;
+
+            case R.id.course_enrollment_list:
+                String name = course.getName() + " students";
+                ArrayList<Person> people = new ArrayList<>(course.getStudents());
+                startActivity(PeopleActivity.getIntent(this, name, people));
+                break;
+
+            case R.id.course_enrollment_broadcast:
+                startActivity(new Intent(this, ChatActivity.class));
+                break;
         }
     }
 }

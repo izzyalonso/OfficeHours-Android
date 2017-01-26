@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,8 +11,16 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import org.tndata.officehours.R;
+import org.tndata.officehours.database.CourseTableHandler;
+import org.tndata.officehours.database.PersonTableHandler;
 import org.tndata.officehours.databinding.ActivityAddCodeBinding;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.ResultSet;
+import org.tndata.officehours.parser.Parser;
+import org.tndata.officehours.util.API;
+
+import es.sandwatch.httprequests.HttpRequest;
+import es.sandwatch.httprequests.HttpRequestError;
 
 
 /**
@@ -22,13 +29,17 @@ import org.tndata.officehours.model.Course;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class AddCodeActivity extends AppCompatActivity implements TextWatcher{
+public class AddCodeActivity
+        extends AppCompatActivity
+        implements
+                TextWatcher,
+                HttpRequest.RequestCallback,
+                Parser.ParserCallback{
+
     public static final String COURSE_KEY = "org.tndata.officehours.AddCode.Course";
-    private static final int ADD_COURSE_RC = 7742;
 
 
     private ActivityAddCodeBinding binding;
-    private Course course;
 
 
     @Override
@@ -96,27 +107,16 @@ public class AddCodeActivity extends AppCompatActivity implements TextWatcher{
         code += binding.addCode3.getText().toString().trim();
         code += binding.addCode4.getText().toString().trim();
 
-        final String finalCode = code;
-
-        new Handler().postDelayed(new Runnable(){
-            @Override
-            public void run(){
-                if (finalCode.equals("1234")){
-                    onCodeAccepted();
-                }
-                else{
-                    onInvalidCode();
-                }
-            }
-        }, 2000);
+        HttpRequest.post(this, API.URL.courseEnroll(), API.BODY.courseEnroll(code));
     }
 
-    private void onCodeAccepted(){
-        course = new Course("MATH 3450", "Some math class", "TR 3:00-4:25", "12/25/2016", "Mr. Algaebra");
-        startActivityForResult(AddCourseActivity.getIntent(this, course), ADD_COURSE_RC);
+    @Override
+    public void onRequestComplete(int requestCode, String result){
+        Parser.parse(result, Course.class, this);
     }
 
-    private void onInvalidCode(){
+    @Override
+    public void onRequestFailed(int requestCode, HttpRequestError error){
         binding.addCodeProgress.setVisibility(View.GONE);
         binding.addCodeError.setVisibility(View.VISIBLE);
 
@@ -134,16 +134,33 @@ public class AddCodeActivity extends AppCompatActivity implements TextWatcher{
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if (requestCode == ADD_COURSE_RC){
-            if (resultCode == RESULT_OK){
-                Intent intent = new Intent().putExtra(COURSE_KEY, course);
-                setResult(RESULT_OK, intent);
-            }
+    public void onProcessResult(int requestCode, ResultSet result){
+        if (result instanceof Course){
+            CourseTableHandler courseHandler = new CourseTableHandler(this);
+            PersonTableHandler personHandler = new PersonTableHandler(this);
+
+            Course course = (Course)result;
+            course.process();
+            courseHandler.saveCourse(course);
+            personHandler.savePerson(course.getInstructor(), course);
+            personHandler.savePeople(course.getStudents(), course);
+
+            personHandler.close();
+            courseHandler.close();
+        }
+    }
+
+    @Override
+    public void onParseSuccess(int requestCode, ResultSet result){
+        if (result instanceof Course){
+            Intent intent = new Intent().putExtra(COURSE_KEY, (Course)result);
+            setResult(RESULT_OK, intent);
             finish();
         }
-        else{
-            super.onActivityResult(requestCode, resultCode, data);
-        }
+    }
+
+    @Override
+    public void onParseFailed(int requestCode){
+
     }
 }

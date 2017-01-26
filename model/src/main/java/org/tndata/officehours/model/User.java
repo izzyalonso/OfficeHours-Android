@@ -3,10 +3,11 @@ package org.tndata.officehours.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,42 +20,34 @@ import java.util.List;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class User{
+public class User extends Base{
     private static final String PREFERENCE_FILE = "OfficeHoursUserPreferences";
 
-    //Fields retrieved from Google
+    @SerializedName("profile_id")
+    private long profileId;
+
+    //Fields retrieved from the API
+    @SerializedName("email")
     private String email;
-    private String googleToken;
+    @SerializedName("first_name")
+    private String firstName;
+    @SerializedName("last_name")
+    private String lastName;
+    @SerializedName("google_image")
+    private String photoUrl;
+    private String schoolEmail;
+    @SerializedName("phone")
+    private String phoneNumber;
+    @SerializedName("needs_onboarding")
+    private boolean needsOnBoarding;
+
+    @SerializedName("token")
+    private String token;
 
     //Fields set during on boarding, some of these are pre-populated with Google's
     private AccountType accountType;
     private List<String> officeHours;
-    private String firstName;
-    private String lastName;
-    private String schoolEmail;
-    private String phoneNumber;
-    private boolean isOnBoardingComplete;
 
-    //Fields retrieved from the API
-    private String token;
-
-
-    /**
-     * Constructor. Called when a user signs in with Google.
-     *
-     * @param account the result of signing in with Google.
-     */
-    public User(GoogleSignInAccount account){
-        email = account.getEmail();
-        googleToken = account.getIdToken();
-        accountType = null; //Unknown yet
-        firstName = account.getGivenName();
-        lastName = account.getFamilyName();
-        schoolEmail = email;
-        phoneNumber = "";
-        isOnBoardingComplete = false;
-        token = null;
-    }
 
     public void setAsStudent(){
         accountType = AccountType.STUDENT;
@@ -82,19 +75,15 @@ public class User{
     }
 
     public void onBoardingCompleted(){
-        isOnBoardingComplete = true;
+        needsOnBoarding = false;
     }
 
-    public void setToken(String token){
-        this.token = token;
+    public long getProfileId(){
+        return profileId;
     }
 
     public String getEmail(){
         return email;
-    }
-
-    public String getGoogleToken(){
-        return googleToken;
     }
 
     public boolean hasDefinedType(){
@@ -121,6 +110,10 @@ public class User{
         return lastName;
     }
 
+    public String getPhotoUrl(){
+        return photoUrl;
+    }
+
     public String getName(){
         return firstName + " " + lastName;
     }
@@ -134,13 +127,25 @@ public class User{
     }
 
     public boolean isOnBoardingComplete(){
-        return isOnBoardingComplete;
+        return !needsOnBoarding;
     }
 
     public String getToken(){
         return token;
     }
 
+    @Override
+    public String toString(){
+        String result = "User #" + getId() + ": " + firstName + " " + lastName;
+        result += " (" + email +", " + phoneNumber + "). ";
+        if (needsOnBoarding){
+            result += "Needs on-boarding.";
+        }
+        else{
+            result += "Doesn't need on-boarding.";
+        }
+        return result;
+    }
 
     //START: User persistence in Shared Preferences
 
@@ -153,8 +158,17 @@ public class User{
         SharedPreferences user = context.getSharedPreferences(PREFERENCE_FILE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = user.edit();
 
+        editor.putLong("user.id", getId());
+        editor.putLong("user.profile_id", profileId);
         editor.putString("user.email", email);
-        editor.putString("user.googleToken", googleToken);
+        editor.putString("user.firstName", firstName);
+        editor.putString("user.lastName", lastName);
+        editor.putString("user.photoUrl", photoUrl);
+        editor.putString("user.schoolEmail", schoolEmail);
+        editor.putString("user.phoneNumber", phoneNumber);
+        editor.putBoolean("user.needsOnBoarding", needsOnBoarding);
+
+        editor.putString("user.token", token);
 
         //NOTE: account type will be null before going through on boarding
         if (accountType == null){
@@ -173,14 +187,8 @@ public class User{
                 editor.putString("user.officeHours", officeHoursCsv);
             }
         }
-        editor.putString("user.firstName", firstName);
-        editor.putString("user.lastName", lastName);
-        editor.putString("user.schoolEmail", schoolEmail);
-        editor.putString("user.phoneNumber", phoneNumber);
-        editor.putBoolean("user.isOnBoardingComplete", isOnBoardingComplete);
 
-        editor.putString("user.token", token);
-        editor.apply();
+        editor.commit();
     }
 
     /**
@@ -216,8 +224,17 @@ public class User{
      * @param preferences the preference map to read the user from.
      */
     private User(SharedPreferences preferences){
+        super(preferences.getLong("user.id", -1));
+        profileId = preferences.getLong("user.profile_id", -1);
         email = preferences.getString("user.email", "");
-        googleToken = preferences.getString("user.googleToken", "");
+        firstName = preferences.getString("user.firstName", "");
+        lastName = preferences.getString("user.lastName", "");
+        photoUrl = preferences.getString("user.photoUrl", "");
+        schoolEmail = preferences.getString("user.schoolEmail", "");
+        phoneNumber = preferences.getString("user.phoneNumber", "");
+        needsOnBoarding = preferences.getBoolean("user.needsOnBoarding", true);
+
+        token = preferences.getString("user.token", "");
 
         accountType = AccountType.getAccountType(preferences.getString("user.accountType", ""));
         if (accountType == AccountType.TEACHER){
@@ -226,15 +243,30 @@ public class User{
                 officeHours = new ArrayList<>(Arrays.asList(officeHoursCsv.split(",")));
             }
         }
-        firstName = preferences.getString("user.firstName", "");
-        lastName = preferences.getString("user.lastName", "");
-        schoolEmail = preferences.getString("user.schoolEmail", "");
-        phoneNumber = preferences.getString("user.phoneNumber", "");
-        isOnBoardingComplete = preferences.getBoolean("user.isOnBoardingComplete", false);
-
-        token = preferences.getString("user.token", "");
     }
 
+    @Override
+    public void writeToParcel(Parcel parcel, int flags){
+        super.writeToParcel(parcel, flags);
+        //TODO: not needed at the moment
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>(){
+        @Override
+        public User createFromParcel(Parcel source){
+            return new User(source);
+        }
+
+        @Override
+        public User[] newArray(int size){
+            return new User[size];
+        }
+    };
+
+    private User(Parcel src){
+        super(src);
+        //TODO: not needed at the moment
+    }
 
     /**
      * Types of accounts supported by the platform.
@@ -279,10 +311,10 @@ public class User{
             if (descriptor == null){
                 return null;
             }
-            if (descriptor.equals("student")){
+            else if (descriptor.equals("student")){
                 return STUDENT;
             }
-            if (descriptor.equals("teacher")){
+            else if (descriptor.equals("teacher")){
                 return TEACHER;
             }
             return null;

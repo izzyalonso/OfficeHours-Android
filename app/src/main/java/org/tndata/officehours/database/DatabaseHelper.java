@@ -34,10 +34,12 @@ class DatabaseHelper extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db){
         db.execSQL(CourseTableHandler.CREATE);
+        db.execSQL(PersonTableHandler.CREATE);
+        db.execSQL(MessageTableHandler.CREATE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
-
+        //Unused
     }
 }

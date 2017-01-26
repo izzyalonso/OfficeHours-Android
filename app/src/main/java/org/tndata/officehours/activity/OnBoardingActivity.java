@@ -5,26 +5,40 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityOnBoardingBinding;
 import org.tndata.officehours.model.User;
+import org.tndata.officehours.util.API;
+import org.tndata.officehours.util.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import es.sandwatch.httprequests.HttpRequest;
+import es.sandwatch.httprequests.HttpRequestError;
 
 
 /**
  * Class that handles on boarding.
  *
+ *
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class OnBoardingActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener{
+public class OnBoardingActivity
+        extends AppCompatActivity
+        implements
+                View.OnClickListener,
+                CompoundButton.OnCheckedChangeListener,
+                HttpRequest.RequestCallback{
+
     private static final int TIME_SLOT_PICKER_RC = 2753;
 
 
@@ -32,6 +46,8 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
 
     private User user;
     private ArrayList<String> officeHours;
+    private Set<Integer> officeHoursRequestCodes;
+    private int profileRequestCode;
 
 
     @Override
@@ -53,6 +69,11 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
             displayForm(true);
         }
 
+        if (!user.getPhotoUrl().isEmpty()){
+            ImageLoader.Options options = new ImageLoader.Options().setCropToCircle(true);
+            ImageLoader.loadBitmap(binding.onBoardingAvatar, user.getPhotoUrl(), options);
+            binding.onBoardingAvatar.setVisibility(View.VISIBLE);
+        }
         binding.onBoardingFirstName.setText(user.getFirstName());
         binding.onBoardingLastName.setText(user.getLastName());
         binding.onBoardingEmail.setText(user.getEmail());
@@ -96,7 +117,7 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View view){
         if (view.getId() == R.id.on_boarding_office_hours_add){
-            startActivityForResult(TimeSlotPickerActivity.getIntent(this, false, false), TIME_SLOT_PICKER_RC);
+            startActivityForResult(TimeSlotPickerActivity.getIntent(this, true, false, false), TIME_SLOT_PICKER_RC);
         }
         else if (view.getId() == R.id.on_boarding_finish){
             finishOnBoarding();
@@ -147,14 +168,14 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
             binding.onBoardingError.setText(R.string.on_boarding_error_name);
             binding.onBoardingError.setVisibility(View.VISIBLE);
         }
-        else if (email.isEmpty()){
+        /*else if (email.isEmpty()){
             binding.onBoardingError.setText(R.string.on_boarding_error_email);
             binding.onBoardingError.setVisibility(View.VISIBLE);
         }
         else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             binding.onBoardingError.setText(R.string.on_boarding_error_email_invalid);
             binding.onBoardingError.setVisibility(View.VISIBLE);
-        }
+        }*/
         else{
             user.setOfficeHours(officeHours);
             user.setName(firstName, lastName);
@@ -162,8 +183,42 @@ public class OnBoardingActivity extends AppCompatActivity implements View.OnClic
             user.setPhoneNumber(phone);
             user.onBoardingCompleted();
             user.writeToPreferences(this);
-            startActivity(new Intent(this, ScheduleActivity.class));
+
+            if (user.isTeacher() && !officeHours.isEmpty()){
+                officeHoursRequestCodes = new HashSet<>();
+                for (String slot:officeHours){
+                    officeHoursRequestCodes.add(HttpRequest.post(this, API.URL.officeHours(), API.BODY.officeHours(slot)));
+                }
+            }
+            else{
+                profileRequestCode = HttpRequest.put(this, API.URL.profile(user), API.BODY.profile(user));
+            }
+            binding.onBoardingProgress.setVisibility(View.VISIBLE);
+            binding.onBoardingFinish.setEnabled(false);
+        }
+    }
+
+    @Override
+    public void onRequestComplete(int requestCode, String result){
+        if (officeHoursRequestCodes.contains(requestCode)){
+            officeHoursRequestCodes.remove(requestCode);
+            if (officeHoursRequestCodes.isEmpty()){
+                profileRequestCode = HttpRequest.put(this, API.URL.profile(user), API.BODY.profile(user));
+            }
+        }
+        else if (requestCode == profileRequestCode){
+            Intent launcher = new Intent(this, LauncherActivity.class)
+                    .putExtra(LauncherActivity.FROM_ON_BOARDING_KEY, true);
+            startActivity(launcher);
             finish();
         }
+    }
+
+    @Override
+    public void onRequestFailed(int requestCode, HttpRequestError error){
+        binding.onBoardingProgress.setVisibility(View.GONE);
+        binding.onBoardingFinish.setEnabled(true);
+
+        Toast.makeText(this, R.string.on_boarding_error_network, Toast.LENGTH_LONG).show();
     }
 }

@@ -15,11 +15,31 @@ class DatabaseContract{
 
         static final String ID = _ID;
         static final String CLOUD_ID = "cloud_id";
-        static final String CODE = "code";
         static final String NAME = "name";
+        static final String LOCATION = "location";
         static final String MEETING_TIME = "meeting_time";
-        static final String EXPIRATION_DATE = "expiration_date";
         static final String ACCESS_CODE = "access_code";
-        static final String INSTRUCTOR_NAME = "instructor_name";
+    }
+
+    static abstract class PersonEntry implements BaseColumns{
+        static final String TABLE = "Person";
+
+        static final String ID = _ID;
+        static final String CLOUD_ID = "cloud_id";
+        static final String COURSE_ID = "course_id";
+        static final String NAME = "name";
+        static final String AVATAR = "avatar";
+        static final String IS_INSTRUCTOR = "is_instructor";
+    }
+
+    static abstract class MessageEntry implements BaseColumns{
+        static final String TABLE = "Message";
+
+        static final String ID = _ID;
+        static final String CLOUD_ID = "cloud_id";
+        static final String SENDER_ID = "sender_id";
+        static final String TEXT = "text";
+        static final String IS_READ = "read";
+        static final String TIMESTAMP = "timestamp";
     }
 }

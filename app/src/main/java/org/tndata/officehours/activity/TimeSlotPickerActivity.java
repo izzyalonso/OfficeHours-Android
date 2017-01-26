@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -46,10 +47,13 @@ public class TimeSlotPickerActivity
     //Keys and such
     private static final String SLOT_KEY = "org.tndata.officehours.TSP.Slot";
     private static final String MC_KEY = "org.tndata.officehours.TSP.MultiChoice";
+    private static final String SINGLE_TIME_KEY = "org.tndata.officehours.TSP.SingleTime";
     private static final String IS_24_HOUR_FORMAT_KEY = "org.tndata.officehours.TSP.24HourFormat";
 
     public static final String RESULT_KEY = "org.tndata.officehours.TSP.Result";
 
+
+    private static final String TAG = "TimeSlotPickerActivity";
 
     private static final DateFormat parser = new SimpleDateFormat("H:mm", Locale.getDefault());
     private static final DateFormat formatter12 = new SimpleDateFormat("K:mm a", Locale.getDefault());
@@ -61,11 +65,15 @@ public class TimeSlotPickerActivity
      *
      * @param context a reference to the context.
      * @param multiChoice true if multiple day choice is allowed, false otherwise.
+     * @param singleTime true if the picker should allow to pick only a start time, false otherwise.
+     * @param is24HourFormat true if the picker should do 24 hour time formatting, false otherwise.
      * @return the intent to launch the activity.
      */
-    public static Intent getIntent(@NonNull Context context, boolean multiChoice, boolean is24HourFormat){
+    public static Intent getIntent(@NonNull Context context, boolean multiChoice,
+                                   boolean singleTime, boolean is24HourFormat){
         return new Intent(context, TimeSlotPickerActivity.class)
                 .putExtra(MC_KEY, multiChoice)
+                .putExtra(SINGLE_TIME_KEY, singleTime)
                 .putExtra(IS_24_HOUR_FORMAT_KEY, is24HourFormat);
     }
 
@@ -75,20 +83,24 @@ public class TimeSlotPickerActivity
      * @param context a reference to the context
      * @param slot the data to pre-fill the activity with.
      * @param multiChoice rue if multiple day choice is allowed, false otherwise.
+     * @param singleTime true if the picker should allow to pick only a start time, false otherwise.
+     * @param is24HourFormat true if the picker should do 24 hour time formatting, false otherwise.
      * @return the intent to launch the activity.
      */
     public static Intent getIntent(@NonNull Context context, @NonNull String slot,
-                                   boolean multiChoice, boolean is24HourFormat){
+                                   boolean multiChoice, boolean singleTime, boolean is24HourFormat){
 
         return new Intent(context, TimeSlotPickerActivity.class)
                 .putExtra(SLOT_KEY, slot)
                 .putExtra(MC_KEY, multiChoice)
+                .putExtra(SINGLE_TIME_KEY, singleTime)
                 .putExtra(IS_24_HOUR_FORMAT_KEY, is24HourFormat);
     }
 
 
     private ActivityTimeSlotPickerBinding binding;
     private boolean multiChoice;
+    private boolean singleTime;
     private boolean is24HourFormat;
 
     private boolean radioSelected;
@@ -104,6 +116,7 @@ public class TimeSlotPickerActivity
 
         //Grab the setting flags
         multiChoice = getIntent().getBooleanExtra(MC_KEY, false);
+        singleTime = getIntent().getBooleanExtra(SINGLE_TIME_KEY, false);
         is24HourFormat = getIntent().getBooleanExtra(IS_24_HOUR_FORMAT_KEY, false);
 
         //Display the selected day picker
@@ -127,7 +140,13 @@ public class TimeSlotPickerActivity
         binding.tspCheckF.setOnCheckedChangeListener(this);
         binding.tspCheckS.setOnCheckedChangeListener(this);
         binding.tspFrom.setOnClickListener(this);
-        binding.tspTo.setOnClickListener(this);
+        if (singleTime){
+            binding.tspDash.setVisibility(View.GONE);
+            binding.tspTo.setVisibility(View.GONE);
+        }
+        else{
+            binding.tspTo.setOnClickListener(this);
+        }
         binding.tspDone.setOnClickListener(this);
         
         //If there is a slot available, fill the form with it
@@ -217,7 +236,7 @@ public class TimeSlotPickerActivity
      */
     private void checkFromState(){
         if (radioSelected || selectedCheckboxes != 0){
-            if (from != null && to != null){
+            if (from != null && (singleTime || to != null)){
                 binding.tspDone.setEnabled(true);
             }
             else{
@@ -257,6 +276,8 @@ public class TimeSlotPickerActivity
      * @param slot the slot used to fill the form.
      */
     private void setSlot(@NonNull String slot){
+        Log.d(TAG, "Setting slot: " + slot);
+
         //Get the parts of the recurrence
         String frag[] = slot.split(" ");
         String days = frag[0];
@@ -319,18 +340,25 @@ public class TimeSlotPickerActivity
             days = days.substring(1);
         }
 
-        frag = time.split("-");
+        if (singleTime){
+            frag[0] = time;
+        }
+        else{
+            frag = time.split("-");
+        }
         try{
+            DateFormat formatter = getSelectedFormatter();
+
             from = parser.parse(frag[0]);
-            to = parser.parse(frag[1]);
+            binding.tspFrom.setText(formatter.format(from));
+            if (!singleTime){
+                to = parser.parse(frag[1]);
+                binding.tspTo.setText(formatter.format(to));
+            }
         }
         catch (ParseException px){
             px.printStackTrace();
         }
-
-        DateFormat formatter = getSelectedFormatter();
-        binding.tspFrom.setText(formatter.format(from));
-        binding.tspTo.setText(formatter.format(to));
 
         checkFromState();
     }
@@ -341,8 +369,9 @@ public class TimeSlotPickerActivity
      * @return the slot input by the user.
      */
     private String getSlot(){
-        String result = "";
+        Log.d(TAG, "Generating slot...");
 
+        String result = "";
         if (multiChoice){
             if (binding.tspCheckM.isChecked()){
                 result += "M";
@@ -385,10 +414,16 @@ public class TimeSlotPickerActivity
         }
 
         result += " " + formatter24.format(from);
-        return result + "-" + formatter24.format(to);
+        if (!singleTime){
+            result += "-" + formatter24.format(to);
+        }
+        Log.d(TAG, "Result: " + result);
+        return result;
     }
 
     public static String get12HourFormattedString(@NonNull String src, boolean expandWeekDays){
+        Log.d(TAG, "Formatting " + src + " to 12 hour format...");
+
         String result = "";
 
         //Split times the days and times sections
@@ -446,20 +481,21 @@ public class TimeSlotPickerActivity
         }
         result += " ";
 
-        DateFormat parser = new SimpleDateFormat("H:mm", Locale.getDefault());
-        DateFormat formatter = new SimpleDateFormat("K:mm a", Locale.getDefault());
-
         //Split from and to
         frags = times.split("-");
         //Add the formatted dates
         try{
-            result += formatter.format(parser.parse(frags[0]));
-            result += " - ";
-            result += formatter.format(parser.parse(frags[1]));
+            result += formatter12.format(parser.parse(frags[0]));
+            if (frags.length == 2){
+                result += " - ";
+                result += formatter12.format(parser.parse(frags[1]));
+            }
         }
         catch (ParseException px){
             px.printStackTrace();
         }
+
+        Log.d(TAG, "Result: " + result);
 
         return result;
     }

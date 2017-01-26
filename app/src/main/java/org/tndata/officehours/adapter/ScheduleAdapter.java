@@ -16,7 +16,7 @@ import java.util.List;
 
 
 /**
- * Adapter used in ScheduleActivity to display the student's add
+ * Adapter used in ScheduleActivity to display the student's schedule_instructor
  *
  * @author Ismael Alonso
  * @version 1.0.0
@@ -61,6 +61,11 @@ public class ScheduleAdapter
     @Override
     public void onBindViewHolder(CourseHolder holder, int position){
         holder.setCourse(courses.get(position));
+    }
+
+    public void setCourses(List<Course> courses){
+        this.courses = courses;
+        notifyDataSetChanged();
     }
 
     public void addCourse(@NonNull Course course){
