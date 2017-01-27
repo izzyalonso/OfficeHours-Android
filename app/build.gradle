@@ -6,9 +6,16 @@ buildscript{
 
 apply plugin: 'com.android.application'
 
+def signingDirectory = "${System.properties['user.home']}/.signing/OfficeHours-Android/"
+def signingProperties = new Properties()
+file(signingDirectory + "gradle.properties").withInputStream{
+    stream -> signingProperties.load(stream)
+}
+
 android{
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
+
     defaultConfig{
         applicationId "org.tndata.officehours"
         minSdkVersion 16
@@ -18,8 +25,20 @@ android{
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs{
+        debug{
+            storeFile file(signingDirectory + "keystore/debug.keystore")
+        }
+        release{
+            storePassword signingProperties.RELEASE_KEYSTORE_PASSWORD
+            keyAlias signingProperties.RELEASE_KEY_ALIAS
+            keyPassword signingProperties.RELEASE_KEY_PASSWORD
+        }
+    }
+
     buildTypes{
         release{
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
