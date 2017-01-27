@@ -1,12 +1,19 @@
 package org.tndata.officehours.util;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.annotation.NonNull;
+
 import com.google.gson.JsonObject;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Person;
 
 
 /**
- * Created by ialonso on 1/9/17.
+ * Class with utility functions.
+ *
+ * @author Ismael Alonso
  */
 public class Util{
     public static Class getTypeOf(String type){
@@ -18,5 +25,18 @@ public class Util{
             return Person.class;
         }
         return Course.class;
+    }
+
+    /**
+     * Tells whether there is a network connection available.
+     *
+     * @param context a reference to the context.
+     * @return true if there is a network connection, false otherwise.
+     */
+    public static boolean isNetworkAvailable(@NonNull Context context){
+        String svc = Context.CONNECTIVITY_SERVICE;
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(svc);
+        NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

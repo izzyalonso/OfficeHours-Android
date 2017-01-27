@@ -164,9 +164,21 @@ public class ChatActivity
     }
 
     @Override
+    public void onConnect(){
+        Log.d(TAG, "Connected to the websocket");
+        connected = true;
+    }
+
+    @Override
     protected void onStop(){
         socketClient.disconnect();
         super.onStop();
+    }
+
+    @Override
+    public void onDisconnect(int code, String reason){
+        Log.d(TAG, "Disconnected from the socket, reason: " + reason);
+        connected = false;
     }
 
     @Override
@@ -174,6 +186,7 @@ public class ChatActivity
         switch (view.getId()){
             case R.id.chat_send:
                 sendMessage();
+                break;
         }
     }
 
@@ -190,12 +203,6 @@ public class ChatActivity
     }
 
     @Override
-    public void onConnect(){
-        Log.d(TAG, "Connected to the websocket");
-        connected = true;
-    }
-
-    @Override
     public void onMessage(String message){
         Log.d(TAG, "Message received as a String");
         Parser.parse(message, Message.class, this);
@@ -206,12 +213,6 @@ public class ChatActivity
         Log.d(TAG, "Message received as a byte stream");
         String message = new String(data);
         Parser.parse(message, Message.class, this);
-    }
-
-    @Override
-    public void onDisconnect(int code, String reason){
-        Log.d(TAG, "Disconnected from the socket, reason: " + reason);
-        connected = false;
     }
 
     @Override
