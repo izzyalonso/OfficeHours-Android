@@ -53,15 +53,15 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
         binding.courseToolbar.toolbar.setTitle(course.getName());
         setSupportActionBar(binding.courseToolbar.toolbar);
 
-        if (((OfficeHoursApp)getApplication()).getUser().isStudent()){
-            binding.courseAccessCode.setVisibility(View.GONE);
-            binding.courseEnrollmentContainer.setVisibility(View.GONE);
-            binding.courseInstructorChat.setOnClickListener(this);
-        }
-        else{
+        if (((OfficeHoursApp)getApplication()).getUser().is(course.getInstructor())){
             binding.courseInstructorContainer.setVisibility(View.GONE);
             binding.courseEnrollmentList.setOnClickListener(this);
             binding.courseEnrollmentBroadcast.setOnClickListener(this);
+        }
+        else{
+            binding.courseAccessCode.setVisibility(View.GONE);
+            binding.courseEnrollmentContainer.setVisibility(View.GONE);
+            binding.courseInstructorChat.setOnClickListener(this);
         }
         String content = getString(R.string.course_enrollment_content, course.getStudents().size());
         binding.courseEnrollment.setText(content);
@@ -69,7 +69,7 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        if (((OfficeHoursApp)getApplication()).getUser().isTeacher()){
+        if (((OfficeHoursApp)getApplication()).getUser().is(course.getInstructor())){
             getMenuInflater().inflate(R.menu.edit, menu);
             return true;
         }

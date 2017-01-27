@@ -134,6 +134,10 @@ public class User extends Base{
         return token;
     }
 
+    public boolean is(Person person){
+        return getId() == person.getId();
+    }
+
     @Override
     public String toString(){
         String result = "User #" + getId() + ": " + firstName + " " + lastName;
