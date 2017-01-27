@@ -34,7 +34,9 @@ import org.tndata.officehours.util.WebSocketClient;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 
 /**
@@ -81,14 +83,16 @@ public class ChatActivity
 
     private OfficeHoursApp app;
 
+    private Person person;
+    //private Course course;
+
+    private ChatAdapter adapter;
+
     private ActivityChatBinding binding;
     private WebSocketClient socketClient;
     private boolean connected;
 
-    private Person person;
-    private Course course;
-
-    private ChatAdapter adapter;
+    private Queue<Message> messageQueue;
 
 
     @Override
@@ -150,6 +154,8 @@ public class ChatActivity
                 socketClient = new WebSocketClient(new URI("wss://staging.tndata.org/chat/1/"), this, headers);
 
                 connected = false;
+
+                messageQueue = new LinkedList<>();
             }
             catch (URISyntaxException usx){
                 usx.printStackTrace();
@@ -185,27 +191,34 @@ public class ChatActivity
     public void onClick(View view){
         switch (view.getId()){
             case R.id.chat_send:
-                sendMessage();
+                String message = binding.chatNewMessage.getText().toString().trim();
+                if (!message.isEmpty()){
+                    queueMessage(new Message(app.getUser().getId(), message));
+                    binding.chatNewMessage.setText("");
+                }
                 break;
         }
     }
 
-    private void sendMessage(){
-        String newMessage = binding.chatNewMessage.getText().toString().trim();
-        if (!newMessage.isEmpty()){
-            OfficeHoursApp app = (OfficeHoursApp)getApplication();
-            Message message = new Message(app.getUser().getId(), newMessage);
-            adapter.addMessage(message);
-            binding.chatNewMessage.setText("");
+    private void queueMessage(@NonNull Message message){
+        adapter.addMessage(message);
+        messageQueue.add(message);
+        if (messageQueue.size() == 1){
+            sendMessage();
+        }
+    }
 
-            socketClient.send(API.BODY.chatMessage(((OfficeHoursApp)getApplication()).getUser(), message.getText()));
+    private void sendMessage(){
+        if (!messageQueue.isEmpty()){
+            socketClient.send(API.BODY.chatMessage(messageQueue.peek()));
         }
     }
 
     @Override
     public void onMessage(String message){
         Log.d(TAG, "Message received as a String");
-        Parser.parse(message, Message.class, this);
+        Log.d(TAG, message);
+        //Parser.parse(message, Message.class, this);
     }
 
     @Override
@@ -217,7 +230,7 @@ public class ChatActivity
 
     @Override
     public void onError(Exception error){
-        Log.d(TAG, "onError()");
+        Log.d(TAG, "onError(): " + error.getMessage());
         error.printStackTrace();
     }
 

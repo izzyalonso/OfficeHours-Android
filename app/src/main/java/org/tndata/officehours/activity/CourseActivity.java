@@ -105,7 +105,7 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view){
         switch (view.getId()){
             case R.id.course_instructor_chat:
-                //TODO start a chat with the dude
+                startActivity(ChatActivity.getIntent(this, course.getInstructor()));
                 break;
 
             case R.id.course_enrollment_list:

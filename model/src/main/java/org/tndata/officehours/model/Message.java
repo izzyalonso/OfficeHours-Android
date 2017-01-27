@@ -5,6 +5,11 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 
 /**
  * Model for a chat message.
@@ -25,6 +30,7 @@ public class Message extends Base{
     private String createdAt;
 
     private long timestamp;
+    private boolean isSent;
 
 
     public Message(long senderId, @NonNull String text){
@@ -36,11 +42,16 @@ public class Message extends Base{
     }
 
     public Message(long id, long senderId, @NonNull String text, long timestamp){
+        this(id, senderId, text, timestamp, false);
+    }
+
+    public Message(long id, long senderId, @NonNull String text, long timestamp, boolean isSent){
         super(id);
         this.senderId = senderId;
         this.text = text;
         this.isRead = false;
         this.timestamp = timestamp;
+        this.isSent = isSent;
     }
 
     public long getSenderId(){
@@ -63,12 +74,26 @@ public class Message extends Base{
         return timestamp;
     }
 
+    public boolean isSent(){
+        return isSent;
+    }
+
     public void read(){
         isRead = true;
     }
 
+    public void sent(){
+        isSent = true;
+    }
+
     public void process(){
-        //TODO read createdAt into a date and save the timestamp in milliseconds since epoch
+        DateFormat parser = new SimpleDateFormat("YYYY-MM-dd HH:m:s.SZ", Locale.getDefault());
+        try{
+            timestamp = parser.parse(createdAt).getTime();
+        }
+        catch (ParseException px){
+            px.printStackTrace();
+        }
     }
 
     @Override

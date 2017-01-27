@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.tndata.officehours.BuildConfig;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.Message;
 import org.tndata.officehours.model.User;
 
 
@@ -185,12 +186,11 @@ public class API{
             return body;
         }
 
-        public static String chatMessage(@NonNull User user, @NonNull String text){
+        public static String chatMessage(@NonNull Message message){
             JSONObject body = new JSONObject();
             try{
-                body.put("text", text);
-                body.put("from", user.getId());
-                body.put("token", user.getToken());
+                body.put("text", message.getText());
+                body.put("from", message.getSenderId());
             }
             catch (JSONException jx){
                 jx.printStackTrace();

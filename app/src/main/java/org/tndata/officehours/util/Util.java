@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
+import android.support.annotation.Px;
+import android.util.TypedValue;
 
 import com.google.gson.JsonObject;
 import org.tndata.officehours.model.Course;
@@ -38,5 +40,11 @@ public class Util{
         ConnectivityManager cm = (ConnectivityManager)context.getSystemService(svc);
         NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    @Px
+    public static int getPixels(Context context, int densityPixels){
+        return (int)Math.ceil(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, densityPixels,
+                context.getResources().getDisplayMetrics()));
     }
 }
