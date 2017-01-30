@@ -9,6 +9,7 @@ import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ItemMyMessageBinding;
 import org.tndata.officehours.model.Message;
 import org.tndata.officehours.util.Util;
@@ -77,6 +78,14 @@ public class MyMessageHolder extends RecyclerView.ViewHolder{
 
         binding.myMessageText.setText(message.getText());
         binding.myMessageTime.setText("1:24 PM");
+        if (message.isSent()){
+            if (message.isRead()){
+                binding.contactMessageState.setImageResource(R.drawable.ic_double_check_white_18dp);
+            }
+            else{
+                binding.contactMessageState.setImageResource(R.drawable.ic_check_white_18dp);
+            }
+        }
     }
 
     private void setViews(){

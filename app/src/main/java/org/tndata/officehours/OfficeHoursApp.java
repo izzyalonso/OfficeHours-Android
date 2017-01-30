@@ -1,6 +1,7 @@
 package org.tndata.officehours;
 
 import android.app.Application;
+import android.util.Log;
 
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.User;
@@ -17,6 +18,9 @@ import es.sandwatch.httprequests.HttpRequest;
  * @version 1.0.0
  */
 public class OfficeHoursApp extends Application{
+    private static final String TAG = "OfficeHoursApp";
+
+
     private User user;
     private List<Course> courses;
 
@@ -46,11 +50,16 @@ public class OfficeHoursApp extends Application{
     @Override
     public void onCreate(){
         super.onCreate();
+        Log.d(TAG, "onCreate()");
         HttpRequest.init(this);
 
-        User user = User.readFromPreferences(this);
+        user = User.readFromPreferences(this);
         if (user != null){
+            Log.i(TAG, "Current session -> " + user);
             HttpRequest.addHeader("Authorization", "Token " + user.getToken());
+        }
+        else{
+            Log.i(TAG, "No user is signed in");
         }
     }
 }

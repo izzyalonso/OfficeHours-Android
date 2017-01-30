@@ -65,11 +65,10 @@ public class LauncherActivity
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_launcher);
 
-        User user = User.readFromPreferences(this);
+        User user = ((OfficeHoursApp)getApplication()).getUser();
         if (user != null){
             binding.launcherGoogleSignIn.setVisibility(View.GONE);
             binding.launcherProgress.setVisibility(View.VISIBLE);
-            ((OfficeHoursApp)getApplication()).setUser(user);
             if (user.isOnBoardingComplete()){
                 if (getIntent().getBooleanExtra(FROM_ON_BOARDING_KEY, false)){
                     DataSynchronizer.sync(this, this);

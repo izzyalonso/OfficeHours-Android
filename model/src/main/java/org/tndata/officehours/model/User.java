@@ -23,6 +23,7 @@ import java.util.List;
 public class User extends Base{
     private static final String PREFERENCE_FILE = "OfficeHoursUserPreferences";
 
+
     @SerializedName("profile_id")
     private long profileId;
 
@@ -159,6 +160,7 @@ public class User extends Base{
      * @param context a reference to the context.
      */
     public void writeToPreferences(@NonNull Context context){
+        context = context.getApplicationContext();
         SharedPreferences user = context.getSharedPreferences(PREFERENCE_FILE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = user.edit();
 
@@ -201,6 +203,7 @@ public class User extends Base{
      * @param context a reference to the context.
      */
     public static void deleteFromPreferences(@NonNull Context context){
+        context = context.getApplicationContext();
         context.getSharedPreferences(PREFERENCE_FILE, Context.MODE_PRIVATE).edit().clear().commit();
     }
 
@@ -212,6 +215,7 @@ public class User extends Base{
      */
     @Nullable
     public static User readFromPreferences(@NonNull Context context){
+        context = context.getApplicationContext();
         //Open the shared preferences file for the user and check if they exist
         SharedPreferences user = context.getSharedPreferences(PREFERENCE_FILE, Context.MODE_PRIVATE);
         String email = user.getString("user.email", null);

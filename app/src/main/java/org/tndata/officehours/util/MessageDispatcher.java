@@ -21,12 +21,14 @@ import java.util.Queue;
 
 
 /**
- * Created by isma on 1/27/17.
+ * Handles sending messages through a websocket.
+ *
+ * @author Ismael Alonso
  */
 public class MessageDispatcher implements WebSocketClient.Listener, Parser.ParserCallback{
     private static final String TAG = "MessageDispatcher";
 
-
+    private OfficeHoursApp app;
     private WebSocketClient socket;
     private Listener listener;
 
@@ -37,11 +39,12 @@ public class MessageDispatcher implements WebSocketClient.Listener, Parser.Parse
     public MessageDispatcher(@NonNull Context context, @NonNull Person recipient,
                              @NonNull Listener listener){
         try{
+            this.app = (OfficeHoursApp)context.getApplicationContext();
             this.listener = listener;
             connected = false;
             messageQueue = new LinkedList<>();
             URI uri = new URI(API.URL.chatSocket(recipient));
-            socket = new WebSocketClient(uri, this, getHeaders(context));
+            socket = new WebSocketClient(uri, this, getHeaders());
         }
         catch (URISyntaxException usx){
             usx.printStackTrace();
@@ -49,8 +52,7 @@ public class MessageDispatcher implements WebSocketClient.Listener, Parser.Parse
     }
 
     @SuppressWarnings("deprecation")
-    private List<BasicNameValuePair> getHeaders(@NonNull Context context){
-        OfficeHoursApp app = (OfficeHoursApp)context.getApplicationContext();
+    private List<BasicNameValuePair> getHeaders(){
         List<BasicNameValuePair> headers = new ArrayList<>();
         headers.add(new BasicNameValuePair("Authorization", "Token " + app.getUser().getToken()));
         return headers;
@@ -120,8 +122,16 @@ public class MessageDispatcher implements WebSocketClient.Listener, Parser.Parse
     @Override
     public void onParseSuccess(int requestCode, ResultSet result){
         if (result instanceof Message){
-            messageQueue.remove();
-            listener.onMessageSent((Message)result);
+            Message receivedMessage = (Message)result;
+            if (receivedMessage.getSenderId() == app.getUser().getId()){
+                Message message = messageQueue.remove();
+                message.become(receivedMessage);
+                message.sent();
+                listener.onMessageSent(message);
+            }
+            else{
+                listener.onMessageReceived(receivedMessage);
+            }
         }
     }
 
@@ -133,5 +143,6 @@ public class MessageDispatcher implements WebSocketClient.Listener, Parser.Parse
 
     public interface Listener{
         void onMessageSent(@NonNull Message message);
+        void onMessageReceived(@NonNull Message message);
     }
 }

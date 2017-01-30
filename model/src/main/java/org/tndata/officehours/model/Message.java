@@ -87,13 +87,20 @@ public class Message extends Base{
     }
 
     public void process(){
-        DateFormat parser = new SimpleDateFormat("YYYY-MM-dd HH:m:s.SZ", Locale.getDefault());
+        /*DateFormat parser = new SimpleDateFormat("yyyy-MM-dd HH:m:s.SZ", Locale.getDefault());
         try{
             timestamp = parser.parse(createdAt).getTime();
         }
         catch (ParseException px){
             px.printStackTrace();
-        }
+        }*/
+    }
+
+    public void become(@NonNull Message message){
+        setId(message.getId());
+        this.isRead = message.isRead();
+        this.timestamp = message.getTimestamp();
+        this.isSent = message.isSent();
     }
 
     @Override

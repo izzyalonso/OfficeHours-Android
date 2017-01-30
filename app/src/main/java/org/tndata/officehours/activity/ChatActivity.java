@@ -27,6 +27,9 @@ import org.tndata.officehours.util.CustomItemDecoration;
 import org.tndata.officehours.util.ImageLoader;
 import org.tndata.officehours.util.MessageDispatcher;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Allows a user to chat with one or more peers.
@@ -75,6 +78,7 @@ public class ChatActivity
     //private Course course;
 
     private ChatAdapter adapter;
+    private List<Message> messages;
 
     private ActivityChatBinding binding;
     private MessageDispatcher dispatcher;
@@ -125,7 +129,8 @@ public class ChatActivity
             //Create the layout manager and the adapter
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
             layoutManager.setReverseLayout(true);
-            adapter = new ChatAdapter(this);
+            messages = new ArrayList<>();
+            adapter = new ChatAdapter(this, messages);
 
             binding.chatMessages.setLayoutManager(layoutManager);
             binding.chatMessages.addItemDecoration(new CustomItemDecoration(this, 8));
@@ -156,7 +161,9 @@ public class ChatActivity
                 String text = binding.chatNewMessage.getText().toString().trim();
                 if (!text.isEmpty()){
                     Message message = new Message(app.getUser().getId(), text);
-                    adapter.addMessage(message);
+                    messages.add(message);
+                    adapter.notifyDataSetChanged();
+                    binding.chatMessages.scrollToPosition(0);
                     dispatcher.queue(message);
                     binding.chatNewMessage.setText("");
                 }
@@ -167,8 +174,15 @@ public class ChatActivity
     @Override
     public void onMessageSent(@NonNull Message message){
         Log.d(TAG, message.toString());
+        adapter.notifyItemChanged(messages.indexOf(message));
+    }
+
+    @Override
+    public void onMessageReceived(@NonNull Message message){
+        Log.d(TAG, message.toString());
         if (!message.getSender().equals("system")){
-            adapter.addMessage(message);
+            messages.add(message);
+            adapter.notifyDataSetChanged();
         }
     }
 }

@@ -22,10 +22,11 @@ import java.util.List;
 
 
 /**
- * Created by ialonso on 1/23/17.
+ * Adapter for the list of chat messages in ChatActivity.
+ *
+ * @author Ismael Alonso
  */
 public class ChatAdapter extends RecyclerView.Adapter{
-
     private static final int TYPE_MY_MESSAGE = 1;
     private static final int TYPE_CONTACT_MESSAGE = 2;
 
@@ -37,9 +38,15 @@ public class ChatAdapter extends RecyclerView.Adapter{
     private User user;
 
 
-    public ChatAdapter(@NonNull Context context){
+    /**
+     * Constructor.
+     *
+     * @param context a reference to the context.
+     * @param messages the list of messages to display.
+     */
+    public ChatAdapter(@NonNull Context context, @NonNull List<Message> messages){
         this.context = context;
-        messages = new ArrayList<>();
+        this.messages = messages;
         user = ((OfficeHoursApp)context.getApplicationContext()).getUser();
     }
 
@@ -97,7 +104,7 @@ public class ChatAdapter extends RecyclerView.Adapter{
         return messages.size();
     }
 
-    public void addMessage(Message message){
+    public void addMessage(@NonNull Message message){
         messages.add(message);
         notifyDataSetChanged();
         if (recyclerView != null){
