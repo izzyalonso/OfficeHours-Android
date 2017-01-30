@@ -2,11 +2,13 @@ package org.tndata.officehours.holder;
 
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -79,9 +81,12 @@ public class MessageHolder extends RecyclerView.ViewHolder{
         });
 
         OfficeHoursApp app = (OfficeHoursApp)binding.getRoot().getContext().getApplicationContext();
+        int padding = Util.getPixels(binding.getRoot().getContext(), 16);
+        FrameLayout.LayoutParams params;
+        params = (FrameLayout.LayoutParams)binding.messageBubble.getLayoutParams();
         if (message.getSenderId() == app.getUser().getId()){
-            binding.messageFrame.setPadding(Util.getPixels(binding.getRoot().getContext(), 16), 0, 0, 0);
-            binding.messageContainer.setGravity(Gravity.END);
+            binding.messageFrame.setPadding(padding, 0, 0, 0);
+            params.gravity = Gravity.END;
             binding.messageState.setVisibility(View.VISIBLE);
             if (message.isSent()){
                 if (message.isRead()){
@@ -93,8 +98,9 @@ public class MessageHolder extends RecyclerView.ViewHolder{
             }
         }
         else{
-            binding.messageFrame.setPadding(0, 0, Util.getPixels(binding.getRoot().getContext(), 16), 0);
-            binding.messageContainer.setGravity(Gravity.START);
+            binding.messageFrame.setPadding(0, 0, padding, 0);
+            params.gravity = Gravity.START;
+            binding.messageContainer.setGravity(GravityCompat.START);
             binding.messageState.setVisibility(View.GONE);
         }
 
