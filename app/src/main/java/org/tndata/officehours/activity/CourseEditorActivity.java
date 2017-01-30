@@ -249,7 +249,6 @@ public class CourseEditorActivity
     public void onProcessResult(int requestCode, ResultSet result){
         if (result instanceof Course){
             Course course = (Course)result;
-            course.process();
             String formatted = TimeSlotPickerActivity.get12HourFormattedString(meetingTime, false);
             course.setFormattedMeetingTime(formatted);
         }

@@ -212,16 +212,6 @@ public class Course extends Base{
         this.students = students;
     }
 
-    /**
-     * Post processes the course after fetching it from the API.
-     */
-    public void process(){
-        getInstructor().asInstructor();
-        for (Person student:getStudents()){
-            student.asStudent();
-        }
-    }
-
     @Override
     public String toString(){
         return "Course #" + getId() + ": " + getName() + " -> " + getLocation();

@@ -33,14 +33,14 @@ public class PersonTableHandler extends TableHandler{
             + PersonEntry.COURSE_ID + " INTEGER, "
             + PersonEntry.NAME + " TEXT, "
             + PersonEntry.AVATAR + " TEXT, "
-            + PersonEntry.IS_INSTRUCTOR + " INTEGER)";
+            + PersonEntry.LAST_MESSAGE + " TEXT)";
 
     private static final String INSERT = "INSERT INTO " + PersonEntry.TABLE + " ("
             + PersonEntry.CLOUD_ID + ", "
             + PersonEntry.COURSE_ID + ", "
             + PersonEntry.NAME + ", "
             + PersonEntry.AVATAR + ", "
-            + PersonEntry.IS_INSTRUCTOR + ") "
+            + PersonEntry.LAST_MESSAGE + ") "
             + "VALUES (?, ?, ?, ?, ?)";
 
     private static final String DELETE_COURSE = "DELETE FROM " + PersonEntry.TABLE
@@ -87,7 +87,7 @@ public class PersonTableHandler extends TableHandler{
         stmt.bindLong(2, course.getId());
         stmt.bindString(3, person.getName());
         stmt.bindString(4, person.getAvatar());
-        stmt.bindLong(5, person.isInstructor() ? 1 : 0);
+        stmt.bindString(5, person.getLastMessage());
 
         //Execute the query
         stmt.executeInsert();
@@ -116,7 +116,7 @@ public class PersonTableHandler extends TableHandler{
             stmt.bindLong(2, course.getId());
             stmt.bindString(3, person.getName());
             stmt.bindString(4, person.getAvatar());
-            stmt.bindLong(5, person.isInstructor() ? 1 : 0);
+            stmt.bindString(5, person.getLastMessage());
 
             //Execution
             stmt.executeInsert();
@@ -184,7 +184,7 @@ public class PersonTableHandler extends TableHandler{
                         getInt(cursor, PersonEntry.CLOUD_ID),
                         getString(cursor, PersonEntry.NAME),
                         getString(cursor, PersonEntry.AVATAR),
-                        getLong(cursor, PersonEntry.IS_INSTRUCTOR) == 1
+                        getString(cursor, PersonEntry.LAST_MESSAGE)
                 ));
             }
             //Move on until the cursor is empty
