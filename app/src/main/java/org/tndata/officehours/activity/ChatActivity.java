@@ -7,6 +7,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ import android.view.View;
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.adapter.ChatAdapter;
+import org.tndata.officehours.database.PersonTableHandler;
 import org.tndata.officehours.databinding.ActivityChatBinding;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Message;
@@ -166,6 +168,8 @@ public class ChatActivity
                     binding.chatMessages.scrollToPosition(0);
                     dispatcher.queue(message);
                     binding.chatNewMessage.setText("");
+                    person.setLastMessage(text);
+                    new PersonUpdater().execute();
                 }
                 break;
         }
@@ -183,6 +187,18 @@ public class ChatActivity
         if (!message.getSender().equals("system")){
             messages.add(message);
             adapter.notifyDataSetChanged();
+            person.setLastMessage(message.getText());
+            new PersonUpdater().execute();
+        }
+    }
+
+    private class PersonUpdater extends AsyncTask<Void, Void, Void>{
+        @Override
+        protected Void doInBackground(Void... params){
+            PersonTableHandler handler = new PersonTableHandler(ChatActivity.this);
+            handler.updatePerson(person);
+            handler.close();
+            return null;
         }
     }
 }

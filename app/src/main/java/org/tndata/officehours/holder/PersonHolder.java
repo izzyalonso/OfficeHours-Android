@@ -76,6 +76,8 @@ public class PersonHolder extends RecyclerView.ViewHolder implements View.OnClic
         String font = "fonts/Roboto-Medium.ttf";
         binding.personName.setTypeface(Typeface.createFromAsset(assetManager, font));
         binding.personName.setText(person.getName());
+        Log.d("PersonHolder", "Last message: " + person.getLastMessage());
+        binding.personLastMessage.setText(person.getLastMessage());
     }
 
     @Override

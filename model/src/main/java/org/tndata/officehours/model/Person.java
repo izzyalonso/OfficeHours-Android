@@ -72,7 +72,7 @@ public class Person extends Base{
         this.color = color;
     }
 
-    public void setLastMessage(String lastMessage){
+    public void setLastMessage(@NonNull String lastMessage){
         this.lastMessage = lastMessage;
     }
 

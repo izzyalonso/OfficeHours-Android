@@ -43,6 +43,12 @@ public class PersonTableHandler extends TableHandler{
             + PersonEntry.LAST_MESSAGE + ") "
             + "VALUES (?, ?, ?, ?, ?)";
 
+    private static final String UPDATE = "UPDATE " + PersonEntry.TABLE + " SET "
+            + PersonEntry.NAME + "=?, "
+            + PersonEntry.AVATAR + "=?, "
+            + PersonEntry.LAST_MESSAGE + "=? "
+            + "WHERE " + PersonEntry.CLOUD_ID + "=?";
+
     private static final String DELETE_COURSE = "DELETE FROM " + PersonEntry.TABLE
             + " WHERE " + PersonEntry.COURSE_ID + "=?";
 
@@ -127,6 +133,24 @@ public class PersonTableHandler extends TableHandler{
         db.endTransaction();
 
         //Close the statement
+        stmt.close();
+    }
+
+    /**
+     * Updates a person in the database.
+     *
+     * @param person the person to be updated.
+     */
+    public void updatePerson(@NonNull Person person){
+        SQLiteDatabase db = getDatabase();
+
+        SQLiteStatement stmt = db.compileStatement(UPDATE);
+        stmt.bindString(1, person.getName());
+        stmt.bindString(2, person.getAvatar());
+        stmt.bindString(3, person.getLastMessage());
+        stmt.bindLong(4, person.getId());
+        stmt.executeUpdateDelete();
+
         stmt.close();
     }
 

@@ -5,7 +5,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical" >
+        android:gravity="center_vertical"
+        android:baselineAligned="false" >
 
         <!-- We need the image to be accessible from the holder to set the image with Picasso,
              so setting data with data binding for a single view feels unnecessary. -->
@@ -30,15 +31,29 @@
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/person_name"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:textSize="17sp"
-            android:textColor="@color/text_primary" />
+            android:layout_marginStart="8dp" >
 
+            <TextView
+                android:id="@+id/person_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:id="@+id/person_last_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/text_secondary" />
+
+        </LinearLayout>
     </LinearLayout>
 </layout>

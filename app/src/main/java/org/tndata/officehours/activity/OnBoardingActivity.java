@@ -184,8 +184,8 @@ public class OnBoardingActivity
             user.onBoardingCompleted();
             user.writeToPreferences(this);
 
+            officeHoursRequestCodes = new HashSet<>();
             if (user.isTeacher() && !officeHours.isEmpty()){
-                officeHoursRequestCodes = new HashSet<>();
                 for (String slot:officeHours){
                     officeHoursRequestCodes.add(HttpRequest.post(this, API.URL.officeHours(), API.BODY.officeHours(slot)));
                 }
