@@ -16,7 +16,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.adapter.ChatAdapter;
@@ -24,19 +23,9 @@ import org.tndata.officehours.databinding.ActivityChatBinding;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Message;
 import org.tndata.officehours.model.Person;
-import org.tndata.officehours.model.ResultSet;
-import org.tndata.officehours.parser.Parser;
-import org.tndata.officehours.util.API;
 import org.tndata.officehours.util.CustomItemDecoration;
 import org.tndata.officehours.util.ImageLoader;
-import org.tndata.officehours.util.WebSocketClient;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import org.tndata.officehours.util.MessageDispatcher;
 
 
 /**
@@ -48,9 +37,8 @@ import java.util.Queue;
 public class ChatActivity
         extends AppCompatActivity
         implements
-                WebSocketClient.Listener,
                 View.OnClickListener,
-                Parser.ParserCallback{
+                MessageDispatcher.Listener{
 
     private static final String TAG = "ChatActivity";
 
@@ -89,10 +77,7 @@ public class ChatActivity
     private ChatAdapter adapter;
 
     private ActivityChatBinding binding;
-    private WebSocketClient socketClient;
-    private boolean connected;
-
-    private Queue<Message> messageQueue;
+    private MessageDispatcher dispatcher;
 
 
     @Override
@@ -148,112 +133,42 @@ public class ChatActivity
 
             binding.chatSend.setOnClickListener(this);
 
-            try{
-                List<BasicNameValuePair> headers = new ArrayList<>();
-                headers.add(new BasicNameValuePair("Authorization", "Token " + app.getUser().getToken()));
-                socketClient = new WebSocketClient(new URI("wss://staging.tndata.org/chat/1/"), this, headers);
-
-                connected = false;
-
-                messageQueue = new LinkedList<>();
-            }
-            catch (URISyntaxException usx){
-                usx.printStackTrace();
-            }
+            dispatcher = new MessageDispatcher(this, person, this);
         }
     }
 
     @Override
     protected void onStart(){
         super.onStart();
-        socketClient.connect();
-    }
-
-    @Override
-    public void onConnect(){
-        Log.d(TAG, "Connected to the websocket");
-        connected = true;
+        dispatcher.connect();
     }
 
     @Override
     protected void onStop(){
-        socketClient.disconnect();
+        dispatcher.disconnect();
         super.onStop();
-    }
-
-    @Override
-    public void onDisconnect(int code, String reason){
-        Log.d(TAG, "Disconnected from the socket, reason: " + reason);
-        connected = false;
     }
 
     @Override
     public void onClick(View view){
         switch (view.getId()){
             case R.id.chat_send:
-                String message = binding.chatNewMessage.getText().toString().trim();
-                if (!message.isEmpty()){
-                    queueMessage(new Message(app.getUser().getId(), message));
+                String text = binding.chatNewMessage.getText().toString().trim();
+                if (!text.isEmpty()){
+                    Message message = new Message(app.getUser().getId(), text);
+                    adapter.addMessage(message);
+                    dispatcher.queue(message);
                     binding.chatNewMessage.setText("");
                 }
                 break;
         }
     }
 
-    private void queueMessage(@NonNull Message message){
-        adapter.addMessage(message);
-        messageQueue.add(message);
-        if (messageQueue.size() == 1){
-            sendMessage();
+    @Override
+    public void onMessageSent(@NonNull Message message){
+        Log.d(TAG, message.toString());
+        if (!message.getSender().equals("system")){
+            adapter.addMessage(message);
         }
-    }
-
-    private void sendMessage(){
-        if (!messageQueue.isEmpty()){
-            socketClient.send(API.BODY.chatMessage(messageQueue.peek()));
-        }
-    }
-
-    @Override
-    public void onMessage(String message){
-        Log.d(TAG, "Message received as a String");
-        Log.d(TAG, message);
-        //Parser.parse(message, Message.class, this);
-    }
-
-    @Override
-    public void onMessage(byte[] data){
-        Log.d(TAG, "Message received as a byte stream");
-        String message = new String(data);
-        Parser.parse(message, Message.class, this);
-    }
-
-    @Override
-    public void onError(Exception error){
-        Log.d(TAG, "onError(): " + error.getMessage());
-        error.printStackTrace();
-    }
-
-    @Override
-    public void onProcessResult(int requestCode, ResultSet result){
-        if (result instanceof Message){
-            ((Message)result).process();
-        }
-    }
-
-    @Override
-    public void onParseSuccess(int requestCode, ResultSet result){
-        if (result instanceof Message){
-            Message message = (Message)result;
-            Log.d(TAG, message.toString());
-            if (!message.getSender().equals("system")){
-                adapter.addMessage(message);
-            }
-        }
-    }
-
-    @Override
-    public void onParseFailed(int requestCode){
-
     }
 }

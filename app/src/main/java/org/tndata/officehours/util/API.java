@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.tndata.officehours.BuildConfig;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Message;
+import org.tndata.officehours.model.Person;
 import org.tndata.officehours.model.User;
 
 
@@ -111,11 +112,11 @@ public class API{
         /**
          * Gets the url to a websocket to chat with a user.
          *
-         * @param userId the id of the user.
+         * @param recipient the person the socket is to be opened to.
          * @return the url to the mentioned websocket.
          */
-        public static String chatSocket(long userId){
-            return SOCKET_URL + "chat/" + userId + "/";
+        public static String chatSocket(@NonNull Person recipient){
+            return SOCKET_URL + "chat/" + recipient.getId() + "/";
         }
     }
 
