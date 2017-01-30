@@ -115,7 +115,7 @@ public class MessageDispatcher implements WebSocketClient.Listener, Parser.Parse
     @Override
     public void onProcessResult(int requestCode, ResultSet result){
         if (result instanceof Message){
-            ((Message)result).process();
+            ((Message)result).setTimestamp(System.currentTimeMillis());
         }
     }
 

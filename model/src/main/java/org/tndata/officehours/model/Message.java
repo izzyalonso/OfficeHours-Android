@@ -82,18 +82,22 @@ public class Message extends Base{
         isRead = true;
     }
 
+    public void setTimestamp(long timestamp){
+        this.timestamp = timestamp;
+    }
+
     public void sent(){
         isSent = true;
     }
 
     public void process(){
-        /*DateFormat parser = new SimpleDateFormat("yyyy-MM-dd HH:m:s.SZ", Locale.getDefault());
+        DateFormat parser = new SimpleDateFormat("yyyy-MM-dd HH:m:s.SZ", Locale.getDefault());
         try{
             timestamp = parser.parse(createdAt).getTime();
         }
         catch (ParseException px){
             px.printStackTrace();
-        }*/
+        }
     }
 
     public void become(@NonNull Message message){
