@@ -105,7 +105,7 @@ public class MessageHolder extends RecyclerView.ViewHolder{
         }
 
         binding.messageText.setText(message.getText());
-        binding.messageTime.setText("1:24 PM");
+        binding.messageTime.setText(message.getTime());
     }
 
     private void setViews(){

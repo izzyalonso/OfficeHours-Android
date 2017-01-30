@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 
@@ -72,6 +73,13 @@ public class Message extends Base{
 
     public long getTimestamp(){
         return timestamp;
+    }
+
+    public String getTime(){
+        DateFormat formatter = new SimpleDateFormat("h:mm a", Locale.getDefault());
+        Date date = new Date();
+        date.setTime(timestamp);
+        return formatter.format(date);
     }
 
     public boolean isSent(){
