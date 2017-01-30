@@ -11,13 +11,12 @@ import android.view.ViewGroup;
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ItemContactMessageBinding;
-import org.tndata.officehours.databinding.ItemMyMessageBinding;
+import org.tndata.officehours.databinding.ItemMessageBinding;
 import org.tndata.officehours.holder.ContactMessageHolder;
-import org.tndata.officehours.holder.MyMessageHolder;
+import org.tndata.officehours.holder.MessageHolder;
 import org.tndata.officehours.model.Message;
 import org.tndata.officehours.model.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -76,9 +75,9 @@ public class ChatAdapter extends RecyclerView.Adapter{
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         LayoutInflater inflater = LayoutInflater.from(context);
         if (viewType == TYPE_MY_MESSAGE){
-            @LayoutRes int layoutRes = R.layout.item_my_message;
-            ItemMyMessageBinding binding = DataBindingUtil.inflate(inflater, layoutRes, parent, false);
-            return new MyMessageHolder(binding);
+            @LayoutRes int layoutRes = R.layout.item_message;
+            ItemMessageBinding binding = DataBindingUtil.inflate(inflater, layoutRes, parent, false);
+            return new MessageHolder(binding);
         }
         else{
             @LayoutRes int layoutRes = R.layout.item_contact_message;
@@ -90,7 +89,7 @@ public class ChatAdapter extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder rawHolder, int position){
         if (getItemViewType(position) == TYPE_MY_MESSAGE){
-            MyMessageHolder holder = (MyMessageHolder)rawHolder;
+            MessageHolder holder = (MessageHolder)rawHolder;
             holder.setMessage(messages.get(getItemCount() - position - 1));
         }
         else{
@@ -102,13 +101,5 @@ public class ChatAdapter extends RecyclerView.Adapter{
     @Override
     public int getItemCount(){
         return messages.size();
-    }
-
-    public void addMessage(@NonNull Message message){
-        messages.add(message);
-        notifyDataSetChanged();
-        if (recyclerView != null){
-            recyclerView.scrollToPosition(0);
-        }
     }
 }

@@ -1,28 +1,30 @@
 package org.tndata.officehours.holder;
 
 import android.graphics.Rect;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
-import org.tndata.officehours.databinding.ItemMyMessageBinding;
+import org.tndata.officehours.databinding.ItemMessageBinding;
 import org.tndata.officehours.model.Message;
 import org.tndata.officehours.util.Util;
 
 
 /**
- * Holder for a message sent by the current user.
+ * Holder for a message.
  *
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class MyMessageHolder extends RecyclerView.ViewHolder{
-    private final ItemMyMessageBinding binding;
+public class MessageHolder extends RecyclerView.ViewHolder{
+    private final ItemMessageBinding binding;
 
     private Rect textBounds;
     private Rect timestampBounds;
@@ -31,9 +33,9 @@ public class MyMessageHolder extends RecyclerView.ViewHolder{
     /**
      * Constructor.
      *
-     * @param binding the binding object for R.layout.item_my_message
+     * @param binding the binding object for R.layout.item_message
      */
-    public MyMessageHolder(@NonNull ItemMyMessageBinding binding){
+    public MessageHolder(@NonNull ItemMessageBinding binding){
         super(binding.getRoot());
         this.binding = binding;
     }
@@ -47,11 +49,11 @@ public class MyMessageHolder extends RecyclerView.ViewHolder{
         textBounds = null;
         timestampBounds = null;
 
-        ViewTreeObserver vto = binding.myMessageText.getViewTreeObserver();
+        ViewTreeObserver vto = binding.messageText.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
             @Override
             public void onGlobalLayout(){
-                TextView view = binding.myMessageText;
+                TextView view = binding.messageText;
                 int lineCount = view.getLineCount();
                 if (lineCount != 0){
                     textBounds = new Rect();
@@ -61,11 +63,11 @@ public class MyMessageHolder extends RecyclerView.ViewHolder{
                 }
             }
         });
-        vto = binding.myMessageTime.getViewTreeObserver();
+        vto = binding.messageTime.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
             @Override
             public void onGlobalLayout(){
-                TextView view = binding.myMessageTime;
+                TextView view = binding.messageTime;
                 int lineCount = view.getLineCount();
                 if (lineCount != 0){
                     timestampBounds = new Rect();
@@ -76,16 +78,28 @@ public class MyMessageHolder extends RecyclerView.ViewHolder{
             }
         });
 
-        binding.myMessageText.setText(message.getText());
-        binding.myMessageTime.setText("1:24 PM");
-        if (message.isSent()){
-            if (message.isRead()){
-                binding.contactMessageState.setImageResource(R.drawable.ic_double_check_white_18dp);
-            }
-            else{
-                binding.contactMessageState.setImageResource(R.drawable.ic_check_white_18dp);
+        OfficeHoursApp app = (OfficeHoursApp)binding.getRoot().getContext().getApplicationContext();
+        if (message.getSenderId() == app.getUser().getId()){
+            binding.messageFrame.setPadding(Util.getPixels(binding.getRoot().getContext(), 16), 0, 0, 0);
+            binding.messageContainer.setGravity(Gravity.END);
+            binding.messageState.setVisibility(View.VISIBLE);
+            if (message.isSent()){
+                if (message.isRead()){
+                    binding.messageState.setImageResource(R.drawable.ic_double_check_white_18dp);
+                }
+                else{
+                    binding.messageState.setImageResource(R.drawable.ic_check_white_18dp);
+                }
             }
         }
+        else{
+            binding.messageFrame.setPadding(0, 0, Util.getPixels(binding.getRoot().getContext(), 16), 0);
+            binding.messageContainer.setGravity(Gravity.START);
+            binding.messageState.setVisibility(View.GONE);
+        }
+
+        binding.messageText.setText(message.getText());
+        binding.messageTime.setText("1:24 PM");
     }
 
     private void setViews(){
@@ -93,14 +107,14 @@ public class MyMessageHolder extends RecyclerView.ViewHolder{
             Log.d("Holder", "Text" + textBounds);
             Log.d("Holder", "Time" + timestampBounds);
 
-            binding.myMessageContainer.setOrientation(LinearLayout.VERTICAL);
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)binding.myMessageText.getLayoutParams();
+            binding.messageContainer.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)binding.messageText.getLayoutParams();
             if (textBounds.intersect(timestampBounds)){
-                Log.d("Holder", binding.myMessageText.getText().toString() + ", views intersect");
+                Log.d("Holder", binding.messageText.getText().toString() + ", views intersect");
 
-                if (binding.myMessageText.getLineCount() == 1){
+                if (binding.messageText.getLineCount() == 1){
                     Log.d("Holder", "Single line message");
-                    binding.myMessageContainer.setOrientation(LinearLayout.HORIZONTAL);
+                    binding.messageContainer.setOrientation(LinearLayout.HORIZONTAL);
                     params.bottomMargin = Util.getPixels(binding.getRoot().getContext(), 8);
                 }
                 else{
@@ -109,7 +123,7 @@ public class MyMessageHolder extends RecyclerView.ViewHolder{
                 }
             }
             else{
-                Log.d("Holder", binding.myMessageText.getText().toString() + ", views don't intersect");
+                Log.d("Holder", binding.messageText.getText().toString() + ", views don't intersect");
                 params.bottomMargin = Util.getPixels(binding.getRoot().getContext(), 8);
             }
 
