@@ -8,14 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
-import org.tndata.officehours.databinding.ItemContactMessageBinding;
 import org.tndata.officehours.databinding.ItemMessageBinding;
-import org.tndata.officehours.holder.ContactMessageHolder;
 import org.tndata.officehours.holder.MessageHolder;
 import org.tndata.officehours.model.Message;
-import org.tndata.officehours.model.User;
 
 import java.util.List;
 
@@ -26,15 +22,12 @@ import java.util.List;
  * @author Ismael Alonso
  */
 public class ChatAdapter extends RecyclerView.Adapter{
-    private static final int TYPE_MY_MESSAGE = 1;
-    private static final int TYPE_CONTACT_MESSAGE = 2;
+    private static final int TYPE_MESSAGE = 1;
 
 
     private Context context;
     private RecyclerView recyclerView;
     private List<Message> messages;
-
-    private User user;
 
 
     /**
@@ -46,7 +39,6 @@ public class ChatAdapter extends RecyclerView.Adapter{
     public ChatAdapter(@NonNull Context context, @NonNull List<Message> messages){
         this.context = context;
         this.messages = messages;
-        user = ((OfficeHoursApp)context.getApplicationContext()).getUser();
     }
 
     @Override
@@ -63,37 +55,24 @@ public class ChatAdapter extends RecyclerView.Adapter{
 
     @Override
     public int getItemViewType(int position){
-        if (messages.get(position).getSenderId() == user.getId()){
-            return TYPE_MY_MESSAGE;
-        }
-        else{
-            return TYPE_CONTACT_MESSAGE;
-        }
+        return TYPE_MESSAGE;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         LayoutInflater inflater = LayoutInflater.from(context);
-        if (viewType == TYPE_MY_MESSAGE){
+        if (viewType == TYPE_MESSAGE){
             @LayoutRes int layoutRes = R.layout.item_message;
             ItemMessageBinding binding = DataBindingUtil.inflate(inflater, layoutRes, parent, false);
             return new MessageHolder(binding);
         }
-        else{
-            @LayoutRes int layoutRes = R.layout.item_contact_message;
-            ItemContactMessageBinding binding = DataBindingUtil.inflate(inflater, layoutRes, parent, false);
-            return new ContactMessageHolder(binding);
-        }
+        return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder rawHolder, int position){
-        if (getItemViewType(position) == TYPE_MY_MESSAGE){
+        if (getItemViewType(position) == TYPE_MESSAGE){
             MessageHolder holder = (MessageHolder)rawHolder;
-            holder.setMessage(messages.get(getItemCount() - position - 1));
-        }
-        else{
-            ContactMessageHolder holder = (ContactMessageHolder)rawHolder;
             holder.setMessage(messages.get(getItemCount() - position - 1));
         }
     }
