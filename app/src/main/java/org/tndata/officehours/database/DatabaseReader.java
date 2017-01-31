@@ -6,8 +6,11 @@ import android.support.annotation.NonNull;
 
 import org.tndata.officehours.activity.TimeSlotPickerActivity;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.Person;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -24,6 +27,7 @@ public class DatabaseReader extends AsyncTask<Void, Void, Void>{
     private Listener listener;
 
     private List<Course> courses;
+    private Map<Long, Person> peopleMap;
 
 
     private DatabaseReader(@NonNull Context context, @NonNull Listener listener){
@@ -34,23 +38,38 @@ public class DatabaseReader extends AsyncTask<Void, Void, Void>{
 
     @Override
     protected Void doInBackground(Void... unused){
-        CourseTableHandler handler = new CourseTableHandler(context);
-        courses = handler.getCourses();
-        handler.close();
+        CourseTableHandler courseHandler = new CourseTableHandler(context);
+        PersonTableHandler personHandler = new PersonTableHandler(context);
+        courses = courseHandler.getCourses();
+        peopleMap = new HashMap<>();
+        courseHandler.close();
         for (Course course:courses){
             String display = TimeSlotPickerActivity.get12HourFormattedString(course.getMeetingTime(), false);
             course.setFormattedMeetingTime(display);
+            List<Person> people = personHandler.getPeople(course);
+            for (int i = 0; i < people.size(); i++){
+                Person person = people.get(i);
+                if (!peopleMap.containsKey(person.getId())){
+                    peopleMap.put(person.getId(), person);
+                }
+                if (person.isInstructor()){
+                    course.setInstructor(person);
+                    people.remove(i--);
+                }
+            }
+            course.setStudents(people);
         }
+        personHandler.close();
         return null;
     }
 
     @Override
     protected void onPostExecute(Void unused){
-        listener.onComplete(courses);
+        listener.onComplete(courses, peopleMap);
     }
 
 
     public interface Listener{
-        void onComplete(List<Course> courses);
+        void onComplete(@NonNull List<Course> courses, @NonNull Map<Long, Person> peopleMap);
     }
 }

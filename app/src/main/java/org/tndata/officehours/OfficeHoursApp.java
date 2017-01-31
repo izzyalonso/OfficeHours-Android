@@ -51,11 +51,8 @@ public class OfficeHoursApp extends Application{
         return courses;
     }
 
-    public void setPeople(@NonNull List<Person> people){
-        this.people = new HashMap<>();
-        for (Person person:people){
-            this.people.put(person.getId(), person);
-        }
+    public void setPeople(@NonNull Map<Long, Person> people){
+        this.people = people;
     }
 
     public void updatePerson(@NonNull Person person){

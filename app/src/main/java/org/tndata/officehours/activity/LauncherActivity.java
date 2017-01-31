@@ -20,6 +20,7 @@ import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityLauncherBinding;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.Person;
 import org.tndata.officehours.model.ResultSet;
 import org.tndata.officehours.model.User;
 import org.tndata.officehours.database.DatabaseReader;
@@ -28,6 +29,7 @@ import org.tndata.officehours.util.API;
 import org.tndata.officehours.util.DataSynchronizer;
 
 import java.util.List;
+import java.util.Map;
 
 import es.sandwatch.httprequests.HttpRequest;
 import es.sandwatch.httprequests.HttpRequestError;
@@ -57,6 +59,7 @@ public class LauncherActivity
 
 
     private ActivityLauncherBinding binding;
+    private OfficeHoursApp app;
     private GoogleApiClient googleApiClient;
 
 
@@ -65,7 +68,8 @@ public class LauncherActivity
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_launcher);
 
-        User user = ((OfficeHoursApp)getApplication()).getUser();
+        app = (OfficeHoursApp)getApplication();
+        User user = app.getUser();
         if (user != null){
             binding.launcherGoogleSignIn.setVisibility(View.GONE);
             binding.launcherProgress.setVisibility(View.VISIBLE);
@@ -163,7 +167,7 @@ public class LauncherActivity
             User user = (User)result;
             Log.d(TAG, user.toString());
             user.writeToPreferences(this);
-            ((OfficeHoursApp)getApplication()).setUser(user);
+            app.setUser(user);
             if (user.isOnBoardingComplete()){
                 DataSynchronizer.sync(this, this);
             }
@@ -191,8 +195,9 @@ public class LauncherActivity
     }
 
     @Override
-    public void onComplete(List<Course> courses){
-        ((OfficeHoursApp)getApplication()).setCourses(courses);
+    public void onComplete(@NonNull List<Course> courses, @NonNull Map<Long, Person> peopleMap){
+        app.setCourses(courses);
+        app.setPeople(peopleMap);
         startActivity(new Intent(this, ScheduleActivity.class));
         finish();
     }
