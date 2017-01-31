@@ -1,12 +1,16 @@
 package org.tndata.officehours;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.Person;
 import org.tndata.officehours.model.User;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import es.sandwatch.httprequests.HttpRequest;
 
@@ -23,6 +27,7 @@ public class OfficeHoursApp extends Application{
 
     private User user;
     private List<Course> courses;
+    private Map<Long, Person> people;
 
 
     public void setUser(User user){
@@ -34,16 +39,29 @@ public class OfficeHoursApp extends Application{
         return user;
     }
 
-    public void setCourses(List<Course> courses){
+    public void setCourses(@NonNull List<Course> courses){
         this.courses = courses;
     }
 
-    public void addCourse(Course course){
+    public void addCourse(@NonNull Course course){
         courses.add(course);
     }
 
     public List<Course> getCourses(){
         return courses;
+    }
+
+    public void setPeople(@NonNull List<Person> people){
+        this.people = new HashMap<>();
+        for (Person person:people){
+            this.people.put(person.getId(), person);
+        }
+    }
+
+    public void updatePerson(@NonNull Person person){
+        if (people.containsKey(person.getId())){
+            people.get(person.getId()).setLastMessage(person.getLastMessage());
+        }
     }
 
 

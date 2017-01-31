@@ -108,6 +108,7 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
                 }
 
                 //Process the course
+                course.process();
                 course.setFormattedMeetingTime(
                         TimeSlotPickerActivity.get12HourFormattedString(
                                 course.getMeetingTime(), false

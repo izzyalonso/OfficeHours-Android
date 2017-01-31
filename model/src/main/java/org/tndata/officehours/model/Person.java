@@ -20,10 +20,11 @@ public class Person extends Base{
     @SerializedName("avatar")
     private String avatar;
 
+    private boolean isInstructor;
+    private String lastMessage;
+
     @ColorInt
     private int color;
-
-    private String lastMessage;
 
 
     /**
@@ -32,12 +33,14 @@ public class Person extends Base{
      * @param id the id of the person.
      * @param name the name of the person.
      * @param avatar the photo url of the person.
+     * @param isInstructor whether the person is an instructor.
      * @param lastMessage the last chat message interchanged with this person.
      */
-    public Person(long id, @NonNull String name, @NonNull String avatar, String lastMessage){
+    public Person(long id, @NonNull String name, @NonNull String avatar, boolean isInstructor, String lastMessage){
         super(id);
         this.name = name;
         this.avatar = avatar;
+        this.isInstructor = isInstructor;
         this.lastMessage = lastMessage;
     }
 
@@ -59,21 +62,33 @@ public class Person extends Base{
         return avatar;
     }
 
-    @ColorInt
-    public int getColor(){
-        return color;
+    public boolean isInstructor(){
+        return isInstructor;
     }
 
     public String getLastMessage(){
         return lastMessage == null ? "" : lastMessage;
     }
 
-    public void setColor(@ColorInt int color){
-        this.color = color;
+    @ColorInt
+    public int getColor(){
+        return color;
+    }
+
+    public void asInstructor(){
+        isInstructor = true;
+    }
+
+    public void asStudent(){
+        isInstructor = false;
     }
 
     public void setLastMessage(@NonNull String lastMessage){
         this.lastMessage = lastMessage;
+    }
+
+    public void setColor(@ColorInt int color){
+        this.color = color;
     }
 
     @Override
@@ -91,8 +106,9 @@ public class Person extends Base{
         super.writeToParcel(parcel, flags);
         parcel.writeString(name);
         parcel.writeString(avatar);
-        parcel.writeInt(color);
+        parcel.writeByte((byte)(isInstructor ? 1 : 0));
         parcel.writeString(getLastMessage());
+        parcel.writeInt(color);
     }
 
     public static final Creator<Person> CREATOR = new Creator<Person>(){
@@ -111,7 +127,8 @@ public class Person extends Base{
         super(in);
         name = in.readString();
         avatar = in.readString();
-        color = in.readInt();
+        isInstructor = in.readByte() == 0;
         lastMessage = in.readString();
+        color = in.readInt();
     }
 }

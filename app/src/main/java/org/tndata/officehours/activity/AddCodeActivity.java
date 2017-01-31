@@ -140,6 +140,7 @@ public class AddCodeActivity
             PersonTableHandler personHandler = new PersonTableHandler(this);
 
             Course course = (Course)result;
+            course.process();
             courseHandler.saveCourse(course);
             personHandler.savePerson(course.getInstructor(), course);
             personHandler.savePeople(course.getStudents(), course);

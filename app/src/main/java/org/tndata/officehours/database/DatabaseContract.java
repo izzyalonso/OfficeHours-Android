@@ -29,6 +29,7 @@ class DatabaseContract{
         static final String COURSE_ID = "course_id";
         static final String NAME = "name";
         static final String AVATAR = "avatar";
+        static final String IS_INSTRUCTOR = "is_instructor";
         static final String LAST_MESSAGE = "last_message";
     }
 
