@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 
 /**
  * Model representing a user other than whoever is using the app
@@ -22,6 +24,8 @@ public class Person extends Base{
 
     private boolean isInstructor;
     private String lastMessage;
+
+    private List<Message> messages;
 
     @ColorInt
     private int color;
@@ -70,6 +74,10 @@ public class Person extends Base{
         return lastMessage == null ? "" : lastMessage;
     }
 
+    public List<Message> getMessages(){
+        return messages;
+    }
+
     @ColorInt
     public int getColor(){
         return color;
@@ -85,6 +93,10 @@ public class Person extends Base{
 
     public void setLastMessage(@NonNull String lastMessage){
         this.lastMessage = lastMessage;
+    }
+
+    public void setMessages(@NonNull List<Message> messages){
+        this.messages = messages;
     }
 
     public void setColor(@ColorInt int color){

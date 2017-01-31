@@ -40,6 +40,7 @@ public class DatabaseReader extends AsyncTask<Void, Void, Void>{
     protected Void doInBackground(Void... unused){
         CourseTableHandler courseHandler = new CourseTableHandler(context);
         PersonTableHandler personHandler = new PersonTableHandler(context);
+        MessageTableHandler messageHandler = new MessageTableHandler(context);
         courses = courseHandler.getCourses();
         peopleMap = new HashMap<>();
         courseHandler.close();
@@ -51,6 +52,8 @@ public class DatabaseReader extends AsyncTask<Void, Void, Void>{
                 Person person = people.get(i);
                 if (!peopleMap.containsKey(person.getId())){
                     peopleMap.put(person.getId(), person);
+                    long time = System.currentTimeMillis();
+                    person.setMessages(messageHandler.getMessages(person, time));
                 }
                 if (person.isInstructor()){
                     course.setInstructor(person);
@@ -59,6 +62,7 @@ public class DatabaseReader extends AsyncTask<Void, Void, Void>{
             }
             course.setStudents(people);
         }
+        messageHandler.close();
         personHandler.close();
         return null;
     }
