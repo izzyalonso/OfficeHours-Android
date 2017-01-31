@@ -118,6 +118,14 @@ public class API{
         public static String chatSocket(@NonNull Person recipient){
             return SOCKET_URL + "chat/" + recipient.getId() + "/";
         }
+
+        public static String chatHistory(long user1, long user2, long since){
+            long first = user1 < user2 ? user1 : user2;
+            long second = user1 > user2 ? user1 : user2;
+            String room = "room=chat-" + first + "-" + second;
+            String time = "since=" + since;
+            return API_URL + "chat/history/?" + room + "&" + time;
+        }
     }
 
     public static class BODY{
@@ -191,7 +199,6 @@ public class API{
             JSONObject body = new JSONObject();
             try{
                 body.put("text", message.getText());
-                body.put("from", message.getSenderId());
             }
             catch (JSONException jx){
                 jx.printStackTrace();

@@ -19,9 +19,10 @@ import java.util.Locale;
  * @version 1.0.0
  */
 public class Message extends Base{
-    @SerializedName("from_id")
+    @SerializedName("user")
     private long senderId;
-    @SerializedName("from")
+    private long recipientId;
+    @SerializedName("user_full_name")
     private String sender;
     @SerializedName("text")
     private String text;
@@ -35,20 +36,17 @@ public class Message extends Base{
 
 
     public Message(long senderId, @NonNull String text){
-        this(-1, senderId, text, -1);
+        this(senderId, text, -1);
     }
 
     public Message(long senderId, @NonNull String text, long timestamp){
-        this(-1, senderId, text, timestamp);
+        this(senderId, -1, text, timestamp, false);
     }
 
-    public Message(long id, long senderId, @NonNull String text, long timestamp){
-        this(id, senderId, text, timestamp, false);
-    }
-
-    public Message(long id, long senderId, @NonNull String text, long timestamp, boolean isSent){
-        super(id);
+    public Message(long senderId, long recipientId, @NonNull String text, long timestamp, boolean isSent){
+        super(-1);
         this.senderId = senderId;
+        this.recipientId = recipientId;
         this.text = text;
         this.isRead = false;
         this.timestamp = timestamp;
@@ -57,6 +55,10 @@ public class Message extends Base{
 
     public long getSenderId(){
         return senderId;
+    }
+
+    public long getRecipientId(){
+        return recipientId;
     }
 
     public String getSender(){
@@ -96,6 +98,7 @@ public class Message extends Base{
 
     public void sent(){
         isSent = true;
+        timestamp = System.currentTimeMillis();
     }
 
     public void process(){

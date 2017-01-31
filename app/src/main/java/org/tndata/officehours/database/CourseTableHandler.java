@@ -195,7 +195,7 @@ public class CourseTableHandler extends TableHandler{
             while (cursor.moveToNext());
         }
 
-        //Close both, the cursor and the database
+        //Close the cursor
         cursor.close();
 
         return courses;

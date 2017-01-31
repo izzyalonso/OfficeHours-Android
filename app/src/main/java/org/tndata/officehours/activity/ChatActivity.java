@@ -184,7 +184,7 @@ public class ChatActivity
     @Override
     public void onMessageReceived(@NonNull Message message){
         Log.d(TAG, message.toString());
-        if (!message.getSender().equals("system")){
+        if (message.getSenderId() != -1){
             messages.add(message);
             adapter.notifyDataSetChanged();
             person.setLastMessage(message.getText());

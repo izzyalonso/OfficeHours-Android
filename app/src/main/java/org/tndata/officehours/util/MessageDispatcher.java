@@ -10,6 +10,7 @@ import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.model.Message;
 import org.tndata.officehours.model.Person;
 import org.tndata.officehours.model.ResultSet;
+import org.tndata.officehours.model.SocketMessage;
 import org.tndata.officehours.parser.Parser;
 
 import java.net.URI;
@@ -90,14 +91,14 @@ public class MessageDispatcher implements WebSocketClient.Listener, Parser.Parse
     public void onMessage(String message){
         Log.d(TAG, "Message received as a String");
         Log.d(TAG, message);
-        Parser.parse(message, Message.class, this);
+        Parser.parse(message, SocketMessage.class, this);
     }
 
     @Override
     public void onMessage(byte[] data){
         Log.d(TAG, "Message received as a byte stream");
         String message = new String(data);
-        Parser.parse(message, Message.class, this);
+        Parser.parse(message, SocketMessage.class, this);
     }
 
     @Override
@@ -114,23 +115,27 @@ public class MessageDispatcher implements WebSocketClient.Listener, Parser.Parse
 
     @Override
     public void onProcessResult(int requestCode, ResultSet result){
-        if (result instanceof Message){
-            ((Message)result).setTimestamp(System.currentTimeMillis());
-        }
+        //Unused, no heavy ops to perform
     }
 
     @Override
     public void onParseSuccess(int requestCode, ResultSet result){
-        if (result instanceof Message){
-            Message receivedMessage = (Message)result;
+        if (result instanceof SocketMessage){
+            SocketMessage receivedMessage = (SocketMessage)result;
             if (receivedMessage.getSenderId() == app.getUser().getId()){
                 Message message = messageQueue.remove();
-                message.become(receivedMessage);
                 message.sent();
                 listener.onMessageSent(message);
             }
             else{
-                listener.onMessageReceived(receivedMessage);
+                Message message = new Message(
+                        receivedMessage.getSenderId(),
+                        app.getUser().getId(),
+                        receivedMessage.getText(),
+                        System.currentTimeMillis(),
+                        true
+                );
+                listener.onMessageReceived(message);
             }
         }
     }

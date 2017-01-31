@@ -35,12 +35,13 @@ class DatabaseContract{
 
     static abstract class MessageEntry implements BaseColumns{
         static final String TABLE = "Message";
+        //TODO table for queue
 
         static final String ID = _ID;
-        static final String CLOUD_ID = "cloud_id";
         static final String SENDER_ID = "sender_id";
+        static final String RECIPIENT_ID = "recipient_id";
         static final String TEXT = "text";
-        static final String IS_READ = "read";
         static final String TIMESTAMP = "timestamp";
+        static final String IS_READ = "read";
     }
 }
