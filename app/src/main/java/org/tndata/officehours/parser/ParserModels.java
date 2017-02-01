@@ -2,6 +2,7 @@ package org.tndata.officehours.parser;
 
 
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.Message;
 import org.tndata.officehours.model.ResultSet;
 
 import java.util.List;
@@ -22,6 +23,10 @@ public final class ParserModels{
 
     public class CourseList extends ListResultSet{
         public List<Course> results;
+    }
+
+    public class MessageList extends ListResultSet{
+        public List<Message> results;
     }
 
     private ParserModels(){
