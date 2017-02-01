@@ -15,9 +15,7 @@ import org.tndata.officehours.parser.Parser;
 import org.tndata.officehours.parser.ParserModels;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import es.sandwatch.httprequests.HttpRequest;
 import es.sandwatch.httprequests.HttpRequestError;
@@ -49,9 +47,8 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
     private Callback callback;
 
     //Things we need to update
-    private int getProfileRC;
+    private int getProfileRC; //TODO what are the odds?
     private int getCoursesRC;
-    private Set<Integer> getMessagesRequestCodeSet;
 
 
     /**
@@ -65,7 +62,6 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
         this.callback = callback;
 
         getCoursesRC = HttpRequest.get(this, API.URL.courses());
-        getMessagesRequestCodeSet = new HashSet<>();
     }
 
 
@@ -186,11 +182,13 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
 
     @Override
     public void onParseSuccess(int requestCode, ResultSet result){
-        for (Course course:app.getCourses()){
-            Log.d(TAG, course.toString());
-            Log.d(TAG, course.getInstructor().toString());
+        if (result instanceof ParserModels.CourseList){
+            for (Course course:app.getCourses()){
+                Log.d(TAG, course.toString());
+                Log.d(TAG, course.getInstructor().toString());
+            }
+            callback.onDataLoaded();
         }
-        callback.onDataLoaded();
     }
 
     @Override
