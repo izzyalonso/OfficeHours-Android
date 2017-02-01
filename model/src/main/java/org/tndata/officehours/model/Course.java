@@ -247,6 +247,12 @@ public class Course extends Base{
         return false;
     }
 
+    public void update(@NonNull Course course){
+        name = course.getName();
+        location = course.getLocation();
+        meetingTime = course.getMeetingTime();
+    }
+
 
     /*------------------*
      * PARCELABLE STUFF *

@@ -15,7 +15,9 @@ import org.tndata.officehours.parser.Parser;
 import org.tndata.officehours.parser.ParserModels;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import es.sandwatch.httprequests.HttpRequest;
 import es.sandwatch.httprequests.HttpRequestError;
@@ -43,12 +45,13 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
 
 
     //Reference to the app and the callback object
-    private OfficeHoursApp application;
+    private OfficeHoursApp app;
     private Callback callback;
 
     //Things we need to update
     private int getProfileRC;
     private int getCoursesRC;
+    private Set<Integer> getMessagesRequestCodeSet;
 
 
     /**
@@ -58,10 +61,11 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
      * @param callback the callback object.
      */
     private DataSynchronizer(@NonNull Context context, @NonNull Callback callback){
-        application = (OfficeHoursApp)context.getApplicationContext();
+        app = (OfficeHoursApp)context.getApplicationContext();
         this.callback = callback;
 
         getCoursesRC = HttpRequest.get(this, API.URL.courses());
+        getMessagesRequestCodeSet = new HashSet<>();
     }
 
 
@@ -82,84 +86,107 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
     public void onProcessResult(int requestCode, ResultSet result){
         if (result instanceof ParserModels.CourseList){
             //Open a connection to the database
-            CourseTableHandler courseHandler = new CourseTableHandler(application);
-            PersonTableHandler personHandler = new PersonTableHandler(application);
+            CourseTableHandler courseHandler = new CourseTableHandler(app);
+            PersonTableHandler personHandler = new PersonTableHandler(app);
 
             //Get the lists of courses in the backend and the database
             List<Course> backendCourses = ((ParserModels.CourseList)result).results;
-            List<Course> dbCourses = courseHandler.getCourses();
+            //We'll be removing courses from the list, so let's make another copy
+            List<Course> loadedCourses = new ArrayList<>(app.getCourses());
 
-            //List of courses in the backend not available in the database, to be bulk written
+            //List of courses in the backend but not in the database, to be bulk written
             List<Course> newCourses = new ArrayList<>();
 
             //Compare the two lists
             for (Course course:backendCourses){
-                if (dbCourses.contains(course)){
+                course.process();
+                if (loadedCourses.contains(course)){
                     //Remove so we have a record of which courses need to be removed
-                    Course dbCourse = dbCourses.remove(dbCourses.indexOf(course));
-                    if (!course.parametersMatch(dbCourse)){
+                    Course loadedCourse = loadedCourses.remove(loadedCourses.indexOf(course));
+                    if (!loadedCourse.parametersMatch(course)){
                         //If the course exists and needs updating, update it
-                        courseHandler.updateCourse(course);
+                        loadedCourse.update(course);
+                        loadedCourse.setFormattedMeetingTime(
+                                TimeSlotPickerActivity.get12HourFormattedString(
+                                        loadedCourse.getMeetingTime(), false
+                                )
+                        );
+                        courseHandler.updateCourse(loadedCourse);
+                    }
+
+                    List<Person> newPeople = new ArrayList<>();
+
+                    Person instructor = course.getInstructor();
+                    //If the instructors mismatch, add the new one to the saving list
+                    if (loadedCourse.getInstructor().equals(instructor)){
+                        newPeople.add(instructor);
+                        loadedCourse.setInstructor(instructor);
+                    }
+
+                    //Compare the list of people as well
+                    List<Person> backendPeople = course.getStudents();
+                    List<Person> loadedPeople = new ArrayList<>(loadedCourse.getStudents());
+
+                    //This is the same process followed by course matching, the only difference is
+                    //  that people are not editable for the time being
+                    for (Person person:backendPeople){
+                        if (loadedPeople.contains(person)){
+                            loadedPeople.remove(person);
+                        }
+                        else{
+                            newPeople.add(person);
+                        }
+                    }
+
+                    //People that need to be deleted
+                    for (Person person:loadedPeople){
+                        personHandler.deletePerson(person, loadedCourse);
+                        loadedCourse.getStudents().remove(person);
+                    }
+
+                    //People who need to be added
+                    personHandler.savePeople(newPeople, loadedCourse);
+                    for (Person person:newPeople){
+                        app.addPerson(person);
+                        loadedCourse.getStudents().add(app.getPeople().get(person.getId()));
                     }
                 }
                 else{
-                    //If the course doesn't exist schedule_instructor it to the list to bulk schedule_instructor later
+                    //If the course doesn't exist add it to the list to bulk save later
                     newCourses.add(course);
-                }
 
-                //Process the course
-                course.process();
+                    //NOTE: If the course is new, the people in it can be saved at a later time
+                }
+            }
+
+            //If a course needs to be deleted, delete both the course and the people in it
+            for (Course course:loadedCourses){
+                courseHandler.deleteCourse(course);
+                personHandler.deletePeople(course);
+                app.getCourses().remove(course);
+            }
+
+            //New courses (to save)
+            courseHandler.saveCourses(newCourses);
+            for (Course course:newCourses){
                 course.setFormattedMeetingTime(
                         TimeSlotPickerActivity.get12HourFormattedString(
                                 course.getMeetingTime(), false
                         )
                 );
-
-
-                List<Person> backendPeople = course.getStudents();
-                List<Person> dbPeople = personHandler.getPeople(course);
-
-                List<Person> newPeople = new ArrayList<>();
-
-                Person instructor = course.getInstructor();
-                //If the instructors mismatch, schedule_instructor the new one to the saving list
-                if (!dbPeople.contains(instructor)){
-                    newPeople.add(instructor);
-                }
-
-                //This is the same process followed by course matching, the only difference is
-                //  that people are not editable for the time being
-                for (Person person:backendPeople){
-                    if (dbPeople.contains(person)){
-                        dbPeople.remove(dbPeople.indexOf(person));
-                    }
-                    else{
-                        newPeople.add(person);
-                    }
-                }
-
-                for (Person person:dbPeople){
-                    personHandler.deletePerson(person, course);
-                }
-                personHandler.savePeople(newPeople, course);
+                app.addCourse(course);
+                personHandler.savePerson(course.getInstructor(), course);
+                personHandler.savePeople(course.getStudents(), course);
             }
-
-            //If a course needs to be deleted, delete both the course and the people in it
-            for (Course course:dbCourses){
-                courseHandler.deleteCourse(course);
-                personHandler.deletePeople(course);
-            }
-            courseHandler.saveCourses(newCourses);
 
             personHandler.close();
             courseHandler.close();
-            application.setCourses(backendCourses);
         }
     }
 
     @Override
     public void onParseSuccess(int requestCode, ResultSet result){
-        for (Course course:((ParserModels.CourseList)result).results){
+        for (Course course:app.getCourses()){
             Log.d(TAG, course.toString());
             Log.d(TAG, course.getInstructor().toString());
         }

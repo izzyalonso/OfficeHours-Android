@@ -8,6 +8,7 @@ import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Person;
 import org.tndata.officehours.model.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,10 @@ public class OfficeHoursApp extends Application{
         courses.add(course);
     }
 
-    public List<Course> getCourses(){
+    public @NonNull List<Course> getCourses(){
+        if (courses == null){
+            courses = new ArrayList<>();
+        }
         return courses;
     }
 
@@ -55,10 +59,26 @@ public class OfficeHoursApp extends Application{
         this.people = people;
     }
 
+    public void addPerson(@NonNull Person person){
+        if (people == null){
+            people = new HashMap<>();
+        }
+        if (!people.containsKey(person.getId())){
+            people.put(person.getId(), person);
+        }
+    }
+
     public void updatePerson(@NonNull Person person){
         if (people.containsKey(person.getId())){
             people.get(person.getId()).setLastMessage(person.getLastMessage());
         }
+    }
+
+    public Map<Long, Person> getPeople(){
+        if (people == null){
+            people = new HashMap<>();
+        }
+        return people;
     }
 
 
