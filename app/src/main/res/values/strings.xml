@@ -92,4 +92,7 @@
     <!-- MessageHolder -->
     <string name="message_state_cd">Whether the message has been delivered or read</string>
 
+    <!-- ChatActivity -->
+    <string name="chat_error_offline">Need an internet connection to use the chat</string>
+
 </resources>

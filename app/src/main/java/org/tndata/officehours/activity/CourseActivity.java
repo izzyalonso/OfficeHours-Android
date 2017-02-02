@@ -11,12 +11,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityCourseBinding;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Person;
+import org.tndata.officehours.util.Util;
 
 import java.util.ArrayList;
 
@@ -105,7 +107,12 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view){
         switch (view.getId()){
             case R.id.course_instructor_chat:
-                startActivity(ChatActivity.getIntent(this, course.getInstructor()));
+                if (Util.isNetworkAvailable(this)){
+                    startActivity(ChatActivity.getIntent(this, course.getInstructor()));
+                }
+                else{
+                    Toast.makeText(this, R.string.chat_error_offline, Toast.LENGTH_SHORT).show();
+                }
                 break;
 
             case R.id.course_enrollment_list:

@@ -14,12 +14,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import org.tndata.officehours.R;
 import org.tndata.officehours.adapter.PeopleAdapter;
 import org.tndata.officehours.databinding.ActivityPeopleBinding;
 import org.tndata.officehours.model.Person;
 import org.tndata.officehours.util.CustomItemDecoration;
+import org.tndata.officehours.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +89,12 @@ public class PeopleActivity extends AppCompatActivity implements PeopleAdapter.L
 
     @Override
     public void onPersonSelected(@NonNull Person person){
-        startActivity(ChatActivity.getIntent(this, person));
+        if (Util.isNetworkAvailable(this)){
+            startActivity(ChatActivity.getIntent(this, person));
+        }
+        else{
+            Toast.makeText(this, R.string.chat_error_offline, Toast.LENGTH_SHORT).show();
+        }
     }
 
 
