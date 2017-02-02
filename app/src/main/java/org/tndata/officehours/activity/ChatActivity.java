@@ -209,6 +209,7 @@ public class ChatActivity
         adapter.notifyDataSetChanged();
         adapter.onLoadComplete(!messages.isEmpty());
         binding.chatMessages.setVisibility(View.VISIBLE);
+        binding.chatNewMessage.setEnabled(true);
         binding.chatLoading.setVisibility(View.GONE);
     }
 
