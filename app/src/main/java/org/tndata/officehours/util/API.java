@@ -119,11 +119,21 @@ public class API{
             return SOCKET_URL + "chat/" + recipient.getId() + "/";
         }
 
-        public static String chatHistory(long user1, long user2, long since){
+        public static String chatHistorySince(long user1, long user2, String timestamp){
             long first = user1 < user2 ? user1 : user2;
             long second = user1 > user2 ? user1 : user2;
             String room = "room=chat-" + first + "-" + second;
-            String time = "since=" + since;
+            timestamp = timestamp.replace(" ", "%20");
+            String time = "since=" + timestamp;
+            return API_URL + "chat/history/?" + room + "&" + time;
+        }
+
+        public static String chatHistoryBefore(long user1, long user2, String timestamp){
+            long first = user1 < user2 ? user1 : user2;
+            long second = user1 > user2 ? user1 : user2;
+            String room = "room=chat-" + first + "-" + second;
+            timestamp = timestamp.replace(" ", "%20");
+            String time = "before=" + timestamp;
             return API_URL + "chat/history/?" + room + "&" + time;
         }
     }

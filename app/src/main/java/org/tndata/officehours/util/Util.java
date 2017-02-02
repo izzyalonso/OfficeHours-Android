@@ -9,6 +9,7 @@ import android.util.TypedValue;
 
 import com.google.gson.JsonObject;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.Message;
 import org.tndata.officehours.model.Person;
 
 
@@ -25,6 +26,9 @@ public class Util{
     public static Class getTypeOf(JsonObject object){
         if (object.has("avatar")){
             return Person.class;
+        }
+        else if (object.has("digest")){
+            return Message.class;
         }
         return Course.class;
     }

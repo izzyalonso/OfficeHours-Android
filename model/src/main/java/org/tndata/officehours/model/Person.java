@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -75,6 +76,9 @@ public class Person extends Base{
     }
 
     public List<Message> getMessages(){
+        if (messages == null){
+            messages = new ArrayList<>();
+        }
         return messages;
     }
 
@@ -121,6 +125,7 @@ public class Person extends Base{
         parcel.writeByte((byte)(isInstructor ? 1 : 0));
         parcel.writeString(getLastMessage());
         parcel.writeInt(color);
+        parcel.writeTypedList(getMessages());
     }
 
     public static final Creator<Person> CREATOR = new Creator<Person>(){
@@ -142,5 +147,7 @@ public class Person extends Base{
         isInstructor = in.readByte() == 0;
         lastMessage = in.readString();
         color = in.readInt();
+        messages = new ArrayList<>();
+        in.readTypedList(messages, Message.CREATOR);
     }
 }

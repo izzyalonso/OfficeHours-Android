@@ -20,17 +20,29 @@ import android.view.View;
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.adapter.ChatAdapter;
+import org.tndata.officehours.database.MessageTableHandler;
 import org.tndata.officehours.database.PersonTableHandler;
 import org.tndata.officehours.databinding.ActivityChatBinding;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Message;
 import org.tndata.officehours.model.Person;
+import org.tndata.officehours.model.ResultSet;
+import org.tndata.officehours.parser.Parser;
+import org.tndata.officehours.parser.ParserModels;
+import org.tndata.officehours.util.API;
 import org.tndata.officehours.util.CustomItemDecoration;
 import org.tndata.officehours.util.ImageLoader;
 import org.tndata.officehours.util.MessageDispatcher;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import es.sandwatch.httprequests.HttpRequest;
+import es.sandwatch.httprequests.HttpRequestError;
 
 
 /**
@@ -42,6 +54,9 @@ import java.util.List;
 public class ChatActivity
         extends AppCompatActivity
         implements
+                HttpRequest.RequestCallback,
+                Parser.ParserCallback,
+                ChatAdapter.Listener,
                 View.OnClickListener,
                 MessageDispatcher.Listener{
 
@@ -84,6 +99,9 @@ public class ChatActivity
 
     private ActivityChatBinding binding;
     private MessageDispatcher dispatcher;
+
+    private boolean fetchingLocally;
+    private int getMessageHistoryRC;
 
 
     @Override
@@ -132,7 +150,7 @@ public class ChatActivity
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
             layoutManager.setReverseLayout(true);
             messages = new ArrayList<>();
-            adapter = new ChatAdapter(this, messages);
+            adapter = new ChatAdapter(this, this, messages);
 
             binding.chatMessages.setLayoutManager(layoutManager);
             binding.chatMessages.addItemDecoration(new CustomItemDecoration(this, 8));
@@ -141,6 +159,14 @@ public class ChatActivity
             binding.chatSend.setOnClickListener(this);
 
             dispatcher = new MessageDispatcher(this, person, this);
+
+            if (person.getMessages().isEmpty()){
+                fetchMessagesBefore(System.currentTimeMillis());
+                fetchingLocally = false;
+            }
+            else{
+                fetchingLocally = false;
+            }
         }
     }
 
@@ -154,6 +180,63 @@ public class ChatActivity
     protected void onStop(){
         dispatcher.disconnect();
         super.onStop();
+    }
+
+    private void fetchMessagesBefore(long timestamp){
+        if (fetchingLocally){
+            Log.d(TAG, "Fetching from the database");
+            //new MessageFetcher(timestamp).execute();
+        }
+        else{
+            Log.d(TAG, "Fetching from the API");
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:sZ", Locale.getDefault());
+            String date = formatter.format(new Date(timestamp));
+            String url = API.URL.chatHistoryBefore(app.getUser().getId(), person.getId(), date);
+            getMessageHistoryRC = HttpRequest.get(this, url);
+        }
+    }
+
+    @Override
+    public void onRequestComplete(int requestCode, String result){
+        if (requestCode == getMessageHistoryRC){
+            Parser.parse(result, ParserModels.MessageList.class, this);
+        }
+    }
+
+    @Override
+    public void onRequestFailed(int requestCode, HttpRequestError error){
+
+    }
+
+    @Override
+    public void onProcessResult(int requestCode, ResultSet result){
+        List<Message> messages = ((ParserModels.MessageList)result).results;
+        for (Message message:((ParserModels.MessageList)result).results){
+            message.process();
+            this.messages.add(0, message);
+        }
+        /*MessageTableHandler handler = new MessageTableHandler(this);
+        handler.saveMessages(messages);
+        handler.close();*/
+    }
+
+    @Override
+    public void onParseSuccess(int requestCode, ResultSet result){
+        List<Message> messages = ((ParserModels.MessageList)result).results;
+        adapter.notifyDataSetChanged();
+        adapter.onLoadComplete(!messages.isEmpty());
+        binding.chatMessages.setVisibility(View.VISIBLE);
+        binding.chatLoading.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onParseFailed(int requestCode){
+
+    }
+
+    @Override
+    public void onTopReached(){
+        fetchMessagesBefore(messages.get(0).getTimestamp());
     }
 
     @Override
@@ -199,6 +282,41 @@ public class ChatActivity
             handler.updatePerson(person);
             handler.close();
             return null;
+        }
+    }
+
+    private class MessageFetcher extends AsyncTask<Void, Void, Boolean>{
+        private long timestamp;
+
+
+        private MessageFetcher(long timestamp){
+            this.timestamp = timestamp;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params){
+            /*MessageTableHandler handler = new MessageTableHandler(ChatActivity.this);
+            List<Message> messages = handler.getMessages(person, timestamp);
+            handler.close();
+            Log.d(TAG, messages.size() + " read from the database.");
+            for (Message message:messages){
+                ChatActivity.this.messages.add(0, message);
+            }
+            return !messages.isEmpty();*/
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean results){
+            if (results){
+                adapter.onLoadComplete(true);
+                adapter.notifyDataSetChanged();
+            }
+            else{
+                //If there are no more messages in the local db start fetching from the backend
+                fetchingLocally = false;
+                fetchMessagesBefore(timestamp);
+            }
         }
     }
 }

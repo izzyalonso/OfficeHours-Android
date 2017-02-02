@@ -49,7 +49,7 @@ public class LauncherActivity
                 HttpRequest.RequestCallback,
                 Parser.ParserCallback,
                 DataSynchronizer.Callback,
-                DatabaseReader.Listener{
+                DatabaseReader.Callback{
 
     public static final String FROM_ON_BOARDING_KEY = "org.tndata.officehours.Launcher.FromOnBoarding";
 

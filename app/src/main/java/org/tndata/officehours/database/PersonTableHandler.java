@@ -58,6 +58,8 @@ public class PersonTableHandler extends TableHandler{
             + " WHERE " + PersonEntry.CLOUD_ID + "=?"
             + " AND " + PersonEntry.COURSE_ID + "=?";
 
+    private static final String TRUNCATE = "DELETE FROM " + PersonEntry.TABLE;
+
     private static final String SELECT = "SELECT * FROM "
             + PersonEntry.TABLE
             + " WHERE " + PersonEntry.COURSE_ID + "=?";
@@ -189,6 +191,13 @@ public class PersonTableHandler extends TableHandler{
         stmt.executeUpdateDelete();
 
         stmt.close();
+    }
+
+    /**
+     * Empties the table.
+     */
+    public void erase(){
+        getDatabase().execSQL(TRUNCATE);
     }
 
     /**

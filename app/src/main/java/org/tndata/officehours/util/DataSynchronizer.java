@@ -24,6 +24,9 @@ import es.sandwatch.httprequests.HttpRequestError;
 /**
  * Class to sync up all the necessary data in the background. For now works one way.
  *
+ * NOTE: This thing requires way more fine-detail engineering than I originally thought,
+ * see DumbDataSynchronizer instead.
+ *
  * @author Ismael Alonso
  * @version 1.0.0
  */
@@ -93,13 +96,20 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
             //List of courses in the backend but not in the database, to be bulk written
             List<Course> newCourses = new ArrayList<>();
 
+            Log.d(TAG, backendCourses.size() + " courses in the backend.");
+            Log.d(TAG, loadedCourses.size() + " courses in the database.");
+
             //Compare the two lists
             for (Course course:backendCourses){
                 course.process();
+
+                Log.i(TAG, course.toString());
                 if (loadedCourses.contains(course)){
+                    Log.i(TAG, "Course already exists locally.");
                     //Remove so we have a record of which courses need to be removed
                     Course loadedCourse = loadedCourses.remove(loadedCourses.indexOf(course));
                     if (!loadedCourse.parametersMatch(course)){
+                        Log.i(TAG, "Courses mismatch, updating...");
                         //If the course exists and needs updating, update it
                         loadedCourse.update(course);
                         loadedCourse.setFormattedMeetingTime(
@@ -110,18 +120,33 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
                         courseHandler.updateCourse(loadedCourse);
                     }
 
-                    List<Person> newPeople = new ArrayList<>();
-
-                    Person instructor = course.getInstructor();
-                    //If the instructors mismatch, add the new one to the saving list
-                    if (loadedCourse.getInstructor().equals(instructor)){
-                        newPeople.add(instructor);
-                        loadedCourse.setInstructor(instructor);
-                    }
-
                     //Compare the list of people as well
                     List<Person> backendPeople = course.getStudents();
                     List<Person> loadedPeople = new ArrayList<>(loadedCourse.getStudents());
+
+                    List<Person> newPeople = new ArrayList<>();
+
+                    Log.d(TAG, "Course has " + backendPeople.size() + " people in the backend.");
+                    Log.d(TAG, "Course has " + loadedPeople.size() + " people in the database.");
+
+                    Person instructor = course.getInstructor();
+                    //If the instructors mismatch
+                    if (loadedCourse.getInstructor().equals(instructor)){
+                        Log.d(TAG, "Instructors mismatch, updating...");
+
+                        //Delete the old instructor from the course, add it to/fetch it from the
+                        //  map of people, set it to the course and save it to the database
+                        personHandler.deletePerson(loadedCourse.getInstructor(), loadedCourse);
+                        if (app.getPeople().containsKey(instructor.getId())){
+                            instructor = app.getPeople().get(instructor.getId());
+                        }
+                        else{
+                            instructor.asInstructor();
+                            app.getPeople().put(instructor.getId(), instructor);
+                        }
+                        loadedCourse.setInstructor(instructor);
+                        personHandler.savePerson(instructor, loadedCourse);
+                    }
 
                     //This is the same process followed by course matching, the only difference is
                     //  that people are not editable for the time being
@@ -143,6 +168,7 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
                     //People who need to be added
                     personHandler.savePeople(newPeople, loadedCourse);
                     for (Person person:newPeople){
+                        person.asStudent();
                         app.addPerson(person);
                         loadedCourse.getStudents().add(app.getPeople().get(person.getId()));
                     }
@@ -171,13 +197,42 @@ public class DataSynchronizer implements HttpRequest.RequestCallback, Parser.Par
                         )
                 );
                 app.addCourse(course);
+
+                if (app.getPeople().containsKey(course.getInstructor().getId())){
+                    course.setInstructor(app.getPeople().get(course.getInstructor().getId()));
+                }
+                else{
+                    course.getInstructor().asInstructor();
+                }
                 personHandler.savePerson(course.getInstructor(), course);
+
+                for (int i = 0; i < course.getStudents().size(); i++){
+                    Person student = course.getStudents().get(i);
+                    if (app.getPeople().containsKey(student.getId())){
+                        student = app.getPeople().get(student.getId());
+                        course.getStudents().set(i, student);
+                    }
+                    else{
+                        student.asStudent();
+                        app.getPeople().put(student.getId(), student);
+                    }
+                }
                 personHandler.savePeople(course.getStudents(), course);
             }
 
             personHandler.close();
             courseHandler.close();
         }
+    }
+
+    private Person getOrAdd(@NonNull Person person){
+        if (app.getPeople().containsKey(person.getId())){
+            person = app.getPeople().get(person.getId());
+        }
+        else{
+            app.getPeople().put(person.getId(), person);
+        }
+        return person;
     }
 
     @Override

@@ -52,6 +52,8 @@ public class CourseTableHandler extends TableHandler{
     private static final String DELETE = "DELETE FROM " + CourseEntry.TABLE
             + " WHERE " + CourseEntry.CLOUD_ID + "=?";
 
+    private static final String TRUNCATE = "DELETE FROM " + CourseEntry.TABLE;
+
     private static final String SELECT = "SELECT * FROM " + CourseEntry.TABLE;
 
 
@@ -164,6 +166,13 @@ public class CourseTableHandler extends TableHandler{
         stmt.executeUpdateDelete();
 
         stmt.close();
+    }
+
+    /**
+     * Empties the table.
+     */
+    public void erase(){
+        getDatabase().execSQL(TRUNCATE);
     }
 
     /**

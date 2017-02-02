@@ -41,7 +41,13 @@ public class OfficeHoursApp extends Application{
     }
 
     public void setCourses(@NonNull List<Course> courses){
-        this.courses = courses;
+        if (this.courses == null){
+            this.courses = new ArrayList<>();
+        }
+        else{
+            this.courses.clear();
+        }
+        this.courses.addAll(courses);
     }
 
     public void addCourse(@NonNull Course course){
@@ -56,7 +62,13 @@ public class OfficeHoursApp extends Application{
     }
 
     public void setPeople(@NonNull Map<Long, Person> people){
-        this.people = people;
+        if (this.people == null){
+            this.people = new HashMap<>();
+        }
+        else{
+            this.people.clear();
+        }
+        this.people.putAll(people);
     }
 
     public void addPerson(@NonNull Person person){

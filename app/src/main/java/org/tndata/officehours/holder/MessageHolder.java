@@ -110,26 +110,26 @@ public class MessageHolder extends RecyclerView.ViewHolder{
 
     private void setViews(){
         if (textBounds != null && timestampBounds != null){
-            Log.d("Holder", "Text" + textBounds);
-            Log.d("Holder", "Time" + timestampBounds);
+            //Log.d("Holder", "Text" + textBounds);
+            //Log.d("Holder", "Time" + timestampBounds);
 
             binding.messageContainer.setOrientation(LinearLayout.VERTICAL);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)binding.messageText.getLayoutParams();
             if (textBounds.intersect(timestampBounds)){
-                Log.d("Holder", binding.messageText.getText().toString() + ", views intersect");
+                //Log.d("Holder", binding.messageText.getText().toString() + ", views intersect");
 
                 if (binding.messageText.getLineCount() == 1){
-                    Log.d("Holder", "Single line message");
+                    //Log.d("Holder", "Single line message");
                     binding.messageContainer.setOrientation(LinearLayout.HORIZONTAL);
                     params.bottomMargin = Util.getPixels(binding.getRoot().getContext(), 8);
                 }
                 else{
-                    Log.d("Holder", "Multi line message");
+                    //Log.d("Holder", "Multi line message");
                     params.bottomMargin = Util.getPixels(binding.getRoot().getContext(), 26);
                 }
             }
             else{
-                Log.d("Holder", binding.messageText.getText().toString() + ", views don't intersect");
+                //Log.d("Holder", binding.messageText.getText().toString() + ", views don't intersect");
                 params.bottomMargin = Util.getPixels(binding.getRoot().getContext(), 8);
             }
 

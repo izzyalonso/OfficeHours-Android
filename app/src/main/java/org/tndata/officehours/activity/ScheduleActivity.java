@@ -18,7 +18,7 @@ import org.tndata.officehours.adapter.ScheduleAdapter;
 import org.tndata.officehours.model.Person;
 import org.tndata.officehours.model.User;
 import org.tndata.officehours.util.CustomItemDecoration;
-import org.tndata.officehours.util.DataSynchronizer;
+import org.tndata.officehours.util.DumbDataSynchronizer;
 
 import java.util.ArrayList;
 
@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapter.Listener, DataSynchronizer.Callback{
+public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapter.Listener, DumbDataSynchronizer.Callback{
     private static final int ADD_CODE_RC = 7529;
     private static final int NEW_COURSE_RC = 6392;
 
@@ -51,7 +51,7 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
         binding.scheduleList.setAdapter(adapter);
         binding.scheduleList.addItemDecoration(new CustomItemDecoration(this, 12));
 
-        DataSynchronizer.sync(this, this);
+        DumbDataSynchronizer.sync(this, this);
     }
 
     @Override
@@ -132,6 +132,7 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
 
     @Override
     public void onDataLoaded(){
+        adapter.notifyDataSetChanged();
         adapter.setCourses(((OfficeHoursApp)getApplication()).getCourses());
     }
 

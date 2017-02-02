@@ -28,8 +28,8 @@ public class Message extends Base{
     private String text;
     @SerializedName("read")
     private boolean isRead;
-    @SerializedName("created_at")
-    private String createdAt;
+    @SerializedName("created_on")
+    private String createdOn;
 
     private long timestamp;
     private boolean isSent;
@@ -77,6 +77,11 @@ public class Message extends Base{
         return timestamp;
     }
 
+    public String getFormattedTimestamp(){
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:s", Locale.getDefault());
+        return formatter.format(new Date(timestamp));
+    }
+
     public String getTime(){
         DateFormat formatter = new SimpleDateFormat("h:mm a", Locale.getDefault());
         Date date = new Date();
@@ -102,9 +107,9 @@ public class Message extends Base{
     }
 
     public void process(){
-        DateFormat parser = new SimpleDateFormat("yyyy-MM-dd HH:m:s.SZ", Locale.getDefault());
+        DateFormat parser = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ", Locale.getDefault());
         try{
-            timestamp = parser.parse(createdAt).getTime();
+            timestamp = parser.parse(createdOn).getTime();
         }
         catch (ParseException px){
             px.printStackTrace();
