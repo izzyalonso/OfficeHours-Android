@@ -124,7 +124,7 @@ public class MessageDispatcher implements WebSocketClient.Listener, Parser.Parse
             SocketMessage receivedMessage = (SocketMessage)result;
             if (receivedMessage.getSenderId() == app.getUser().getId()){
                 Message message = messageQueue.remove();
-                message.sent();
+                message.sent(true);
                 listener.onMessageSent(message);
             }
             else{

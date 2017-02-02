@@ -100,7 +100,6 @@ public class ChatActivity
     private ActivityChatBinding binding;
     private MessageDispatcher dispatcher;
 
-    private boolean fetchingLocally;
     private int getMessageHistoryRC;
 
 
@@ -160,13 +159,7 @@ public class ChatActivity
 
             dispatcher = new MessageDispatcher(this, person, this);
 
-            if (person.getMessages().isEmpty()){
-                fetchMessagesBefore(System.currentTimeMillis());
-                fetchingLocally = false;
-            }
-            else{
-                fetchingLocally = false;
-            }
+            fetchMessagesBefore(System.currentTimeMillis());
         }
     }
 
@@ -183,17 +176,10 @@ public class ChatActivity
     }
 
     private void fetchMessagesBefore(long timestamp){
-        if (fetchingLocally){
-            Log.d(TAG, "Fetching from the database");
-            //new MessageFetcher(timestamp).execute();
-        }
-        else{
-            Log.d(TAG, "Fetching from the API");
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:sZ", Locale.getDefault());
-            String date = formatter.format(new Date(timestamp));
-            String url = API.URL.chatHistoryBefore(app.getUser().getId(), person.getId(), date);
-            getMessageHistoryRC = HttpRequest.get(this, url);
-        }
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:sZ", Locale.getDefault());
+        String date = formatter.format(new Date(timestamp));
+        String url = API.URL.chatHistoryBefore(app.getUser().getId(), person.getId(), date);
+        getMessageHistoryRC = HttpRequest.get(this, url);
     }
 
     @Override
@@ -210,14 +196,11 @@ public class ChatActivity
 
     @Override
     public void onProcessResult(int requestCode, ResultSet result){
-        List<Message> messages = ((ParserModels.MessageList)result).results;
         for (Message message:((ParserModels.MessageList)result).results){
             message.process();
+            message.sent(false);
             this.messages.add(0, message);
         }
-        /*MessageTableHandler handler = new MessageTableHandler(this);
-        handler.saveMessages(messages);
-        handler.close();*/
     }
 
     @Override
@@ -314,7 +297,7 @@ public class ChatActivity
             }
             else{
                 //If there are no more messages in the local db start fetching from the backend
-                fetchingLocally = false;
+                //fetchingLocally = false;
                 fetchMessagesBefore(timestamp);
             }
         }

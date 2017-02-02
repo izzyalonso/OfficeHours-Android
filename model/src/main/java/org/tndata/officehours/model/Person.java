@@ -26,7 +26,7 @@ public class Person extends Base{
     private boolean isInstructor;
     private String lastMessage;
 
-    private List<Message> messages;
+    //private List<Message> messages;
 
     @ColorInt
     private int color;
@@ -75,13 +75,6 @@ public class Person extends Base{
         return lastMessage == null ? "" : lastMessage;
     }
 
-    public List<Message> getMessages(){
-        if (messages == null){
-            messages = new ArrayList<>();
-        }
-        return messages;
-    }
-
     @ColorInt
     public int getColor(){
         return color;
@@ -97,10 +90,6 @@ public class Person extends Base{
 
     public void setLastMessage(@NonNull String lastMessage){
         this.lastMessage = lastMessage;
-    }
-
-    public void setMessages(@NonNull List<Message> messages){
-        this.messages = messages;
     }
 
     public void setColor(@ColorInt int color){
@@ -125,7 +114,6 @@ public class Person extends Base{
         parcel.writeByte((byte)(isInstructor ? 1 : 0));
         parcel.writeString(getLastMessage());
         parcel.writeInt(color);
-        parcel.writeTypedList(getMessages());
     }
 
     public static final Creator<Person> CREATOR = new Creator<Person>(){
@@ -147,7 +135,5 @@ public class Person extends Base{
         isInstructor = in.readByte() == 0;
         lastMessage = in.readString();
         color = in.readInt();
-        messages = new ArrayList<>();
-        in.readTypedList(messages, Message.CREATOR);
     }
 }

@@ -101,9 +101,11 @@ public class Message extends Base{
         this.timestamp = timestamp;
     }
 
-    public void sent(){
+    public void sent(boolean now){
         isSent = true;
-        timestamp = System.currentTimeMillis();
+        if (now){
+            timestamp = System.currentTimeMillis();
+        }
     }
 
     public void process(){

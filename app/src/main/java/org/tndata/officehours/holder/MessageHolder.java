@@ -4,7 +4,6 @@ import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -51,7 +50,7 @@ public class MessageHolder extends RecyclerView.ViewHolder{
         textBounds = null;
         timestampBounds = null;
 
-        ViewTreeObserver vto = binding.messageText.getViewTreeObserver();
+        /*ViewTreeObserver vto = binding.messageText.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
             @Override
             public void onGlobalLayout(){
@@ -78,7 +77,7 @@ public class MessageHolder extends RecyclerView.ViewHolder{
                     setViews();
                 }
             }
-        });
+        });*/
 
         OfficeHoursApp app = (OfficeHoursApp)binding.getRoot().getContext().getApplicationContext();
         int padding = Util.getPixels(binding.getRoot().getContext(), 16);
