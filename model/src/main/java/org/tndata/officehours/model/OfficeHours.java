@@ -12,19 +12,19 @@ import com.google.gson.annotations.SerializedName;
  */
 public class OfficeHours extends Base{
     @SerializedName("Monday")
-    private String monday[][];
+    private TimeSlot monday[];
     @SerializedName("Tuesday")
-    private String tuesday[][];
+    private TimeSlot tuesday[];
     @SerializedName("Wednesday")
-    private String wednesday[][];
+    private TimeSlot wednesday[];
     @SerializedName("Thursday")
-    private String thursday[][];
+    private TimeSlot thursday[];
     @SerializedName("Friday")
-    private String friday[][];
+    private TimeSlot friday[];
     @SerializedName("Saturday")
-    private String saturday[][];
+    private TimeSlot saturday[];
     @SerializedName("Sunday")
-    private String sunday[][];
+    private TimeSlot sunday[];
 
 
     public OfficeHours(){
@@ -59,10 +59,10 @@ public class OfficeHours extends Base{
         return monday != null;
     }
 
-    private String getHoursFor(String[][] day){
+    private String getHoursFor(TimeSlot[] day){
         String result = "";
         for (int i = 0; i < day.length; i++){
-            result += day[i][0] + "-" + day[i][1];
+            result += day[i].from + "-" + day[i].to;
             if (day.length < 2){
                 result += ", ";
                 if (i == day.length-2){
@@ -132,9 +132,9 @@ public class OfficeHours extends Base{
 
         if (hasMondayHours()){
             parcel.writeInt(monday.length);
-            for (String[] slot:monday){
-                parcel.writeString(slot[0]);
-                parcel.writeString(slot[1]);
+            for (TimeSlot slot:monday){
+                parcel.writeString(slot.from);
+                parcel.writeString(slot.to);
             }
         }
         else{
@@ -143,9 +143,9 @@ public class OfficeHours extends Base{
 
         if (hasTuesdayHours()){
             parcel.writeInt(tuesday.length);
-            for (String[] slot:tuesday){
-                parcel.writeString(slot[0]);
-                parcel.writeString(slot[1]);
+            for (TimeSlot slot:tuesday){
+                parcel.writeString(slot.from);
+                parcel.writeString(slot.to);
             }
         }
         else{
@@ -154,9 +154,9 @@ public class OfficeHours extends Base{
 
         if (hasWednesdayHours()){
             parcel.writeInt(wednesday.length);
-            for (String[] slot:wednesday){
-                parcel.writeString(slot[0]);
-                parcel.writeString(slot[1]);
+            for (TimeSlot slot:wednesday){
+                parcel.writeString(slot.from);
+                parcel.writeString(slot.to);
             }
         }
         else{
@@ -165,9 +165,9 @@ public class OfficeHours extends Base{
 
         if (hasThursdayHours()){
             parcel.writeInt(thursday.length);
-            for (String[] slot:thursday){
-                parcel.writeString(slot[0]);
-                parcel.writeString(slot[1]);
+            for (TimeSlot slot:thursday){
+                parcel.writeString(slot.from);
+                parcel.writeString(slot.to);
             }
         }
         else{
@@ -176,9 +176,9 @@ public class OfficeHours extends Base{
 
         if (hasFridayHours()){
             parcel.writeInt(friday.length);
-            for (String[] slot:friday){
-                parcel.writeString(slot[0]);
-                parcel.writeString(slot[1]);
+            for (TimeSlot slot:friday){
+                parcel.writeString(slot.from);
+                parcel.writeString(slot.to);
             }
         }
         else{
@@ -187,9 +187,9 @@ public class OfficeHours extends Base{
 
         if (hasSaturdayHours()){
             parcel.writeInt(saturday.length);
-            for (String[] slot:saturday){
-                parcel.writeString(slot[0]);
-                parcel.writeString(slot[1]);
+            for (TimeSlot slot:saturday){
+                parcel.writeString(slot.from);
+                parcel.writeString(slot.to);
             }
         }
         else{
@@ -198,9 +198,9 @@ public class OfficeHours extends Base{
 
         if (hasSundayHours()){
             parcel.writeInt(sunday.length);
-            for (String[] slot:sunday){
-                parcel.writeString(slot[0]);
-                parcel.writeString(slot[1]);
+            for (TimeSlot slot:sunday){
+                parcel.writeString(slot.from);
+                parcel.writeString(slot.to);
             }
         }
         else{
@@ -224,52 +224,62 @@ public class OfficeHours extends Base{
         super(src);
 
         int slots = src.readInt();
-        monday = new String[slots][2];
+        monday = new TimeSlot[slots];
         for (int i = 0; i < slots; i++){
-            monday[i][0] = src.readString();
-            monday[i][1] = src.readString();
+            monday[i] = new TimeSlot(src.readString(), src.readString());
         }
 
         slots = src.readInt();
-        tuesday = new String[slots][2];
+        tuesday = new TimeSlot[slots];
         for (int i = 0; i < slots; i++){
-            tuesday[i][0] = src.readString();
-            tuesday[i][1] = src.readString();
+            tuesday[i] = new TimeSlot(src.readString(), src.readString());
         }
 
         slots = src.readInt();
-        wednesday = new String[slots][2];
+        wednesday = new TimeSlot[slots];
         for (int i = 0; i < slots; i++){
-            wednesday[i][0] = src.readString();
-            wednesday[i][1] = src.readString();
+            wednesday[i] = new TimeSlot(src.readString(), src.readString());
         }
 
         slots = src.readInt();
-        thursday = new String[slots][2];
+        thursday = new TimeSlot[slots];
         for (int i = 0; i < slots; i++){
-            thursday[i][0] = src.readString();
-            thursday[i][1] = src.readString();
+            thursday[i] = new TimeSlot(src.readString(), src.readString());
         }
 
         slots = src.readInt();
-        friday = new String[slots][2];
+        friday = new TimeSlot[slots];
         for (int i = 0; i < slots; i++){
-            friday[i][0] = src.readString();
-            friday[i][1] = src.readString();
+            friday[i] = new TimeSlot(src.readString(), src.readString());
         }
 
         slots = src.readInt();
-        saturday = new String[slots][2];
+        saturday = new TimeSlot[slots];
         for (int i = 0; i < slots; i++){
-            saturday[i][0] = src.readString();
-            saturday[i][1] = src.readString();
+            saturday[i] = new TimeSlot(src.readString(), src.readString());
         }
 
         slots = src.readInt();
-        sunday = new String[slots][2];
+        sunday = new TimeSlot[slots];
         for (int i = 0; i < slots; i++){
-            sunday[i][0] = src.readString();
-            sunday[i][1] = src.readString();
+            sunday[i] = new TimeSlot(src.readString(), src.readString());
+        }
+    }
+
+
+    /**
+     * Model for a from-to dataset
+     *
+     * @author Ismael Alonso
+     */
+    private class TimeSlot{
+        private String from;
+        private String to;
+
+
+        private TimeSlot(String from, String to){
+            this.from = from;
+            this.to = to;
         }
     }
 }
