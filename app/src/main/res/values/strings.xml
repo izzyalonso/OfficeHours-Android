@@ -90,6 +90,7 @@
     <string name="course_last_meeting">Last meeting date</string>
     <string name="course_instructor">Instructor</string>
     <string name="course_instructor_chat_cd">Chat with your instructor</string>
+    <string name="course_office_hours">Office hours</string>
     <string name="course_access_code">Access code</string>
     <string name="course_enrollment">Enrollment</string>
     <string name="course_enrollment_content">%1$d students</string>
@@ -105,5 +106,14 @@
 
     <!-- Avatar -->
     <string name="avatar_image_cd">The user\'s avatar</string>
+
+    <!-- OfficeHours -->
+    <string name="office_hours_monday">Monday: </string>
+    <string name="office_hours_tuesday">Tuesday: </string>
+    <string name="office_hours_wednesday">Wednesday: </string>
+    <string name="office_hours_thursday">Thursday: </string>
+    <string name="office_hours_friday">Friday: </string>
+    <string name="office_hours_saturday">Saturday: </string>
+    <string name="office_hours_sunday">Sunday: </string>
 
 </resources>

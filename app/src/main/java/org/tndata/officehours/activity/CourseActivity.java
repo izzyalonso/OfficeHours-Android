@@ -17,6 +17,7 @@ import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityCourseBinding;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.OfficeHours;
 import org.tndata.officehours.model.Person;
 import org.tndata.officehours.util.Util;
 
@@ -57,6 +58,7 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
 
         if (((OfficeHoursApp)getApplication()).getUser().is(course.getInstructor())){
             binding.courseInstructorContainer.setVisibility(View.GONE);
+            binding.courseOfficeHoursContainer.setVisibility(View.GONE);
             binding.courseEnrollmentList.setOnClickListener(this);
             binding.courseEnrollmentBroadcast.setOnClickListener(this);
         }
@@ -64,9 +66,75 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
             binding.courseAccessCode.setVisibility(View.GONE);
             binding.courseEnrollmentContainer.setVisibility(View.GONE);
             binding.courseInstructorChat.setOnClickListener(this);
+            if (course.getInstructor().getOfficeHours() == null){
+                binding.courseOfficeHoursContainer.setVisibility(View.GONE);
+            }
+            else{
+                setOfficeHours();
+            }
         }
         String content = getString(R.string.course_enrollment_content, course.getStudents().size());
         binding.courseEnrollment.setText(content);
+    }
+
+    private void setOfficeHours(){
+        OfficeHours hours = course.getInstructor().getOfficeHours();
+
+        if (hours.hasMondayHours()){
+            String text = getString(R.string.office_hours_monday) + hours.getMondayHours();
+            binding.courseOfficeHoursMonday.setText(text);
+        }
+        else{
+            binding.courseOfficeHoursMonday.setVisibility(View.GONE);
+        }
+
+        if (hours.hasTuesdayHours()){
+            String text = getString(R.string.office_hours_tuesday) + hours.getTuesdayHours();
+            binding.courseOfficeHoursTuesday.setText(text);
+        }
+        else{
+            binding.courseOfficeHoursTuesday.setVisibility(View.GONE);
+        }
+
+        if (hours.hasWednesdayHours()){
+            String text = getString(R.string.office_hours_wednesday) + hours.getWednesdayHours();
+            binding.courseOfficeHoursWednesday.setText(text);
+        }
+        else{
+            binding.courseOfficeHoursWednesday.setVisibility(View.GONE);
+        }
+
+        if (hours.hasThursdayHours()){
+            String text = getString(R.string.office_hours_thursday) + hours.getThursdayHours();
+            binding.courseOfficeHoursThursday.setText(text);
+        }
+        else{
+            binding.courseOfficeHoursThursday.setVisibility(View.GONE);
+        }
+
+        if (hours.hasFridayHours()){
+            String text = getString(R.string.office_hours_friday) + hours.getFridayHours();
+            binding.courseOfficeHoursFriday.setText(text);
+        }
+        else{
+            binding.courseOfficeHoursFriday.setVisibility(View.GONE);
+        }
+
+        if (hours.hasSaturdayHours()){
+            String text = getString(R.string.office_hours_saturday) + hours.getSaturdayHours();
+            binding.courseOfficeHoursSaturday.setText(text);
+        }
+        else{
+            binding.courseOfficeHoursSaturday.setVisibility(View.GONE);
+        }
+
+        if (hours.hasSundayHours()){
+            String text = getString(R.string.office_hours_sunday) + hours.getSundayHours();
+            binding.courseOfficeHoursSunday.setText(text);
+        }
+        else{
+            binding.courseOfficeHoursSunday.setVisibility(View.GONE);
+        }
     }
 
     @Override

@@ -1,14 +1,9 @@
 package org.tndata.officehours.model;
 
-
 import android.os.Parcel;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -74,6 +69,10 @@ public class Person extends Base{
         return lastMessage == null ? "" : lastMessage;
     }
 
+    public OfficeHours getOfficeHours(){
+        return officeHours;
+    }
+
     public void asInstructor(){
         isInstructor = true;
     }
@@ -103,6 +102,7 @@ public class Person extends Base{
         parcel.writeString(avatar);
         parcel.writeByte((byte)(isInstructor ? 1 : 0));
         parcel.writeString(getLastMessage());
+        parcel.writeParcelable(officeHours, flags);
     }
 
     public static final Creator<Person> CREATOR = new Creator<Person>(){
@@ -123,5 +123,6 @@ public class Person extends Base{
         avatar = in.readString();
         isInstructor = in.readByte() == 0;
         lastMessage = in.readString();
+        officeHours = in.readParcelable(OfficeHours.class.getClassLoader());
     }
 }
