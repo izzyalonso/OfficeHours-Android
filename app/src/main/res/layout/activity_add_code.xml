@@ -7,62 +7,24 @@
         android:layout_height="match_parent"
         android:layout_margin="16dp" >
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/add_code_code"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginLeft="16dp"
             android:layout_marginBottom="16dp"
-            android:layout_marginRight="16dp" >
+            android:layout_marginRight="16dp"
+            android:gravity="center"
+            android:maxLength="4"
+            android:hint="@string/add_code_hint"
+            android:inputType="textCapCharacters" />
 
-            <EditText
-                android:id="@+id/add_code_1"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:layout_marginEnd="8dp"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:maxLength="1"
-                android:hint="@string/add_code_hint"
-                android:inputType="textCapCharacters" />
-
-            <EditText
-                android:id="@+id/add_code_2"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:layout_marginEnd="8dp"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:maxLength="1"
-                android:hint="@string/add_code_hint"
-                android:inputType="textCapCharacters" />
-
-            <EditText
-                android:id="@+id/add_code_3"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:layout_marginEnd="8dp"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:maxLength="1"
-                android:hint="@string/add_code_hint"
-                android:inputType="textCapCharacters" />
-
-            <EditText
-                android:id="@+id/add_code_4"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:maxLength="1"
-                android:hint="@string/add_code_hint"
-                android:inputType="textCapCharacters" />
-
-        </LinearLayout>
+        <Button
+            android:id="@+id/add_code_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/add_code_add" />
 
         <ProgressBar
             android:id="@+id/add_code_progress"
@@ -73,12 +35,13 @@
 
         <TextView
             android:id="@+id/add_code_error"
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center"
             android:gravity="center"
             android:textSize="16sp"
             android:textColor="@color/error"
-            android:text="@string/add_code_error"
             android:visibility="gone" />
 
     </LinearLayout>

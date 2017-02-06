@@ -5,10 +5,7 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,11 +13,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.adapter.ChatAdapter;
-import org.tndata.officehours.database.MessageTableHandler;
 import org.tndata.officehours.database.PersonTableHandler;
 import org.tndata.officehours.databinding.ActivityChatBinding;
 import org.tndata.officehours.model.Course;
@@ -31,7 +28,6 @@ import org.tndata.officehours.parser.Parser;
 import org.tndata.officehours.parser.ParserModels;
 import org.tndata.officehours.util.API;
 import org.tndata.officehours.util.CustomItemDecoration;
-import org.tndata.officehours.util.ImageLoader;
 import org.tndata.officehours.util.MessageDispatcher;
 
 import java.text.DateFormat;
@@ -54,6 +50,7 @@ import es.sandwatch.httprequests.HttpRequestError;
 public class ChatActivity
         extends AppCompatActivity
         implements
+                OfficeHoursApp.ConnectionStateChangeListener,
                 HttpRequest.RequestCallback,
                 Parser.ParserCallback,
                 ChatAdapter.Listener,
@@ -109,36 +106,13 @@ public class ChatActivity
         app = (OfficeHoursApp)getApplication();
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chat);
 
+        app.addConnectionStateChangeListener(this);
+
         setSupportActionBar(binding.chatToolbar);
 
         person = getIntent().getParcelableExtra(PERSON_KEY);
         if (person != null){
-            Drawable drawable = binding.chatAvatarContainer.getBackground();
-            GradientDrawable gradientDrawable = (GradientDrawable)drawable;
-            gradientDrawable.setColor(person.getColor());
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN){
-                binding.chatAvatarContainer.setBackgroundDrawable(gradientDrawable);
-            }
-            else{
-                binding.chatAvatarContainer.setBackground(gradientDrawable);
-            }
-
-            if (!person.getAvatar().isEmpty()){
-                ImageLoader.Options options = new ImageLoader.Options().setCropToCircle(true);
-                ImageLoader.loadBitmap(binding.chatAvatar, person.getAvatar(), options);
-                binding.chatInitials.setVisibility(View.GONE);
-                binding.chatAvatar.setVisibility(View.VISIBLE);
-            }
-            else{
-                String initials = "";
-                String[] names = person.getName().split(" ");
-                for (String name:names){
-                    initials += name.charAt(0);
-                }
-                binding.chatInitials.setText(initials);
-                binding.chatInitials.setVisibility(View.VISIBLE);
-                binding.chatAvatar.setVisibility((View.GONE));
-            }
+            binding.chatAvatar.setPerson(person);
 
             AssetManager assetManager = binding.getRoot().getContext().getAssets();
             String font = "fonts/Roboto-Medium.ttf";
@@ -173,6 +147,23 @@ public class ChatActivity
     protected void onStop(){
         dispatcher.disconnect();
         super.onStop();
+    }
+
+    @Override
+    public void onConnectionStateChanged(boolean connected){
+        binding.chatNewMessage.setEnabled(connected);
+        if (connected){
+            dispatcher.connect();
+        }
+        else{
+            Toast.makeText(this, R.string.chat_error_disconnected, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onDestroy(){
+        app.removeConnectionStateChangeListener(this);
+        super.onDestroy();
     }
 
     private void fetchMessagesBefore(long timestamp){
@@ -236,7 +227,7 @@ public class ChatActivity
                     dispatcher.queue(message);
                     binding.chatNewMessage.setText("");
                     person.setLastMessage(text);
-                    new PersonUpdater().execute();
+                    //new PersonUpdater().execute();
                 }
                 break;
         }
@@ -255,7 +246,7 @@ public class ChatActivity
             messages.add(message);
             adapter.notifyDataSetChanged();
             person.setLastMessage(message.getText());
-            new PersonUpdater().execute();
+            //new PersonUpdater().execute();
         }
     }
 

@@ -1,12 +1,15 @@
 package org.tndata.officehours;
 
 import android.app.Application;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Person;
 import org.tndata.officehours.model.User;
+import org.tndata.officehours.receiver.ConnectivityStateReceiver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,6 +97,37 @@ public class OfficeHoursApp extends Application{
     }
 
 
+    /*-----------------------------------*
+     * Network state distribution system *
+     *-----------------------------------*/
+
+    private ArrayList<ConnectionStateChangeListener> connectionStateChangeListeners;
+
+
+    public void addConnectionStateChangeListener(@NonNull ConnectionStateChangeListener listener){
+        connectionStateChangeListeners.add(listener);
+    }
+
+    public void removeConnectionStateChangeListener(@NonNull ConnectionStateChangeListener victim){
+        connectionStateChangeListeners.remove(victim);
+    }
+
+    public void connectionStateChanged(boolean connected){
+        Log.i(TAG, "Connection state changed: " + (connected ? "connected" : "not connected"));
+        for (ConnectionStateChangeListener listener: connectionStateChangeListeners){
+            listener.onConnectionStateChanged(connected);
+        }
+    }
+
+    public interface ConnectionStateChangeListener{
+        void onConnectionStateChanged(boolean connected);
+    }
+
+
+    /*--------------------------*
+     * Application's onCreate() *
+     *--------------------------*/
+
     @Override
     public void onCreate(){
         super.onCreate();
@@ -108,5 +142,9 @@ public class OfficeHoursApp extends Application{
         else{
             Log.i(TAG, "No user is signed in");
         }
+
+        connectionStateChangeListeners = new ArrayList<>();
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(new ConnectivityStateReceiver(), filter);
     }
 }

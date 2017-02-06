@@ -71,17 +71,6 @@ public class PeopleActivity extends AppCompatActivity implements PeopleAdapter.L
 
         List<Person> people = getIntent().getParcelableArrayListExtra(PEOPLE_KEY);
 
-        int[] color = new int[5];
-        color[0] = Color.CYAN;
-        color[1] = Color.RED;
-        color[2] = Color.GREEN;
-        color[3] = Color.YELLOW;
-        color[4] = Color.DKGRAY;
-
-        for (Person person:people){
-            person.setColor(color[(int)(Math.random()*color.length)]);
-        }
-
         binding.peopleList.addItemDecoration(new PeopleItemDecoration(this));
         binding.peopleList.setLayoutManager(new LinearLayoutManager(this));
         binding.peopleList.setAdapter(new PeopleAdapter(this, people, this));

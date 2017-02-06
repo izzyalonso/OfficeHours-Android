@@ -1,6 +1,8 @@
 package org.tndata.officehours.activity;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
@@ -29,7 +31,13 @@ import java.util.ArrayList;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapter.Listener, DumbDataSynchronizer.Callback{
+public class ScheduleActivity
+        extends AppCompatActivity
+        implements
+                ScheduleAdapter.Listener,
+                DialogInterface.OnClickListener,
+                DumbDataSynchronizer.Callback{
+
     private static final int ADD_CODE_RC = 7529;
     private static final int NEW_COURSE_RC = 6392;
 
@@ -62,25 +70,18 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        //The student menu contains an option to see all instructors
-        if (app.getUser().isStudent()){
-            getMenuInflater().inflate(R.menu.schedule_student, menu);
-        }
-        else{
-            getMenuInflater().inflate(R.menu.schedule_instructor, menu);
-        }
+        getMenuInflater().inflate(R.menu.schedule, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if (item.getItemId() == R.id.schedule_add){
-            if (app.getUser().isTeacher()){
-                startActivityForResult(new Intent(this, CourseEditorActivity.class), NEW_COURSE_RC);
-            }
-            else{
-                startActivityForResult(new Intent(this, AddCodeActivity.class), ADD_CODE_RC);
-            }
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle(R.string.schedule_dialog_add_title)
+                    .setItems(R.array.schedule_dialog_add_options, this)
+                    .create();
+            dialog.show();
             return true;
         }
         else if (item.getItemId() == R.id.schedule_faculty){
@@ -103,6 +104,16 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which){
+        if (which == 0){
+            startActivityForResult(new Intent(this, AddCodeActivity.class), ADD_CODE_RC);
+        }
+        else{
+            startActivityForResult(new Intent(this, CourseEditorActivity.class), NEW_COURSE_RC);
+        }
     }
 
     @Override

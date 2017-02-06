@@ -16,4 +16,10 @@
     <color name="flat_button_disabled">@color/text_disabled</color>
 
     <color name="error">#FF0000</color>
+
+    <color name="avatar_cyan">#00bcd4</color>
+    <color name="avatar_indigo">#3f51b5</color>
+    <color name="avatar_purple">#9c27b0</color>
+    <color name="avatar_green">#4caf50</color>
+    <color name="avatar_orange">#ef6c00</color>
 </resources>

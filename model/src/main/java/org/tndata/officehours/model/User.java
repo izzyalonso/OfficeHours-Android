@@ -45,18 +45,8 @@ public class User extends Base{
     @SerializedName("token")
     private String token;
 
-    //Fields set during on boarding, some of these are pre-populated with Google's
-    private AccountType accountType;
     private List<String> officeHours;
 
-
-    public void setAsStudent(){
-        accountType = AccountType.STUDENT;
-    }
-
-    public void setAsTeacher(){
-        accountType = AccountType.TEACHER;
-    }
 
     public void setOfficeHours(List<String> officeHours){
         this.officeHours = officeHours;
@@ -85,18 +75,6 @@ public class User extends Base{
 
     public String getEmail(){
         return email;
-    }
-
-    public boolean hasDefinedType(){
-        return accountType != null;
-    }
-
-    public boolean isStudent(){
-        return accountType == AccountType.STUDENT;
-    }
-
-    public boolean isTeacher(){
-        return accountType == AccountType.TEACHER;
     }
 
     public List<String> getOfficeHours(){
@@ -177,21 +155,15 @@ public class User extends Base{
         editor.putString("user.token", token);
 
         //NOTE: account type will be null before going through on boarding
-        if (accountType == null){
-            editor.putString("user.accountType", "");
-        }
-        else{
-            editor.putString("user.accountType", accountType.getDescriptor());
-            if (accountType == AccountType.TEACHER && officeHours != null){
-                String officeHoursCsv = "";
-                for (String officeHour:officeHours){
-                    officeHoursCsv += officeHour + ",";
-                }
-                if (!officeHoursCsv.isEmpty()){
-                    officeHoursCsv = officeHoursCsv.substring(0, officeHoursCsv.length() - 2);
-                }
-                editor.putString("user.officeHours", officeHoursCsv);
+        if (officeHours != null){
+            String officeHoursCsv = "";
+            for (String officeHour:officeHours){
+                officeHoursCsv += officeHour + ",";
             }
+            if (!officeHoursCsv.isEmpty()){
+                officeHoursCsv = officeHoursCsv.substring(0, officeHoursCsv.length() - 2);
+            }
+            editor.putString("user.officeHours", officeHoursCsv);
         }
 
         editor.commit();
@@ -244,12 +216,9 @@ public class User extends Base{
 
         token = preferences.getString("user.token", "");
 
-        accountType = AccountType.getAccountType(preferences.getString("user.accountType", ""));
-        if (accountType == AccountType.TEACHER){
-            String officeHoursCsv = preferences.getString("user.officeHours", "");
-            if (!officeHoursCsv.isEmpty()){
-                officeHours = new ArrayList<>(Arrays.asList(officeHoursCsv.split(",")));
-            }
+        String officeHoursCsv = preferences.getString("user.officeHours", "");
+        if (!officeHoursCsv.isEmpty()){
+            officeHours = new ArrayList<>(Arrays.asList(officeHoursCsv.split(",")));
         }
     }
 
@@ -274,58 +243,5 @@ public class User extends Base{
     private User(Parcel src){
         super(src);
         //TODO: not needed at the moment
-    }
-
-    /**
-     * Types of accounts supported by the platform.
-     *
-     * @author Ismael Alonso
-     * @version 1.0.0
-     */
-    private enum AccountType{
-        STUDENT("student"), TEACHER("teacher");
-
-
-        private final String descriptor;
-
-
-        /**
-         * Constructor.
-         *
-         * @param descriptor the account type descriptor.
-         */
-        AccountType(String descriptor){
-            this.descriptor = descriptor;
-        }
-
-        /**
-         * Descriptor getter.
-         *
-         * @return the descriptor
-         */
-        private String getDescriptor(){
-            return descriptor;
-        }
-
-        /**
-         * Gets an account type for a given descriptor. In order for this method to return an
-         * actual account type the match must be exact.
-         *
-         * @param descriptor the descriptor to be matched.
-         * @return the account type mapped to the provided descriptor or null no mapping was found.
-         */
-        @Nullable
-        private static AccountType getAccountType(@Nullable String descriptor){
-            if (descriptor == null){
-                return null;
-            }
-            else if (descriptor.equals("student")){
-                return STUDENT;
-            }
-            else if (descriptor.equals("teacher")){
-                return TEACHER;
-            }
-            return null;
-        }
     }
 }

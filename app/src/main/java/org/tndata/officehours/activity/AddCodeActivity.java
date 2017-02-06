@@ -1,20 +1,18 @@
 package org.tndata.officehours.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
+import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.database.CourseTableHandler;
 import org.tndata.officehours.database.PersonTableHandler;
 import org.tndata.officehours.databinding.ActivityAddCodeBinding;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.Person;
 import org.tndata.officehours.model.ResultSet;
 import org.tndata.officehours.parser.Parser;
 import org.tndata.officehours.util.API;
@@ -32,7 +30,7 @@ import es.sandwatch.httprequests.HttpRequestError;
 public class AddCodeActivity
         extends AppCompatActivity
         implements
-                TextWatcher,
+                View.OnClickListener,
                 HttpRequest.RequestCallback,
                 Parser.ParserCallback{
 
@@ -46,68 +44,24 @@ public class AddCodeActivity
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_code);
-
-        addListeners();
-    }
-
-    private void addListeners(){
-        binding.addCode1.addTextChangedListener(this);
-        binding.addCode2.addTextChangedListener(this);
-        binding.addCode3.addTextChangedListener(this);
-        binding.addCode4.addTextChangedListener(this);
-    }
-
-    private void removeListeners(){
-        binding.addCode1.removeTextChangedListener(this);
-        binding.addCode2.removeTextChangedListener(this);
-        binding.addCode3.removeTextChangedListener(this);
-        binding.addCode4.removeTextChangedListener(this);
+        binding.addCodeAdd.setOnClickListener(this);
     }
 
     @Override
-    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2){
-        //Unused
-    }
+    public void onClick(View view){
+        if (view.getId() == R.id.add_code_add){
+            String code = binding.addCodeCode.getText().toString().trim();
+            if (code.length() < 4){
+                binding.addCodeError.setText(R.string.add_code_length_error);
+                binding.addCodeError.setVisibility(View.VISIBLE);
+            }
+            else{
+                binding.addCodeError.setVisibility(View.GONE);
+                binding.addCodeProgress.setVisibility(View.VISIBLE);
 
-    @Override
-    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2){
-        //Unused
-    }
-
-    @Override
-    public void afterTextChanged(Editable editable){
-        if (editable == binding.addCode1.getText()){
-            binding.addCode2.requestFocus();
+                HttpRequest.post(this, API.URL.courseEnroll(), API.BODY.courseEnroll(code));
+            }
         }
-        else if (editable == binding.addCode2.getText()){
-            binding.addCode3.requestFocus();
-        }
-        else if (editable == binding.addCode3.getText()){
-            binding.addCode4.requestFocus();
-        }
-        else if (editable == binding.addCode4.getText()){
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
-            binding.addCode4.clearFocus();
-            removeListeners();
-            onCodeEntered();
-        }
-    }
-
-    private void onCodeEntered(){
-        binding.addCode1.setEnabled(false);
-        binding.addCode2.setEnabled(false);
-        binding.addCode3.setEnabled(false);
-        binding.addCode4.setEnabled(false);
-        binding.addCodeError.setVisibility(View.GONE);
-        binding.addCodeProgress.setVisibility(View.VISIBLE);
-
-        String code = binding.addCode1.getText().toString().trim();
-        code += binding.addCode2.getText().toString().trim();
-        code += binding.addCode3.getText().toString().trim();
-        code += binding.addCode4.getText().toString().trim();
-
-        HttpRequest.post(this, API.URL.courseEnroll(), API.BODY.courseEnroll(code));
     }
 
     @Override
@@ -117,20 +71,9 @@ public class AddCodeActivity
 
     @Override
     public void onRequestFailed(int requestCode, HttpRequestError error){
+        binding.addCodeError.setText(R.string.add_code_invalid_error);
         binding.addCodeProgress.setVisibility(View.GONE);
         binding.addCodeError.setVisibility(View.VISIBLE);
-
-        binding.addCode1.setEnabled(true);
-        binding.addCode2.setEnabled(true);
-        binding.addCode3.setEnabled(true);
-        binding.addCode4.setEnabled(true);
-
-        binding.addCode1.setText("");
-        binding.addCode2.setText("");
-        binding.addCode3.setText("");
-        binding.addCode4.setText("");
-
-        addListeners();
     }
 
     @Override
@@ -147,6 +90,17 @@ public class AddCodeActivity
 
             personHandler.close();
             courseHandler.close();
+
+            //Add the object to the global sets
+            OfficeHoursApp app = (OfficeHoursApp)getApplication();
+            app.addCourse(course);
+            app.addPerson(course.getInstructor());
+            course.setInstructor(app.getPeople().get(course.getInstructor().getId()));
+            for (int i = 0; i < course.getStudents().size(); i++){
+                Person student = course.getStudents().get(i);
+                app.addPerson(student);
+                course.getStudents().set(i, app.getPeople().get(student.getId()));
+            }
         }
     }
 
@@ -161,6 +115,8 @@ public class AddCodeActivity
 
     @Override
     public void onParseFailed(int requestCode){
-
+        binding.addCodeError.setText(R.string.add_code_invalid_error);
+        binding.addCodeProgress.setVisibility(View.GONE);
+        binding.addCodeError.setVisibility(View.VISIBLE);
     }
 }
