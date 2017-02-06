@@ -22,6 +22,8 @@ public class Person extends Base{
     private String name;
     @SerializedName("avatar")
     private String avatar;
+    @SerializedName("officehours")
+    private OfficeHours officeHours;
 
     private boolean isInstructor;
     private String lastMessage;
