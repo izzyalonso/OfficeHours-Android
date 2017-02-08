@@ -29,6 +29,7 @@ import org.tndata.officehours.parser.ParserModels;
 import org.tndata.officehours.util.API;
 import org.tndata.officehours.util.CustomItemDecoration;
 import org.tndata.officehours.util.MessageDispatcher;
+import org.tndata.officehours.util.Util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -98,6 +99,7 @@ public class ChatActivity
     private MessageDispatcher dispatcher;
 
     private int getMessageHistoryRC;
+    private boolean updateQueued;
 
 
     @Override
@@ -134,6 +136,7 @@ public class ChatActivity
             dispatcher = new MessageDispatcher(this, person, this);
 
             fetchMessagesBefore(System.currentTimeMillis());
+            updateQueued = false;
         }
     }
 
@@ -154,6 +157,10 @@ public class ChatActivity
         binding.chatNewMessage.setEnabled(connected);
         if (connected){
             dispatcher.connect();
+            if (updateQueued){
+                updateQueued = false;
+                fetchMessagesBefore(messages.get(0).getTimestamp());
+            }
         }
         else{
             Toast.makeText(this, R.string.chat_error_disconnected, Toast.LENGTH_LONG).show();
@@ -211,7 +218,12 @@ public class ChatActivity
 
     @Override
     public void onTopReached(){
-        fetchMessagesBefore(messages.get(0).getTimestamp());
+        if (Util.isNetworkAvailable(this)){
+            fetchMessagesBefore(messages.get(0).getTimestamp());
+        }
+        else{
+            updateQueued = true;
+        }
     }
 
     @Override

@@ -83,6 +83,9 @@ public class AddCodeActivity
             PersonTableHandler personHandler = new PersonTableHandler(this);
 
             Course course = (Course)result;
+            String meetingTime = course.getMeetingTime();
+            String formatted = TimeSlotPickerActivity.get12HourFormattedString(meetingTime, false);
+            course.setFormattedMeetingTime(formatted);
             course.process();
             courseHandler.saveCourse(course);
             personHandler.savePerson(course.getInstructor(), course);

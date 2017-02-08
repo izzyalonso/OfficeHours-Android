@@ -10,6 +10,7 @@ import android.util.TypedValue;
 import com.google.gson.JsonObject;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Message;
+import org.tndata.officehours.model.OfficeHours;
 import org.tndata.officehours.model.Person;
 
 
@@ -29,6 +30,9 @@ public class Util{
         }
         else if (object.has("digest")){
             return Message.class;
+        }
+        else if (object.has("from") && object.has("to")){
+            return OfficeHours.TimeSlot.class;
         }
         return Course.class;
     }

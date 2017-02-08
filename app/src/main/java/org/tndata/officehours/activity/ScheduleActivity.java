@@ -121,7 +121,10 @@ public class ScheduleActivity
         if (requestCode == ADD_CODE_RC){
             if (resultCode == RESULT_OK){
                 Course course = data.getParcelableExtra(AddCodeActivity.COURSE_KEY);
-                adapter.addCourse(course);
+                adapter.notifyItemInserted(app.getCourses().size()-1);
+                if (app.getCourses().size() != 1){
+                    adapter.notifyItemChanged(app.getCourses().size()-2);
+                }
                 onCourseSelected(course);
             }
         }

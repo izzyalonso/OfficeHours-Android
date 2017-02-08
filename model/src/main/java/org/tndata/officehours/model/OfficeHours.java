@@ -4,6 +4,9 @@ import android.os.Parcel;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Model for the new representation of office hours.
@@ -12,19 +15,19 @@ import com.google.gson.annotations.SerializedName;
  */
 public class OfficeHours extends Base{
     @SerializedName("Monday")
-    private TimeSlot monday[];
+    private List<TimeSlot> monday;
     @SerializedName("Tuesday")
-    private TimeSlot tuesday[];
+    private List<TimeSlot> tuesday;
     @SerializedName("Wednesday")
-    private TimeSlot wednesday[];
+    private List<TimeSlot> wednesday;
     @SerializedName("Thursday")
-    private TimeSlot thursday[];
+    private List<TimeSlot> thursday;
     @SerializedName("Friday")
-    private TimeSlot friday[];
+    private List<TimeSlot> friday;
     @SerializedName("Saturday")
-    private TimeSlot saturday[];
+    private List<TimeSlot> saturday;
     @SerializedName("Sunday")
-    private TimeSlot sunday[];
+    private List<TimeSlot> sunday;
 
 
     public OfficeHours(){
@@ -36,40 +39,40 @@ public class OfficeHours extends Base{
     }
 
     public boolean hasTuesdayHours(){
-        return monday != null;
+        return tuesday != null;
     }
 
     public boolean hasWednesdayHours(){
-        return monday != null;
+        return wednesday != null;
     }
 
     public boolean hasThursdayHours(){
-        return monday != null;
+        return thursday != null;
     }
 
     public boolean hasFridayHours(){
-        return monday != null;
+        return friday != null;
     }
 
     public boolean hasSaturdayHours(){
-        return monday != null;
+        return saturday != null;
     }
 
     public boolean hasSundayHours(){
-        return monday != null;
+        return sunday != null;
     }
 
-    private String getHoursFor(TimeSlot[] day){
+    private String getHoursFor(List<TimeSlot> day){
         String result = "";
-        for (int i = 0; i < day.length; i++){
-            result += day[i].from + "-" + day[i].to;
-            if (day.length < 2){
+        for (int i = 0; i < day.size(); i++){
+            result += day.get(i).from + "-" + day.get(i).to;
+            if (day.size() < 2){
                 result += ", ";
-                if (i == day.length-2){
+                if (i == day.size()-2){
                     result += "and ";
                 }
             }
-            else if (day.length == 2 && i == 0){
+            else if (day.size() == 2 && i == 0){
                 result += " and ";
             }
         }
@@ -131,7 +134,7 @@ public class OfficeHours extends Base{
         super.writeToParcel(parcel, flags);
 
         if (hasMondayHours()){
-            parcel.writeInt(monday.length);
+            parcel.writeInt(monday.size());
             for (TimeSlot slot:monday){
                 parcel.writeString(slot.from);
                 parcel.writeString(slot.to);
@@ -142,7 +145,7 @@ public class OfficeHours extends Base{
         }
 
         if (hasTuesdayHours()){
-            parcel.writeInt(tuesday.length);
+            parcel.writeInt(tuesday.size());
             for (TimeSlot slot:tuesday){
                 parcel.writeString(slot.from);
                 parcel.writeString(slot.to);
@@ -153,7 +156,7 @@ public class OfficeHours extends Base{
         }
 
         if (hasWednesdayHours()){
-            parcel.writeInt(wednesday.length);
+            parcel.writeInt(wednesday.size());
             for (TimeSlot slot:wednesday){
                 parcel.writeString(slot.from);
                 parcel.writeString(slot.to);
@@ -164,7 +167,7 @@ public class OfficeHours extends Base{
         }
 
         if (hasThursdayHours()){
-            parcel.writeInt(thursday.length);
+            parcel.writeInt(thursday.size());
             for (TimeSlot slot:thursday){
                 parcel.writeString(slot.from);
                 parcel.writeString(slot.to);
@@ -175,7 +178,7 @@ public class OfficeHours extends Base{
         }
 
         if (hasFridayHours()){
-            parcel.writeInt(friday.length);
+            parcel.writeInt(friday.size());
             for (TimeSlot slot:friday){
                 parcel.writeString(slot.from);
                 parcel.writeString(slot.to);
@@ -186,7 +189,7 @@ public class OfficeHours extends Base{
         }
 
         if (hasSaturdayHours()){
-            parcel.writeInt(saturday.length);
+            parcel.writeInt(saturday.size());
             for (TimeSlot slot:saturday){
                 parcel.writeString(slot.from);
                 parcel.writeString(slot.to);
@@ -197,7 +200,7 @@ public class OfficeHours extends Base{
         }
 
         if (hasSundayHours()){
-            parcel.writeInt(sunday.length);
+            parcel.writeInt(sunday.size());
             for (TimeSlot slot:sunday){
                 parcel.writeString(slot.from);
                 parcel.writeString(slot.to);
@@ -224,55 +227,70 @@ public class OfficeHours extends Base{
         super(src);
 
         int slots = src.readInt();
-        monday = new TimeSlot[slots];
-        for (int i = 0; i < slots; i++){
-            monday[i] = new TimeSlot(src.readString(), src.readString());
+        if (slots > 0){
+            monday = new ArrayList<>(slots);
+            for (int i = 0; i < slots; i++){
+                monday.add(new TimeSlot(src.readString(), src.readString()));
+            }
         }
 
         slots = src.readInt();
-        tuesday = new TimeSlot[slots];
-        for (int i = 0; i < slots; i++){
-            tuesday[i] = new TimeSlot(src.readString(), src.readString());
+        if (slots > 0){
+            tuesday = new ArrayList<>(slots);
+            for (int i = 0; i < slots; i++){
+                tuesday.add(new TimeSlot(src.readString(), src.readString()));
+            }
         }
 
         slots = src.readInt();
-        wednesday = new TimeSlot[slots];
-        for (int i = 0; i < slots; i++){
-            wednesday[i] = new TimeSlot(src.readString(), src.readString());
+        if (slots > 0){
+            wednesday = new ArrayList<>(slots);
+            for (int i = 0; i < slots; i++){
+                wednesday.add(new TimeSlot(src.readString(), src.readString()));
+            }
         }
 
         slots = src.readInt();
-        thursday = new TimeSlot[slots];
-        for (int i = 0; i < slots; i++){
-            thursday[i] = new TimeSlot(src.readString(), src.readString());
+
+        if (slots > 0){
+            thursday = new ArrayList<>(slots);
+            for (int i = 0; i < slots; i++){
+                thursday.add(new TimeSlot(src.readString(), src.readString()));
+            }
         }
 
         slots = src.readInt();
-        friday = new TimeSlot[slots];
-        for (int i = 0; i < slots; i++){
-            friday[i] = new TimeSlot(src.readString(), src.readString());
+        if (slots > 0){
+            friday = new ArrayList<>(slots);
+            for (int i = 0; i < slots; i++){
+                friday.add(new TimeSlot(src.readString(), src.readString()));
+            }
         }
 
         slots = src.readInt();
-        saturday = new TimeSlot[slots];
-        for (int i = 0; i < slots; i++){
-            saturday[i] = new TimeSlot(src.readString(), src.readString());
+        if (slots > 0){
+            saturday = new ArrayList<>(slots);
+            for (int i = 0; i < slots; i++){
+                saturday.add(new TimeSlot(src.readString(), src.readString()));
+            }
         }
 
         slots = src.readInt();
-        sunday = new TimeSlot[slots];
-        for (int i = 0; i < slots; i++){
-            sunday[i] = new TimeSlot(src.readString(), src.readString());
+        if (slots > 0){
+            sunday = new ArrayList<>(slots);
+            for (int i = 0; i < slots; i++){
+                sunday.add(new TimeSlot(src.readString(), src.readString()));
+            }
         }
     }
 
 
     /**
-     * Model for a from-to dataset
+     * Model for a from-to data set
      *
      * @author Ismael Alonso
      */
-    private class TimeSlot{
+    public class TimeSlot{
         private String from;
         private String to;
 
