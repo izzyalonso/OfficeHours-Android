@@ -25,11 +25,11 @@ public class Util{
     }
 
     public static Class getTypeOf(JsonObject object){
-        if (object.has("avatar")){
-            return Person.class;
-        }
-        else if (object.has("digest")){
+        if (object.has("digest")){
             return Message.class;
+        }
+        else if (object.has("avatar")){
+            return Person.class;
         }
         else if (object.has("from") && object.has("to")){
             return OfficeHours.TimeSlot.class;
