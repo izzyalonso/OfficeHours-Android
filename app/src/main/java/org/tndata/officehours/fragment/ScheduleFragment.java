@@ -1,5 +1,6 @@
 package org.tndata.officehours.fragment;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,9 +25,30 @@ import org.tndata.officehours.util.CustomItemDecoration;
  * @author Ismael Alonso
  */
 public class ScheduleFragment extends Fragment implements ScheduleAdapter.Listener{
+    private ScheduleAdapter.Listener listener;
     private FragmentListBinding binding;
     private ScheduleAdapter adapter;
 
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+
+        try{
+            listener = (ScheduleAdapter.Listener)context;
+        }
+        catch (ClassCastException ccx){
+            String description = "ScheduleFragment's host activity must implement" +
+                    " the ScheduleAdapter.Listener interface.";
+            throw new ClassCastException(description);
+        }
+    }
+
+    @Override
+    public void onDetach(){
+        listener = null;
+        super.onDetach();
+    }
 
     @Nullable
     @Override
@@ -48,6 +70,8 @@ public class ScheduleFragment extends Fragment implements ScheduleAdapter.Listen
 
     @Override
     public void onCourseSelected(@NonNull Course course){
-
+        if (listener != null){
+            listener.onCourseSelected(course);
+        }
     }
 }

@@ -3,6 +3,7 @@ package org.tndata.officehours.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import android.view.View;
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.adapter.MainPagerAdapter;
+import org.tndata.officehours.adapter.ScheduleAdapter;
 import org.tndata.officehours.databinding.ActivityMainBinding;
 import org.tndata.officehours.model.Course;
 
@@ -30,7 +32,8 @@ public class MainActivity
                 ViewPager.OnPageChangeListener,
                 MainPagerAdapter.Listener,
                 TextWatcher,
-                View.OnClickListener{
+                View.OnClickListener,
+                ScheduleAdapter.Listener{
 
     private static final int ADD_CODE_RC = 7529;
     private static final int NEW_COURSE_RC = 6392;
@@ -201,5 +204,10 @@ public class MainActivity
         else{
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void onCourseSelected(@NonNull Course course){
+        startActivity(CourseActivity.getIntent(this, course));
     }
 }
