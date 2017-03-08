@@ -116,7 +116,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter{
         return false;
     }
 
-    public void onCourseAdded(@NonNull Course course){
+    public void updateDataSet(){
 
     }
 

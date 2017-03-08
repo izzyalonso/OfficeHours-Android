@@ -10,15 +10,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.adapter.MainPagerAdapter;
+import org.tndata.officehours.adapter.PeopleAdapter;
 import org.tndata.officehours.adapter.ScheduleAdapter;
 import org.tndata.officehours.databinding.ActivityMainBinding;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.Person;
+import org.tndata.officehours.util.Util;
 
 
 /**
@@ -33,6 +36,7 @@ public class MainActivity
                 MainPagerAdapter.Listener,
                 TextWatcher,
                 View.OnClickListener,
+                PeopleAdapter.Listener,
                 ScheduleAdapter.Listener{
 
     private static final int ADD_CODE_RC = 7529;
@@ -203,6 +207,16 @@ public class MainActivity
         }
         else{
             super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public void onPersonSelected(@NonNull Person person){
+        if (Util.isNetworkAvailable(this)){
+            startActivity(ChatActivity.getIntent(this, person));
+        }
+        else{
+            Toast.makeText(this, R.string.chat_error_offline, Toast.LENGTH_SHORT).show();
         }
     }
 

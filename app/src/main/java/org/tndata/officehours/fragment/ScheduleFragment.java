@@ -38,7 +38,7 @@ public class ScheduleFragment extends Fragment implements ScheduleAdapter.Listen
             listener = (ScheduleAdapter.Listener)context;
         }
         catch (ClassCastException ccx){
-            String description = "ScheduleFragment's host activity must implement" +
+            String description = "ScheduleFragment's host Activity must implement" +
                     " the ScheduleAdapter.Listener interface.";
             throw new ClassCastException(description);
         }

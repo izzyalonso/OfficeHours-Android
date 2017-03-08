@@ -1,5 +1,6 @@
 package org.tndata.officehours.fragment;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,6 +32,7 @@ public class PeopleFragment extends Fragment implements PeopleAdapter.Listener{
 
 
     private boolean instructors;
+    private PeopleAdapter.Listener listener;
     private FragmentListBinding binding;
 
     private RecyclerView.OnScrollListener currentScrollListener;
@@ -39,12 +41,27 @@ public class PeopleFragment extends Fragment implements PeopleAdapter.Listener{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        if (getArguments() != null){
-            instructors = getArguments().getBoolean(INSTRUCTORS_KEY, false);
+        instructors = getArguments() != null && getArguments().getBoolean(INSTRUCTORS_KEY, false);
+    }
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+
+        try{
+            listener = (PeopleAdapter.Listener)context;
         }
-        else{
-            instructors = false;
+        catch (ClassCastException ccx){
+            String description = "PeopleFragment's host Activity must implement" +
+                    " the ScheduleAdapter.Listener interface.";
+            throw new ClassCastException(description);
         }
+    }
+
+    @Override
+    public void onDetach(){
+        listener = null;
+        super.onDetach();
     }
 
     @Nullable
@@ -72,7 +89,9 @@ public class PeopleFragment extends Fragment implements PeopleAdapter.Listener{
 
     @Override
     public void onPersonSelected(@NonNull Person person){
-
+        if (listener != null){
+            listener.onPersonSelected(person);
+        }
     }
 
     public void setScrollListener(@NonNull RecyclerView.OnScrollListener listener){
