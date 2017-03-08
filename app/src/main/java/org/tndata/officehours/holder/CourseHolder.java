@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import org.jetbrains.annotations.NotNull;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.databinding.CardCourseBinding;
 
@@ -25,7 +24,7 @@ public class CourseHolder extends RecyclerView.ViewHolder implements View.OnClic
      *
      * @param binding the binding object.
      */
-    public CourseHolder(@NotNull CardCourseBinding binding, @NotNull Listener listener){
+    public CourseHolder(@NonNull CardCourseBinding binding, @NonNull Listener listener){
         super(binding.getRoot());
         this.binding = binding;
         this.listener = listener;

@@ -96,6 +96,16 @@ public class OfficeHoursApp extends Application{
         return people;
     }
 
+    public ArrayList<Person> getPeople(boolean instructors){
+        ArrayList<Person> people = new ArrayList<>();
+        for (Person person:this.people.values()){
+            if (person.isInstructor() == instructors){
+                people.add(person);
+            }
+        }
+        return people;
+    }
+
 
     /*-----------------------------------*
      * Network state distribution system *

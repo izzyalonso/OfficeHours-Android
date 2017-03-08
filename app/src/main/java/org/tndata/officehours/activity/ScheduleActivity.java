@@ -54,7 +54,7 @@ public class ScheduleActivity
         setSupportActionBar(binding.scheduleToolbar.toolbar);
 
         app = (OfficeHoursApp)getApplication();
-        adapter = new ScheduleAdapter(this, this, app.getCourses());
+        adapter = new ScheduleAdapter(this, app.getCourses(), this);
         binding.scheduleList.setLayoutManager(new LinearLayoutManager(this));
         binding.scheduleList.setAdapter(adapter);
         binding.scheduleList.addItemDecoration(new CustomItemDecoration(this, 12));
@@ -77,11 +77,12 @@ public class ScheduleActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if (item.getItemId() == R.id.schedule_add){
-            AlertDialog dialog = new AlertDialog.Builder(this)
+            /*AlertDialog dialog = new AlertDialog.Builder(this)
                     .setTitle(R.string.schedule_dialog_add_title)
                     .setItems(R.array.schedule_dialog_add_options, this)
                     .create();
-            dialog.show();
+            dialog.show();*/
+            startActivity(new Intent(this, MainActivity.class));
             return true;
         }
         else if (item.getItemId() == R.id.schedule_faculty){

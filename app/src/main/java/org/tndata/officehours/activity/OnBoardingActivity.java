@@ -77,10 +77,12 @@ public class OnBoardingActivity
     public void onTypeButtonClick(View view){
         switch (view.getId()){
             case R.id.on_boarding_student:
+                user.asStudent();
                 displayForm(false);
                 break;
 
             case R.id.on_boarding_teacher:
+                user.asTeacher();
                 displayForm(true);
                 break;
         }

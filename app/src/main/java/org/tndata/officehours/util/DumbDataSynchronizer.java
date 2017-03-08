@@ -28,7 +28,6 @@ import es.sandwatch.httprequests.HttpRequestError;
  * @author Ismael Alonso
  */
 public class DumbDataSynchronizer implements HttpRequest.RequestCallback, Parser.ParserCallback{
-
     private static final String TAG = "DumbDataSynchronizer";
 
 
@@ -97,12 +96,14 @@ public class DumbDataSynchronizer implements HttpRequest.RequestCallback, Parser
                 String display = TimeSlotPickerActivity.get12HourFormattedString(course.getMeetingTime(), false);
                 course.setFormattedMeetingTime(display);
 
+                course.getInstructor().asInstructor();
                 if (!people.containsKey(course.getInstructor().getId())){
                     people.put(course.getInstructor().getId(), course.getInstructor());
                 }
                 personHandler.savePerson(course.getInstructor(), course);
 
                 for (Person student:course.getStudents()){
+                    student.asStudent();
                     if (!people.containsKey(student.getId())){
                         people.put(student.getId(), student);
                     }

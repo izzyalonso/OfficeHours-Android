@@ -3,24 +3,18 @@ package org.tndata.officehours.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Toast;
 
 import org.tndata.officehours.R;
 import org.tndata.officehours.adapter.PeopleAdapter;
 import org.tndata.officehours.databinding.ActivityPeopleBinding;
 import org.tndata.officehours.model.Person;
-import org.tndata.officehours.util.CustomItemDecoration;
+import org.tndata.officehours.util.PeopleItemDecoration;
 import org.tndata.officehours.util.Util;
 
 import java.util.ArrayList;
@@ -86,51 +80,4 @@ public class PeopleActivity extends AppCompatActivity implements PeopleAdapter.L
         }
     }
 
-
-    /**
-     * ItemDecoration class that adds dividers to the functionality already provided by the parent.
-     *
-     * @author Ismael Alonso
-     * @version 1.0.0
-     */
-    private class PeopleItemDecoration extends CustomItemDecoration{
-        private Drawable divider;
-
-
-        /**
-         * Constructor.
-         *
-         * @param context a reference to the context.
-         */
-        @SuppressWarnings("deprecation")
-        private PeopleItemDecoration(@NonNull Context context){
-            super(context, 12);
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
-                divider = getResources().getDrawable(R.drawable.divider);
-            }
-            else{
-                divider = getResources().getDrawable(R.drawable.divider, null);
-            }
-        }
-
-        @Override
-        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state){
-            int dividerLeft = parent.getPaddingLeft() + getPixels(70);
-            int dividerRight = parent.getWidth() - parent.getPaddingRight();
-
-            int childCount = parent.getChildCount();
-            for (int i = 0; i < childCount - 1; i++) {
-                View child = parent.getChildAt(i);
-
-                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-
-                int dividerTop = child.getBottom() + params.bottomMargin + getPixels(6);
-                int dividerBottom = dividerTop + 1;
-
-                divider.setBounds(dividerLeft, dividerTop, dividerRight, dividerBottom);
-                divider.draw(c);
-            }
-        }
-    }
 }

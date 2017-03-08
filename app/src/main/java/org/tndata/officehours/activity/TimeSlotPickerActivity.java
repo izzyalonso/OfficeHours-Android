@@ -424,6 +424,10 @@ public class TimeSlotPickerActivity
     public static String get12HourFormattedString(@NonNull String src, boolean expandWeekDays){
         Log.d(TAG, "Formatting " + src + " to 12 hour format...");
 
+        if (src.isEmpty()){
+            return "";
+        }
+
         String result = "";
 
         //Split times the days and times sections

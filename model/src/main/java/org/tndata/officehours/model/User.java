@@ -42,6 +42,9 @@ public class User extends Base{
     @SerializedName("needs_onboarding")
     private boolean needsOnBoarding;
 
+    @SerializedName("student")
+    private boolean isStudent;
+
     @SerializedName("token")
     private String token;
 
@@ -67,6 +70,14 @@ public class User extends Base{
 
     public void onBoardingCompleted(){
         needsOnBoarding = false;
+    }
+
+    public void asStudent(){
+        isStudent = true;
+    }
+
+    public void asTeacher(){
+        isStudent = false;
     }
 
     public long getProfileId(){
@@ -107,6 +118,10 @@ public class User extends Base{
 
     public boolean isOnBoardingComplete(){
         return !needsOnBoarding;
+    }
+
+    public boolean isStudent(){
+        return isStudent;
     }
 
     public String getToken(){
@@ -151,6 +166,7 @@ public class User extends Base{
         editor.putString("user.schoolEmail", schoolEmail);
         editor.putString("user.phoneNumber", phoneNumber);
         editor.putBoolean("user.needsOnBoarding", needsOnBoarding);
+        editor.putBoolean("user.isStudent", isStudent);
 
         editor.putString("user.token", token);
 
@@ -213,6 +229,7 @@ public class User extends Base{
         schoolEmail = preferences.getString("user.schoolEmail", "");
         phoneNumber = preferences.getString("user.phoneNumber", "");
         needsOnBoarding = preferences.getBoolean("user.needsOnBoarding", true);
+        isStudent = preferences.getBoolean("user.isStudent", true);
 
         token = preferences.getString("user.token", "");
 
