@@ -53,7 +53,7 @@ public class QuestionsAdapter extends RecyclerView.Adapter{
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         LayoutInflater inflater = LayoutInflater.from(context);
         if (viewType == TYPE_QUESTION){
-            
+
         }
         if (viewType == TYPE_FOOTER_SPACE){
             View view = inflater.inflate(R.layout.item_people_footer_space, parent, false);

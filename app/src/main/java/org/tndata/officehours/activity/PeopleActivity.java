@@ -14,7 +14,7 @@ import org.tndata.officehours.R;
 import org.tndata.officehours.adapter.PeopleAdapter;
 import org.tndata.officehours.databinding.ActivityPeopleBinding;
 import org.tndata.officehours.model.Person;
-import org.tndata.officehours.util.PeopleItemDecoration;
+import org.tndata.officehours.util.DividerItemDecoration;
 import org.tndata.officehours.util.Util;
 
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public class PeopleActivity extends AppCompatActivity implements PeopleAdapter.L
 
         List<Person> people = getIntent().getParcelableArrayListExtra(PEOPLE_KEY);
 
-        binding.peopleList.addItemDecoration(new PeopleItemDecoration(this));
+        binding.peopleList.addItemDecoration(new DividerItemDecoration(this));
         binding.peopleList.setLayoutManager(new LinearLayoutManager(this));
         binding.peopleList.setAdapter(new PeopleAdapter(this, people, this));
     }

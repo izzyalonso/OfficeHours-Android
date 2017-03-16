@@ -17,7 +17,7 @@ import org.tndata.officehours.R;
 import org.tndata.officehours.adapter.PeopleAdapter;
 import org.tndata.officehours.databinding.FragmentListBinding;
 import org.tndata.officehours.model.Person;
-import org.tndata.officehours.util.PeopleItemDecoration;
+import org.tndata.officehours.util.DividerItemDecoration;
 
 import java.util.ArrayList;
 
@@ -78,7 +78,7 @@ public class PeopleFragment extends Fragment implements PeopleAdapter.Listener{
         OfficeHoursApp app = (OfficeHoursApp)getContext().getApplicationContext();
         ArrayList<Person> people = app.getPeople(instructors);
 
-        binding.list.addItemDecoration(new PeopleItemDecoration(getContext()));
+        binding.list.addItemDecoration(new DividerItemDecoration(getContext()));
         binding.list.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.list.setAdapter(new PeopleAdapter(getContext(), people, true, this));
 

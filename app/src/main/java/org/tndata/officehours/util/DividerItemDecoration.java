@@ -18,7 +18,7 @@ import org.tndata.officehours.adapter.PeopleAdapter;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class PeopleItemDecoration extends CustomItemDecoration{
+public class DividerItemDecoration extends CustomItemDecoration{
     private Drawable divider;
 
 
@@ -28,7 +28,7 @@ public class PeopleItemDecoration extends CustomItemDecoration{
      * @param context a reference to the context.
      */
     @SuppressWarnings("deprecation")
-    public PeopleItemDecoration(@NonNull Context context){
+    public DividerItemDecoration(@NonNull Context context){
         super(context, 12);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
