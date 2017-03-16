@@ -60,15 +60,6 @@ public class OnBoardingActivity
         user = ((OfficeHoursApp)getApplication()).getUser();
         officeHours = new ArrayList<>();
 
-        if (user.isStudent()){
-            binding.onBoardingStudent.setChecked(true);
-            displayForm(false);
-        }
-        else if (user.isTeacher()){
-            binding.onBoardingTeacher.setChecked(true);
-            displayForm(true);
-        }
-
         if (!user.getPhotoUrl().isEmpty()){
             ImageLoader.Options options = new ImageLoader.Options().setCropToCircle(true);
             ImageLoader.loadBitmap(binding.onBoardingAvatar, user.getPhotoUrl(), options);
@@ -86,19 +77,13 @@ public class OnBoardingActivity
     public void onTypeButtonClick(View view){
         switch (view.getId()){
             case R.id.on_boarding_student:
-                if (!user.isStudent()){
-                    user.setAsStudent();
-                    user.writeToPreferences(this);
-                    displayForm(false);
-                }
+                user.asStudent();
+                displayForm(false);
                 break;
 
             case R.id.on_boarding_teacher:
-                if (!user.isTeacher()){
-                    user.setAsTeacher();
-                    user.writeToPreferences(this);
-                    displayForm(true);
-                }
+                user.asTeacher();
+                displayForm(true);
                 break;
         }
     }
@@ -184,8 +169,8 @@ public class OnBoardingActivity
             user.onBoardingCompleted();
             user.writeToPreferences(this);
 
-            if (user.isTeacher() && !officeHours.isEmpty()){
-                officeHoursRequestCodes = new HashSet<>();
+            officeHoursRequestCodes = new HashSet<>();
+            if (binding.onBoardingTeacher.isChecked() && !officeHours.isEmpty()){
                 for (String slot:officeHours){
                     officeHoursRequestCodes.add(HttpRequest.post(this, API.URL.officeHours(), API.BODY.officeHours(slot)));
                 }

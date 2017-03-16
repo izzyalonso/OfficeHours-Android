@@ -33,15 +33,23 @@ public class PersonTableHandler extends TableHandler{
             + PersonEntry.COURSE_ID + " INTEGER, "
             + PersonEntry.NAME + " TEXT, "
             + PersonEntry.AVATAR + " TEXT, "
-            + PersonEntry.IS_INSTRUCTOR + " INTEGER)";
+            + PersonEntry.IS_INSTRUCTOR + " INTEGER, "
+            + PersonEntry.LAST_MESSAGE + " TEXT)";
 
     private static final String INSERT = "INSERT INTO " + PersonEntry.TABLE + " ("
             + PersonEntry.CLOUD_ID + ", "
             + PersonEntry.COURSE_ID + ", "
             + PersonEntry.NAME + ", "
             + PersonEntry.AVATAR + ", "
-            + PersonEntry.IS_INSTRUCTOR + ") "
-            + "VALUES (?, ?, ?, ?, ?)";
+            + PersonEntry.IS_INSTRUCTOR + ", "
+            + PersonEntry.LAST_MESSAGE + ") "
+            + "VALUES (?, ?, ?, ?, ?, ?)";
+
+    private static final String UPDATE = "UPDATE " + PersonEntry.TABLE + " SET "
+            + PersonEntry.NAME + "=?, "
+            + PersonEntry.AVATAR + "=?, "
+            + PersonEntry.LAST_MESSAGE + "=? "
+            + "WHERE " + PersonEntry.CLOUD_ID + "=?";
 
     private static final String DELETE_COURSE = "DELETE FROM " + PersonEntry.TABLE
             + " WHERE " + PersonEntry.COURSE_ID + "=?";
@@ -49,6 +57,8 @@ public class PersonTableHandler extends TableHandler{
     private static final String DELETE = "DELETE FROM " + PersonEntry.TABLE
             + " WHERE " + PersonEntry.CLOUD_ID + "=?"
             + " AND " + PersonEntry.COURSE_ID + "=?";
+
+    private static final String TRUNCATE = "DELETE FROM " + PersonEntry.TABLE;
 
     private static final String SELECT = "SELECT * FROM "
             + PersonEntry.TABLE
@@ -88,6 +98,7 @@ public class PersonTableHandler extends TableHandler{
         stmt.bindString(3, person.getName());
         stmt.bindString(4, person.getAvatar());
         stmt.bindLong(5, person.isInstructor() ? 1 : 0);
+        stmt.bindString(6, person.getLastMessage());
 
         //Execute the query
         stmt.executeInsert();
@@ -116,7 +127,9 @@ public class PersonTableHandler extends TableHandler{
             stmt.bindLong(2, course.getId());
             stmt.bindString(3, person.getName());
             stmt.bindString(4, person.getAvatar());
+            stmt.bindString(5, person.getLastMessage());
             stmt.bindLong(5, person.isInstructor() ? 1 : 0);
+            stmt.bindString(6, person.getLastMessage());
 
             //Execution
             stmt.executeInsert();
@@ -127,6 +140,24 @@ public class PersonTableHandler extends TableHandler{
         db.endTransaction();
 
         //Close the statement
+        stmt.close();
+    }
+
+    /**
+     * Updates a person in the database.
+     *
+     * @param person the person to be updated.
+     */
+    public void updatePerson(@NonNull Person person){
+        SQLiteDatabase db = getDatabase();
+
+        SQLiteStatement stmt = db.compileStatement(UPDATE);
+        stmt.bindString(1, person.getName());
+        stmt.bindString(2, person.getAvatar());
+        stmt.bindString(3, person.getLastMessage());
+        stmt.bindLong(4, person.getId());
+        stmt.executeUpdateDelete();
+
         stmt.close();
     }
 
@@ -163,6 +194,13 @@ public class PersonTableHandler extends TableHandler{
     }
 
     /**
+     * Empties the table.
+     */
+    public void erase(){
+        getDatabase().execSQL(TRUNCATE);
+    }
+
+    /**
      * Fetches the list of people enrolled in a course stored in the database.
      *
      * @param course the course whose people are to be fetched.
@@ -184,7 +222,8 @@ public class PersonTableHandler extends TableHandler{
                         getInt(cursor, PersonEntry.CLOUD_ID),
                         getString(cursor, PersonEntry.NAME),
                         getString(cursor, PersonEntry.AVATAR),
-                        getLong(cursor, PersonEntry.IS_INSTRUCTOR) == 1
+                        getBoolean(cursor, PersonEntry.IS_INSTRUCTOR),
+                        getString(cursor, PersonEntry.LAST_MESSAGE)
                 ));
             }
             //Move on until the cursor is empty

@@ -1,6 +1,8 @@
 package org.tndata.officehours.activity;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
@@ -18,7 +20,7 @@ import org.tndata.officehours.adapter.ScheduleAdapter;
 import org.tndata.officehours.model.Person;
 import org.tndata.officehours.model.User;
 import org.tndata.officehours.util.CustomItemDecoration;
-import org.tndata.officehours.util.DataSynchronizer;
+import org.tndata.officehours.util.DumbDataSynchronizer;
 
 import java.util.ArrayList;
 
@@ -29,7 +31,13 @@ import java.util.ArrayList;
  * @author Ismael Alonso
  * @version 1.0.0
  */
-public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapter.Listener, DataSynchronizer.Callback{
+public class ScheduleActivity
+        extends AppCompatActivity
+        implements
+                ScheduleAdapter.Listener,
+                DialogInterface.OnClickListener,
+                DumbDataSynchronizer.Callback{
+
     private static final int ADD_CODE_RC = 7529;
     private static final int NEW_COURSE_RC = 6392;
 
@@ -46,12 +54,12 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
         setSupportActionBar(binding.scheduleToolbar.toolbar);
 
         app = (OfficeHoursApp)getApplication();
-        adapter = new ScheduleAdapter(this, this, app.getCourses());
+        adapter = new ScheduleAdapter(this, app.getCourses(), this);
         binding.scheduleList.setLayoutManager(new LinearLayoutManager(this));
         binding.scheduleList.setAdapter(adapter);
         binding.scheduleList.addItemDecoration(new CustomItemDecoration(this, 12));
 
-        DataSynchronizer.sync(this, this);
+        DumbDataSynchronizer.sync(this, this);
     }
 
     @Override
@@ -62,25 +70,19 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        //The student menu contains an option to see all instructors
-        if (app.getUser().isStudent()){
-            getMenuInflater().inflate(R.menu.schedule_student, menu);
-        }
-        else{
-            getMenuInflater().inflate(R.menu.schedule_instructor, menu);
-        }
+        getMenuInflater().inflate(R.menu.schedule, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if (item.getItemId() == R.id.schedule_add){
-            if (app.getUser().isTeacher()){
-                startActivityForResult(new Intent(this, CourseEditorActivity.class), NEW_COURSE_RC);
-            }
-            else{
-                startActivityForResult(new Intent(this, AddCodeActivity.class), ADD_CODE_RC);
-            }
+            /*AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle(R.string.schedule_dialog_add_title)
+                    .setItems(R.array.schedule_dialog_add_options, this)
+                    .create();
+            dialog.show();*/
+            startActivity(new Intent(this, MainActivity.class));
             return true;
         }
         else if (item.getItemId() == R.id.schedule_faculty){
@@ -106,11 +108,24 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
     }
 
     @Override
+    public void onClick(DialogInterface dialog, int which){
+        if (which == 0){
+            startActivityForResult(new Intent(this, AddCodeActivity.class), ADD_CODE_RC);
+        }
+        else{
+            startActivityForResult(new Intent(this, CourseEditorActivity.class), NEW_COURSE_RC);
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if (requestCode == ADD_CODE_RC){
             if (resultCode == RESULT_OK){
                 Course course = data.getParcelableExtra(AddCodeActivity.COURSE_KEY);
-                adapter.addCourse(course);
+                adapter.notifyItemInserted(app.getCourses().size()-1);
+                if (app.getCourses().size() != 1){
+                    adapter.notifyItemChanged(app.getCourses().size()-2);
+                }
                 onCourseSelected(course);
             }
         }
@@ -132,6 +147,7 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleAdapt
 
     @Override
     public void onDataLoaded(){
+        adapter.notifyDataSetChanged();
         adapter.setCourses(((OfficeHoursApp)getApplication()).getCourses());
     }
 

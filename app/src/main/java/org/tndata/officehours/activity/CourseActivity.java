@@ -11,12 +11,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityCourseBinding;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.OfficeHours;
 import org.tndata.officehours.model.Person;
+import org.tndata.officehours.util.Util;
 
 import java.util.ArrayList;
 
@@ -53,23 +56,90 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
         binding.courseToolbar.toolbar.setTitle(course.getName());
         setSupportActionBar(binding.courseToolbar.toolbar);
 
-        if (((OfficeHoursApp)getApplication()).getUser().isStudent()){
+        if (((OfficeHoursApp)getApplication()).getUser().is(course.getInstructor())){
+            binding.courseInstructorContainer.setVisibility(View.GONE);
+            binding.courseOfficeHoursContainer.setVisibility(View.GONE);
+            binding.courseEnrollmentList.setOnClickListener(this);
+            binding.courseEnrollmentBroadcast.setOnClickListener(this);
+        }
+        else{
             binding.courseAccessCode.setVisibility(View.GONE);
             binding.courseEnrollmentContainer.setVisibility(View.GONE);
             binding.courseInstructorChat.setOnClickListener(this);
-        }
-        else{
-            binding.courseInstructorContainer.setVisibility(View.GONE);
-            binding.courseEnrollmentList.setOnClickListener(this);
-            binding.courseEnrollmentBroadcast.setOnClickListener(this);
+            if (course.getInstructor().getOfficeHours() == null){
+                binding.courseOfficeHoursContainer.setVisibility(View.GONE);
+            }
+            else{
+                setOfficeHours();
+            }
         }
         String content = getString(R.string.course_enrollment_content, course.getStudents().size());
         binding.courseEnrollment.setText(content);
     }
 
+    private void setOfficeHours(){
+        OfficeHours hours = course.getInstructor().getOfficeHours();
+
+        if (hours.hasMondayHours()){
+            String text = getString(R.string.office_hours_monday) + hours.getMondayHours();
+            binding.courseOfficeHoursMonday.setText(text);
+        }
+        else{
+            binding.courseOfficeHoursMonday.setVisibility(View.GONE);
+        }
+
+        if (hours.hasTuesdayHours()){
+            String text = getString(R.string.office_hours_tuesday) + hours.getTuesdayHours();
+            binding.courseOfficeHoursTuesday.setText(text);
+        }
+        else{
+            binding.courseOfficeHoursTuesday.setVisibility(View.GONE);
+        }
+
+        if (hours.hasWednesdayHours()){
+            String text = getString(R.string.office_hours_wednesday) + hours.getWednesdayHours();
+            binding.courseOfficeHoursWednesday.setText(text);
+        }
+        else{
+            binding.courseOfficeHoursWednesday.setVisibility(View.GONE);
+        }
+
+        if (hours.hasThursdayHours()){
+            String text = getString(R.string.office_hours_thursday) + hours.getThursdayHours();
+            binding.courseOfficeHoursThursday.setText(text);
+        }
+        else{
+            binding.courseOfficeHoursThursday.setVisibility(View.GONE);
+        }
+
+        if (hours.hasFridayHours()){
+            String text = getString(R.string.office_hours_friday) + hours.getFridayHours();
+            binding.courseOfficeHoursFriday.setText(text);
+        }
+        else{
+            binding.courseOfficeHoursFriday.setVisibility(View.GONE);
+        }
+
+        if (hours.hasSaturdayHours()){
+            String text = getString(R.string.office_hours_saturday) + hours.getSaturdayHours();
+            binding.courseOfficeHoursSaturday.setText(text);
+        }
+        else{
+            binding.courseOfficeHoursSaturday.setVisibility(View.GONE);
+        }
+
+        if (hours.hasSundayHours()){
+            String text = getString(R.string.office_hours_sunday) + hours.getSundayHours();
+            binding.courseOfficeHoursSunday.setText(text);
+        }
+        else{
+            binding.courseOfficeHoursSunday.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        if (((OfficeHoursApp)getApplication()).getUser().isTeacher()){
+        if (((OfficeHoursApp)getApplication()).getUser().is(course.getInstructor())){
             getMenuInflater().inflate(R.menu.edit, menu);
             return true;
         }
@@ -105,7 +175,12 @@ public class CourseActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view){
         switch (view.getId()){
             case R.id.course_instructor_chat:
-                //TODO start a chat with the dude
+                if (Util.isNetworkAvailable(this)){
+                    startActivity(ChatActivity.getIntent(this, course.getInstructor()));
+                }
+                else{
+                    Toast.makeText(this, R.string.chat_error_offline, Toast.LENGTH_SHORT).show();
+                }
                 break;
 
             case R.id.course_enrollment_list:

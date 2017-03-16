@@ -1,8 +1,6 @@
 package org.tndata.officehours.model;
 
-
 import android.os.Parcel;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
@@ -19,11 +17,13 @@ public class Person extends Base{
     private String name;
     @SerializedName("avatar")
     private String avatar;
-
-    @ColorInt
-    private int color;
+    @SerializedName("officehours")
+    private OfficeHours officeHours;
 
     private boolean isInstructor;
+    private String lastMessage;
+
+    //private List<Message> messages;
 
 
     /**
@@ -33,12 +33,14 @@ public class Person extends Base{
      * @param name the name of the person.
      * @param avatar the photo url of the person.
      * @param isInstructor whether the person is an instructor.
+     * @param lastMessage the last chat message interchanged with this person.
      */
-    public Person(long id, @NonNull String name, @NonNull String avatar, boolean isInstructor){
+    public Person(long id, @NonNull String name, @NonNull String avatar, boolean isInstructor, String lastMessage){
         super(id);
         this.name = name;
         this.avatar = avatar;
         this.isInstructor = isInstructor;
+        this.lastMessage = lastMessage;
     }
 
     /**
@@ -59,22 +61,16 @@ public class Person extends Base{
         return avatar;
     }
 
-    @ColorInt
-    public int getColor(){
-        return color;
-    }
-
-    public void setColor(@ColorInt int color){
-        this.color = color;
-    }
-
-    /**
-     * Tells whether the person is an instructor.
-     *
-     * @return true if instructor, false if student.
-     */
     public boolean isInstructor(){
         return isInstructor;
+    }
+
+    public String getLastMessage(){
+        return lastMessage == null ? "" : lastMessage;
+    }
+
+    public OfficeHours getOfficeHours(){
+        return officeHours;
     }
 
     public void asInstructor(){
@@ -85,13 +81,13 @@ public class Person extends Base{
         isInstructor = false;
     }
 
+    public void setLastMessage(@NonNull String lastMessage){
+        this.lastMessage = lastMessage;
+    }
+
     @Override
     public String toString(){
-        String result = "Person #" + getId() + ": " + getName();
-        if (isInstructor()){
-            result += " (instructor)";
-        }
-        return result;
+        return "Person #" + getId() + ": " + getName();
     }
 
     @Override
@@ -104,8 +100,9 @@ public class Person extends Base{
         super.writeToParcel(parcel, flags);
         parcel.writeString(name);
         parcel.writeString(avatar);
-        parcel.writeInt(color);
         parcel.writeByte((byte)(isInstructor ? 1 : 0));
+        parcel.writeString(getLastMessage());
+        parcel.writeParcelable(officeHours, flags);
     }
 
     public static final Creator<Person> CREATOR = new Creator<Person>(){
@@ -124,7 +121,8 @@ public class Person extends Base{
         super(in);
         name = in.readString();
         avatar = in.readString();
-        color = in.readInt();
-        isInstructor = in.readByte() == 1;
+        isInstructor = in.readByte() == 0;
+        lastMessage = in.readString();
+        officeHours = in.readParcelable(OfficeHours.class.getClassLoader());
     }
 }

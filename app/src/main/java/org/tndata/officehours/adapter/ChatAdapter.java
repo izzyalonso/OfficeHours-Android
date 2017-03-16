@@ -8,100 +8,107 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
-import org.tndata.officehours.databinding.ItemContactMessageBinding;
-import org.tndata.officehours.databinding.ItemMyMessageBinding;
-import org.tndata.officehours.holder.ContactMessageHolder;
-import org.tndata.officehours.holder.MyMessageHolder;
+import org.tndata.officehours.databinding.ItemLoadingBinding;
+import org.tndata.officehours.databinding.ItemMessageBinding;
+import org.tndata.officehours.holder.LoadingHolder;
+import org.tndata.officehours.holder.MessageHolder;
 import org.tndata.officehours.model.Message;
-import org.tndata.officehours.model.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 /**
- * Created by ialonso on 1/23/17.
+ * Adapter for the list of chat messages in ChatActivity.
+ *
+ * @author Ismael Alonso
  */
 public class ChatAdapter extends RecyclerView.Adapter{
-
-    private static final int TYPE_MY_MESSAGE = 1;
-    private static final int TYPE_CONTACT_MESSAGE = 2;
+    private static final int TYPE_MESSAGE = 1;
+    private static final int TYPE_DATE = 2;
+    private static final int TYPE_LOADING = 3;
 
 
     private Context context;
-    private RecyclerView recyclerView;
+    private Listener listener;
     private List<Message> messages;
 
-    private User user;
+    private boolean canLoadMore;
+    private boolean topReachedSignalSent;
 
 
-    public ChatAdapter(@NonNull Context context){
+    /**
+     * Constructor.
+     *
+     * @param context a reference to the context.
+     * @param listener the listener object.
+     * @param messages the list of messages to display.
+     */
+    public ChatAdapter(@NonNull Context context, @NonNull Listener listener, @NonNull List<Message> messages){
         this.context = context;
-        messages = new ArrayList<>();
-        user = ((OfficeHoursApp)context.getApplicationContext()).getUser();
+        this.listener = listener;
+        this.messages = messages;
+        canLoadMore = true;
+        topReachedSignalSent = false;
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView){
-        this.recyclerView = recyclerView;
-    }
-
-    @Override
-    public void onDetachedFromRecyclerView(RecyclerView recyclerView){
-        if (this.recyclerView == recyclerView){
-            this.recyclerView = null;
+    public int getItemCount(){
+        int count = messages.size();
+        if (canLoadMore){
+            count++;
         }
+        return count;
     }
 
     @Override
     public int getItemViewType(int position){
-        if (messages.get(position).getSenderId() == user.getId()){
-            return TYPE_MY_MESSAGE;
+        if (position == messages.size()){
+            return TYPE_LOADING;
         }
-        else{
-            return TYPE_CONTACT_MESSAGE;
-        }
+        return TYPE_MESSAGE;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         LayoutInflater inflater = LayoutInflater.from(context);
-        if (viewType == TYPE_MY_MESSAGE){
-            @LayoutRes int layoutRes = R.layout.item_my_message;
-            ItemMyMessageBinding binding = DataBindingUtil.inflate(inflater, layoutRes, parent, false);
-            return new MyMessageHolder(binding);
+        if (viewType == TYPE_MESSAGE){
+            @LayoutRes int layoutRes = R.layout.item_message;
+            ItemMessageBinding binding = DataBindingUtil.inflate(inflater, layoutRes, parent, false);
+            return new MessageHolder(binding);
         }
-        else{
-            @LayoutRes int layoutRes = R.layout.item_contact_message;
-            ItemContactMessageBinding binding = DataBindingUtil.inflate(inflater, layoutRes, parent, false);
-            return new ContactMessageHolder(binding);
+        else if (viewType == TYPE_LOADING){
+            @LayoutRes int layoutRes = R.layout.item_loading;
+            ItemLoadingBinding binding = DataBindingUtil.inflate(inflater, layoutRes, parent, false);
+            return new LoadingHolder(binding);
         }
+        return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder rawHolder, int position){
-        if (getItemViewType(position) == TYPE_MY_MESSAGE){
-            MyMessageHolder holder = (MyMessageHolder)rawHolder;
-            holder.setMessage(messages.get(getItemCount() - position - 1));
-        }
-        else{
-            ContactMessageHolder holder = (ContactMessageHolder)rawHolder;
-            holder.setMessage(messages.get(getItemCount() - position - 1));
+        switch (getItemViewType(position)){
+            case TYPE_MESSAGE:
+                MessageHolder holder = (MessageHolder)rawHolder;
+                holder.setMessage(messages.get(messages.size() - position - 1));
+                break;
+
+            case TYPE_LOADING:
+                if (!topReachedSignalSent && canLoadMore){
+                    listener.onTopReached();
+                    topReachedSignalSent = true;
+                }
+                break;
         }
     }
 
-    @Override
-    public int getItemCount(){
-        return messages.size();
+    public void onLoadComplete(boolean canLoadMore){
+        topReachedSignalSent = false;
+        this.canLoadMore = canLoadMore;
     }
 
-    public void addMessage(Message message){
-        messages.add(message);
-        notifyDataSetChanged();
-        if (recyclerView != null){
-            recyclerView.scrollToPosition(0);
-        }
+
+    public interface Listener{
+        void onTopReached();
     }
 }

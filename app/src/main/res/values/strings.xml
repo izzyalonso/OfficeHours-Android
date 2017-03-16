@@ -24,12 +24,17 @@
     <string name="on_boarding_error_network">Unable to save your profile at the moment</string>
 
     <!-- ScheduleActivity -->
-    <string name="schedule_menu_add">Add a course</string>
+    <string name="schedule_menu_add">Add</string>
     <string name="schedule_menu_add_condensed">Add</string>
     <string name="schedule_menu_faculty">See my instructors</string>
     <string name="schedule_menu_faculty_condensed">Instructors</string>
     <string name="schedule_menu_logout">Sign out</string>
     <string name="schedule_my_instructors_label">My instructors</string>
+    <string name="schedule_dialog_add_title">Add a course</string>
+    <string-array name="schedule_dialog_add_options">
+        <item>Enroll in a course</item>
+        <item>Create a course</item>
+    </string-array>
 
     <!-- CourseEditorActivity -->
     <string name="course_editor_label_new">New course</string>
@@ -63,8 +68,10 @@
 
     <!-- AddCodeActivity -->
     <string name="add_code_title">Add Code</string>
-    <string name="add_code_hint">X</string>
-    <string name="add_code_error">Invalid code</string>
+    <string name="add_code_hint">XXXX</string>
+    <string name="add_code_add">Add course</string>
+    <string name="add_code_length_error">Codes are 4 characters long</string>
+    <string name="add_code_invalid_error">Invalid code</string>
 
     <!-- AddCourseActivity -->
     <string name="add_course_label">Add to my schedule</string>
@@ -83,12 +90,30 @@
     <string name="course_last_meeting">Last meeting date</string>
     <string name="course_instructor">Instructor</string>
     <string name="course_instructor_chat_cd">Chat with your instructor</string>
+    <string name="course_office_hours">Office hours</string>
     <string name="course_access_code">Access code</string>
     <string name="course_enrollment">Enrollment</string>
     <string name="course_enrollment_content">%1$d students</string>
     <string name="course_enrollment_list_cd">List of people enrolled in the class</string>
     <string name="course_enrollment_broadcast_cd">List of people enrolled in the class</string>
-    
-    <string name="server_client_id">123754374341-8ug3otempcpmoi7rmaa6dkd362vor46l.apps.googleusercontent.com</string>
+
+    <!-- MessageHolder -->
+    <string name="message_state_cd">Whether the message has been delivered or read</string>
+
+    <!-- ChatActivity -->
+    <string name="chat_error_offline">Need an internet connection to use the chat</string>
+    <string name="chat_error_disconnected">Please, reconnect to the network to continue chatting</string>
+
+    <!-- Avatar -->
+    <string name="avatar_image_cd">The user\'s avatar</string>
+
+    <!-- OfficeHours -->
+    <string name="office_hours_monday">Monday: </string>
+    <string name="office_hours_tuesday">Tuesday: </string>
+    <string name="office_hours_wednesday">Wednesday: </string>
+    <string name="office_hours_thursday">Thursday: </string>
+    <string name="office_hours_friday">Friday: </string>
+    <string name="office_hours_saturday">Saturday: </string>
+    <string name="office_hours_sunday">Sunday: </string>
 
 </resources>

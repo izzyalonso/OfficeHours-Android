@@ -27,6 +27,15 @@ public abstract class Base implements Parcelable, ResultSet{
     }
 
     /**
+     * Id setter.
+     *
+     * @param id the new id of the instance.
+     */
+    protected void setId(long id){
+        this.id = id;
+    }
+
+    /**
      * Id getter.
      *
      * @return the id of the instance

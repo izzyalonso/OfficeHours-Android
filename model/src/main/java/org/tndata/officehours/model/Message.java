@@ -5,6 +5,12 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 
 /**
  * Model for a chat message.
@@ -13,38 +19,46 @@ import com.google.gson.annotations.SerializedName;
  * @version 1.0.0
  */
 public class Message extends Base{
-    @SerializedName("from_id")
+    @SerializedName("user")
     private long senderId;
-    @SerializedName("from")
+    private long recipientId;
+    @SerializedName("user_full_name")
     private String sender;
     @SerializedName("text")
     private String text;
     @SerializedName("read")
     private boolean isRead;
-    @SerializedName("created_at")
-    private String createdAt;
+    @SerializedName("created_on")
+    private String createdOn;
 
     private long timestamp;
+    private boolean isSent;
 
 
     public Message(long senderId, @NonNull String text){
-        this(-1, senderId, text, -1);
+        this(senderId, text, -1);
     }
 
     public Message(long senderId, @NonNull String text, long timestamp){
-        this(-1, senderId, text, timestamp);
+        this(senderId, -1, text, timestamp, false);
     }
 
-    public Message(long id, long senderId, @NonNull String text, long timestamp){
-        super(id);
+    public Message(long senderId, long recipientId, @NonNull String text, long timestamp, boolean isSent){
+        super(-1);
         this.senderId = senderId;
+        this.recipientId = recipientId;
         this.text = text;
         this.isRead = false;
         this.timestamp = timestamp;
+        this.isSent = isSent;
     }
 
     public long getSenderId(){
         return senderId;
+    }
+
+    public long getRecipientId(){
+        return recipientId;
     }
 
     public String getSender(){
@@ -63,12 +77,52 @@ public class Message extends Base{
         return timestamp;
     }
 
+    public String getFormattedTimestamp(){
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:s", Locale.getDefault());
+        return formatter.format(new Date(timestamp));
+    }
+
+    public String getTime(){
+        DateFormat formatter = new SimpleDateFormat("h:mm a", Locale.getDefault());
+        Date date = new Date();
+        date.setTime(timestamp);
+        return formatter.format(date);
+    }
+
+    public boolean isSent(){
+        return isSent;
+    }
+
     public void read(){
         isRead = true;
     }
 
+    public void setTimestamp(long timestamp){
+        this.timestamp = timestamp;
+    }
+
+    public void sent(boolean now){
+        isSent = true;
+        if (now){
+            timestamp = System.currentTimeMillis();
+        }
+    }
+
     public void process(){
-        //TODO read createdAt into a date and save the timestamp in milliseconds since epoch
+        DateFormat parser = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ", Locale.getDefault());
+        try{
+            timestamp = parser.parse(createdOn).getTime();
+        }
+        catch (ParseException px){
+            px.printStackTrace();
+        }
+    }
+
+    public void become(@NonNull Message message){
+        setId(message.getId());
+        this.isRead = message.isRead();
+        this.timestamp = message.getTimestamp();
+        this.isSent = message.isSent();
     }
 
     @Override

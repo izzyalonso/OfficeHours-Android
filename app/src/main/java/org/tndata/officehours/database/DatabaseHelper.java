@@ -35,7 +35,7 @@ class DatabaseHelper extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db){
         db.execSQL(CourseTableHandler.CREATE);
         db.execSQL(PersonTableHandler.CREATE);
-        db.execSQL(MessageTableHandler.CREATE);
+        //db.execSQL(MessageTableHandler.CREATE);
     }
 
     @Override

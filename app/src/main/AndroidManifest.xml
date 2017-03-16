@@ -4,6 +4,7 @@
     package="org.tndata.officehours">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         xmlns:tools="http://schemas.android.com/tools"
@@ -31,6 +32,10 @@
         <activity
             android:name=".activity.ScheduleActivity"
             android:label="My Schedule" />
+
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="Office Hours" />
 
         <activity
             android:name=".activity.AddCodeActivity"

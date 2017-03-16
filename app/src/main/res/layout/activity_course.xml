@@ -131,6 +131,64 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/course_office_hours_container"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/accent"
+                        android:textSize="14sp"
+                        android:text="@string/course_office_hours" />
+
+                    <TextView
+                        android:id="@+id/course_office_hours_monday"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/course_office_hours_tuesday"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/course_office_hours_wednesday"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/course_office_hours_thursday"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/course_office_hours_friday"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/course_office_hours_saturday"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/course_office_hours_sunday"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/course_enrollment_container"
                     android:orientation="vertical"
                     android:layout_width="match_parent"

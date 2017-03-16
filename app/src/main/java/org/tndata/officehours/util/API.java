@@ -8,6 +8,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.tndata.officehours.BuildConfig;
 import org.tndata.officehours.model.Course;
+import org.tndata.officehours.model.Message;
+import org.tndata.officehours.model.Person;
 import org.tndata.officehours.model.User;
 
 
@@ -110,11 +112,29 @@ public class API{
         /**
          * Gets the url to a websocket to chat with a user.
          *
-         * @param userId the id of the user.
+         * @param recipient the person the socket is to be opened to.
          * @return the url to the mentioned websocket.
          */
-        public static String chatSocket(long userId){
-            return SOCKET_URL + "chat/" + userId + "/";
+        public static String chatSocket(@NonNull Person recipient){
+            return SOCKET_URL + "chat/" + recipient.getId() + "/";
+        }
+
+        public static String chatHistorySince(long user1, long user2, String timestamp){
+            long first = user1 < user2 ? user1 : user2;
+            long second = user1 > user2 ? user1 : user2;
+            String room = "room=chat-" + first + "-" + second;
+            timestamp = timestamp.replace(" ", "%20");
+            String time = "since=" + timestamp;
+            return API_URL + "chat/history/?" + room + "&" + time;
+        }
+
+        public static String chatHistoryBefore(long user1, long user2, String timestamp){
+            long first = user1 < user2 ? user1 : user2;
+            long second = user1 > user2 ? user1 : user2;
+            String room = "room=chat-" + first + "-" + second;
+            timestamp = timestamp.replace(" ", "%20");
+            String time = "before=" + timestamp;
+            return API_URL + "chat/history/?" + room + "&" + time;
         }
     }
 
@@ -185,12 +205,10 @@ public class API{
             return body;
         }
 
-        public static String chatMessage(@NonNull User user, @NonNull String text){
+        public static String chatMessage(@NonNull Message message){
             JSONObject body = new JSONObject();
             try{
-                body.put("text", text);
-                body.put("from", user.getId());
-                body.put("token", user.getToken());
+                body.put("text", message.getText());
             }
             catch (JSONException jx){
                 jx.printStackTrace();

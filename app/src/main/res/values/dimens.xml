@@ -12,4 +12,10 @@
     <dimen name="flat_button_text_size">14sp</dimen>
     <dimen name="flat_button_corner_radius">1dp</dimen>
 
+    <dimen name="people_footer_height">56dp</dimen>
+    <dimen name="people_footer_margin">16sp</dimen>
+    <!-- This value includes the margin -->
+    <dimen name="people_footer_size">72dp</dimen>
+    <dimen name="people_footer_corner_radius">28dp</dimen>
+
 </resources>
