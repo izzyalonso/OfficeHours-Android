@@ -44,4 +44,15 @@ class DatabaseContract{
         static final String TIMESTAMP = "timestamp";
         static final String IS_READ = "read";
     }
+
+    static abstract class QuestionEntry implements BaseColumns{
+        static final String TABLE = "Questions";
+
+        static final String ID = _ID;
+        static final String CLOUD_ID = "cloud_id";
+        static final String TITLE = "title";
+        static final String CONTENT = "content";
+        static final String VOTES = "votes";
+        static final String KEYWORDS = "keywords";
+    }
 }
