@@ -136,6 +136,10 @@ public class API{
             String time = "before=" + timestamp;
             return API_URL + "chat/history/?" + room + "&" + time;
         }
+
+        public static String questions(){
+            return API_URL + "questions/";
+        }
     }
 
     public static class BODY{
