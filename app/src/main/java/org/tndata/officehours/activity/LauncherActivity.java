@@ -21,12 +21,13 @@ import org.tndata.officehours.R;
 import org.tndata.officehours.databinding.ActivityLauncherBinding;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Person;
+import org.tndata.officehours.model.Question;
 import org.tndata.officehours.model.ResultSet;
 import org.tndata.officehours.model.User;
 import org.tndata.officehours.database.DatabaseReader;
 import org.tndata.officehours.parser.Parser;
 import org.tndata.officehours.util.API;
-import org.tndata.officehours.util.DataSynchronizer;
+import org.tndata.officehours.util.DumbDataSynchronizer;
 
 import java.util.List;
 import java.util.Map;
@@ -48,7 +49,7 @@ public class LauncherActivity
                 GoogleApiClient.OnConnectionFailedListener,
                 HttpRequest.RequestCallback,
                 Parser.ParserCallback,
-                DataSynchronizer.Callback,
+                DumbDataSynchronizer.Callback,
                 DatabaseReader.Callback{
 
     public static final String FROM_ON_BOARDING_KEY = "org.tndata.officehours.Launcher.FromOnBoarding";
@@ -75,7 +76,7 @@ public class LauncherActivity
             binding.launcherProgress.setVisibility(View.VISIBLE);
             if (user.isOnBoardingComplete()){
                 if (getIntent().getBooleanExtra(FROM_ON_BOARDING_KEY, false)){
-                    DataSynchronizer.sync(this, this);
+                    DumbDataSynchronizer.sync(this, this);
                 }
                 else{
                     DatabaseReader.start(this, this);
@@ -169,7 +170,7 @@ public class LauncherActivity
             user.writeToPreferences(this);
             app.setUser(user);
             if (user.isOnBoardingComplete()){
-                DataSynchronizer.sync(this, this);
+                DumbDataSynchronizer.sync(this, this);
             }
             else{
                 startActivity(new Intent(this, OnBoardingActivity.class));
@@ -195,9 +196,10 @@ public class LauncherActivity
     }
 
     @Override
-    public void onComplete(@NonNull List<Course> courses, @NonNull Map<Long, Person> peopleMap){
+    public void onComplete(@NonNull List<Course> courses, @NonNull Map<Long, Person> peopleMap, @NonNull List<Question> questions){
         app.setCourses(courses);
         app.setPeople(peopleMap);
+        app.setQuestions(questions);
         startActivity(new Intent(this, ScheduleActivity.class));
         finish();
     }

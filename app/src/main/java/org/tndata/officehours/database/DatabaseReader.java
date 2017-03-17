@@ -8,6 +8,7 @@ import android.util.Log;
 import org.tndata.officehours.activity.TimeSlotPickerActivity;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Person;
+import org.tndata.officehours.model.Question;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ public class DatabaseReader extends AsyncTask<Void, Void, Void>{
 
     private List<Course> courses;
     private Map<Long, Person> peopleMap;
+    private List<Question> questions;
 
 
     /**
@@ -52,6 +54,7 @@ public class DatabaseReader extends AsyncTask<Void, Void, Void>{
         CourseTableHandler courseHandler = new CourseTableHandler(context);
         PersonTableHandler personHandler = new PersonTableHandler(context);
         //MessageTableHandler messageHandler = new MessageTableHandler(context);
+        QuestionsTableHandler questionsHandler = new QuestionsTableHandler(context);
 
         //Read courses and close the handler
         courses = courseHandler.getCourses();
@@ -89,12 +92,16 @@ public class DatabaseReader extends AsyncTask<Void, Void, Void>{
         }
         //messageHandler.close();
         personHandler.close();
+
+        questions = questionsHandler.getQuestions();
+
+        questionsHandler.close();
         return null;
     }
 
     @Override
     protected void onPostExecute(Void unused){
-        callback.onComplete(courses, peopleMap);
+        callback.onComplete(courses, peopleMap, questions);
     }
 
 
@@ -109,7 +116,8 @@ public class DatabaseReader extends AsyncTask<Void, Void, Void>{
          *
          * @param courses the list of courses in the DB.
          * @param peopleMap a map pf Person.id -> Person containing all the people in the DB.
+         * @param questions the list of questions in the DB.
          */
-        void onComplete(@NonNull List<Course> courses, @NonNull Map<Long, Person> peopleMap);
+        void onComplete(@NonNull List<Course> courses, @NonNull Map<Long, Person> peopleMap, @NonNull List<Question> questions);
     }
 }

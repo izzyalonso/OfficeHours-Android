@@ -8,6 +8,7 @@ import android.util.Log;
 
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Person;
+import org.tndata.officehours.model.Question;
 import org.tndata.officehours.model.User;
 import org.tndata.officehours.receiver.ConnectivityStateReceiver;
 
@@ -32,6 +33,7 @@ public class OfficeHoursApp extends Application{
     private User user;
     private List<Course> courses;
     private Map<Long, Person> people;
+    private List<Question> questions;
 
 
     public void setUser(User user){
@@ -104,6 +106,23 @@ public class OfficeHoursApp extends Application{
             }
         }
         return people;
+    }
+
+    public void setQuestions(@NonNull List<Question> questions){
+        if (this.questions == null){
+            this.questions = new ArrayList<>();
+        }
+        else{
+            this.questions.clear();
+        }
+        this.questions.addAll(questions);
+    }
+
+    public @NonNull List<Question> getQuestions(){
+        if (questions == null){
+            questions = new ArrayList<>();
+        }
+        return questions;
     }
 
 

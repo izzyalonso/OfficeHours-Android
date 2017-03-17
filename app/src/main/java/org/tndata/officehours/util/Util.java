@@ -12,6 +12,7 @@ import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Message;
 import org.tndata.officehours.model.OfficeHours;
 import org.tndata.officehours.model.Person;
+import org.tndata.officehours.model.Question;
 
 
 /**
@@ -30,6 +31,9 @@ public class Util{
         }
         else if (object.has("avatar")){
             return Person.class;
+        }
+        else if (object.has("votes")){
+            return Question.class;
         }
         else if (object.has("from") && object.has("to")){
             return OfficeHours.TimeSlot.class;

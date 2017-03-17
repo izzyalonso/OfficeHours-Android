@@ -8,8 +8,10 @@ import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.activity.TimeSlotPickerActivity;
 import org.tndata.officehours.database.CourseTableHandler;
 import org.tndata.officehours.database.PersonTableHandler;
+import org.tndata.officehours.database.QuestionsTableHandler;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Person;
+import org.tndata.officehours.model.Question;
 import org.tndata.officehours.model.ResultSet;
 import org.tndata.officehours.parser.Parser;
 import org.tndata.officehours.parser.ParserModels;
@@ -48,6 +50,9 @@ public class DumbDataSynchronizer implements HttpRequest.RequestCallback, Parser
 
     //Things we need to update
     private int getCoursesRC;
+    private int getQuestionsRC;
+
+    private int completeRequests;
 
 
     /**
@@ -61,6 +66,9 @@ public class DumbDataSynchronizer implements HttpRequest.RequestCallback, Parser
         this.callback = callback;
 
         getCoursesRC = HttpRequest.get(this, API.URL.courses());
+        getQuestionsRC = HttpRequest.get(this, API.URL.questions());
+
+        completeRequests = 0;
     }
 
 
@@ -69,6 +77,10 @@ public class DumbDataSynchronizer implements HttpRequest.RequestCallback, Parser
         if (requestCode == getCoursesRC){
             Log.d(TAG, result);
             Parser.parse(result, ParserModels.CourseList.class, this);
+        }
+        else if (requestCode == getQuestionsRC){
+            Log.d(TAG, result);
+            Parser.parse(result, ParserModels.QuestionList.class, this);
         }
     }
 
@@ -119,11 +131,22 @@ public class DumbDataSynchronizer implements HttpRequest.RequestCallback, Parser
             app.setCourses(courses);
             app.setPeople(people);
         }
+        else if (result instanceof ParserModels.QuestionList){
+            List<Question> questions = ((ParserModels.QuestionList)result).results;
+
+            QuestionsTableHandler handler = new QuestionsTableHandler(app);
+            handler.erase();
+            handler.saveQuestions(questions);
+
+            app.setQuestions(questions);
+        }
     }
 
     @Override
     public void onParseSuccess(int requestCode, ResultSet result){
-        callback.onDataLoaded();
+        if (++completeRequests == 2){
+            callback.onDataLoaded();
+        }
     }
 
     @Override

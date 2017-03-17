@@ -101,4 +101,11 @@ public class QuestionsTableHandler extends TableHandler{
 
         return questions;
     }
+
+    /**
+     * Empties the table.
+     */
+    public void erase(){
+        getDatabase().execSQL(TRUNCATE);
+    }
 }
