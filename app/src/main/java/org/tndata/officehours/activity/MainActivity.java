@@ -17,10 +17,12 @@ import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.R;
 import org.tndata.officehours.adapter.MainPagerAdapter;
 import org.tndata.officehours.adapter.PeopleAdapter;
+import org.tndata.officehours.adapter.QuestionsAdapter;
 import org.tndata.officehours.adapter.ScheduleAdapter;
 import org.tndata.officehours.databinding.ActivityMainBinding;
 import org.tndata.officehours.model.Course;
 import org.tndata.officehours.model.Person;
+import org.tndata.officehours.model.Question;
 import org.tndata.officehours.util.Util;
 
 
@@ -37,7 +39,8 @@ public class MainActivity
                 TextWatcher,
                 View.OnClickListener,
                 PeopleAdapter.Listener,
-                ScheduleAdapter.Listener{
+                ScheduleAdapter.Listener,
+                QuestionsAdapter.Listener{
 
     private static final int ADD_CODE_RC = 7529;
     private static final int NEW_COURSE_RC = 6392;
@@ -223,5 +226,10 @@ public class MainActivity
     @Override
     public void onCourseSelected(@NonNull Course course){
         startActivity(CourseActivity.getIntent(this, course));
+    }
+
+    @Override
+    public void onQuestionSelected(@NonNull Question question){
+        startActivity(QuestionActivity.getIntent(this, question));
     }
 }

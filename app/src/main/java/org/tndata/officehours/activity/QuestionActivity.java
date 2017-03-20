@@ -24,7 +24,7 @@ public class QuestionActivity extends AppCompatActivity{
     private static final String QUESTION_KEY = "org.tndata.QuestionActivity.Question";
 
 
-    public Intent getIntent(@NonNull Context context, @NonNull Question question){
+    public static Intent getIntent(@NonNull Context context, @NonNull Question question){
         return new Intent(context, QuestionActivity.class)
                 .putExtra(QUESTION_KEY, question);
     }

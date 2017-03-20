@@ -10,8 +10,8 @@ import android.support.v7.widget.RecyclerView;
 
 import org.tndata.officehours.OfficeHoursApp;
 import org.tndata.officehours.fragment.PeopleFragment;
+import org.tndata.officehours.fragment.QuestionsFragment;
 import org.tndata.officehours.fragment.ScheduleFragment;
-import org.tndata.officehours.model.Course;
 
 
 /**
@@ -30,7 +30,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter{
     private PeopleFragment helpersFragment;
     private PeopleFragment peersFragment;
     private ScheduleFragment scheduleFragment;
-    private PeopleFragment forumFragment;
+    private QuestionsFragment questionsFragment;
 
     /**
      * Constructor.
@@ -82,11 +82,10 @@ public class MainPagerAdapter extends FragmentPagerAdapter{
             return scheduleFragment;
         }
         if (position == 3){
-            if (forumFragment == null){
-                forumFragment = new PeopleFragment();
+            if (questionsFragment == null){
+                questionsFragment = new QuestionsFragment();
             }
-            forumFragment.setScrollListener(scrollListener);
-            return forumFragment;
+            return questionsFragment;
         }
         return new PeopleFragment();
     }
