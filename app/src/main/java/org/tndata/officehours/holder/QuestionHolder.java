@@ -2,39 +2,36 @@ package org.tndata.officehours.holder;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import org.tndata.officehours.databinding.ItemQuestionBinding;
 import org.tndata.officehours.model.Question;
 
 
 /**
- * View holder for a question
+ * Holder to display a full question.
  *
  * @author Ismael Alonso
  */
-public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+public class QuestionHolder extends RecyclerView.ViewHolder{
     private ItemQuestionBinding binding;
-    private Listener listener;
 
 
-    public QuestionHolder(@NonNull ItemQuestionBinding binding, @NonNull Listener listener){
+    /**
+     * Constructor.
+     *
+     * @param binding the binding object for item_question.xml
+     */
+    public QuestionHolder(ItemQuestionBinding binding){
         super(binding.getRoot());
         this.binding = binding;
-        this.listener = listener;
-        itemView.setOnClickListener(this);
     }
 
+    /**
+     * Binds a question to this holder.
+     *
+     * @param question the question to bind.
+     */
     public void bind(@NonNull Question question){
         binding.setQuestion(question);
-    }
-
-    @Override
-    public void onClick(View v){
-        listener.onItemTapped(binding.getQuestion());
-    }
-
-    public interface Listener{
-        void onItemTapped(@NonNull Question question);
     }
 }

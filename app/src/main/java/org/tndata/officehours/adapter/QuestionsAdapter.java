@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.tndata.officehours.R;
-import org.tndata.officehours.databinding.ItemQuestionBinding;
-import org.tndata.officehours.holder.QuestionHolder;
+import org.tndata.officehours.databinding.ItemCompactQuestionBinding;
+import org.tndata.officehours.holder.CompactQuestionHolder;
 import org.tndata.officehours.model.Question;
 
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @author Ismael Alonso
  */
-public class QuestionsAdapter extends RecyclerView.Adapter implements QuestionHolder.Listener{
+public class QuestionsAdapter extends RecyclerView.Adapter implements CompactQuestionHolder.Listener{
     private static final int TYPE_QUESTION = 1;
     private static final int TYPE_FOOTER_SPACE = 2;
 
@@ -57,9 +57,9 @@ public class QuestionsAdapter extends RecyclerView.Adapter implements QuestionHo
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         LayoutInflater inflater = LayoutInflater.from(context);
         if (viewType == TYPE_QUESTION){
-            @LayoutRes int res = R.layout.item_question;
-            ItemQuestionBinding binding = DataBindingUtil.inflate(inflater, res, parent, false);
-            return new QuestionHolder(binding, this);
+            @LayoutRes int res = R.layout.item_compact_question;
+            ItemCompactQuestionBinding binding = DataBindingUtil.inflate(inflater, res, parent, false);
+            return new CompactQuestionHolder(binding, this);
         }
         if (viewType == TYPE_FOOTER_SPACE){
             View view = inflater.inflate(R.layout.item_people_footer_space, parent, false);
@@ -71,7 +71,7 @@ public class QuestionsAdapter extends RecyclerView.Adapter implements QuestionHo
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder rawHolder, int position){
         if (getItemViewType(position) == TYPE_QUESTION){
-            ((QuestionHolder)rawHolder).bind(questions.get(position));
+            ((CompactQuestionHolder)rawHolder).bind(questions.get(position));
         }
     }
 

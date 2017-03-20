@@ -53,6 +53,8 @@
 
         <activity android:name=".activity.PeopleActivity" />
 
+        <activity android:name=".activity.QuestionActivity" />
+
         <activity android:name=".activity.ChatActivity" />
 
         <activity
